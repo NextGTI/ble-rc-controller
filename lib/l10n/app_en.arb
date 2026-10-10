@@ -116,6 +116,14 @@
   "onScreenHint": "Touch buttons for phones and tablets (or mouse clicks).",
   "about": "About",
   "disclaimer": "Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.",
+  "versionLabel": "Version {version}",
+  "@versionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "driveLive": "Live inputs",
   "keyboardTipTitle": "Keyboard",
   "safetyNote": "Inputs only count while this window is in front. If you switch apps the car stops.",

@@ -31,9 +31,9 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 
 Descarga la última versión para tu sistema desde [**Releases**](../../releases):
 
-- **Android:** `ble-rc-controller-android.apk` (permite «instalar apps desconocidas» a tu navegador o gestor de archivos).
-- **macOS:** `ble-rc-controller-macos.zip`. La app no está notarizada; la primera vez: clic derecho → **Abrir**.
-- **Windows:** `ble-rc-controller-windows.zip`. Descomprime y ejecuta `ble_rc_controller.exe`. Si SmartScreen avisa: **Más información → Ejecutar de todas formas**.
+- **Android:** `ble-rc-controller-<version>-android.apk` (permite «instalar apps desconocidas» a tu navegador o gestor de archivos).
+- **macOS:** `ble-rc-controller-<version>-macos.zip`. La app no está notarizada; la primera vez: clic derecho → **Abrir**.
+- **Windows:** `ble-rc-controller-<version>-windows.zip`. Descomprime y ejecuta `ble_rc_controller.exe`. Si SmartScreen avisa: **Más información → Ejecutar de todas formas**.
 
 ## Primeros pasos
 

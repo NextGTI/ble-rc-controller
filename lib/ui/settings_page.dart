@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import 'strings.dart';
 import 'widgets.dart';
+
+// Looked up once; the page rebuilds every time the driver notifies.
+final Future<PackageInfo> _packageInfo = PackageInfo.fromPlatform();
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -77,6 +81,14 @@ class SettingsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(l.about, style: t.titleSmall),
+              const SizedBox(height: 4),
+              FutureBuilder<PackageInfo>(
+                future: _packageInfo,
+                builder: (context, snap) => snap.hasData
+                    ? Text(l.versionLabel('${snap.data!.version} (${snap.data!.buildNumber})'),
+                        style: t.bodyMedium?.copyWith(fontWeight: FontWeight.w600))
+                    : const SizedBox.shrink(),
+              ),
               const SizedBox(height: 8),
               Text(l.disclaimer, style: t.bodyMedium?.copyWith(color: Theme.of(context).hintColor)),
             ],

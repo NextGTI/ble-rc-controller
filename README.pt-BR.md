@@ -31,9 +31,9 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 
 Baixe a versão mais recente para o seu sistema na página de [**Releases**](../../releases):
 
-- **Android:** `ble-rc-controller-android.apk` (permita "instalar apps desconhecidos" para o navegador/gerenciador de arquivos).
-- **macOS:** `ble-rc-controller-macos.zip`. O app não é notarizado; na primeira vez: botão direito → **Abrir**.
-- **Windows:** `ble-rc-controller-windows.zip`. Extraia e execute `ble_rc_controller.exe`. Se o SmartScreen avisar: **Mais informações → Executar assim mesmo**.
+- **Android:** `ble-rc-controller-<version>-android.apk` (permita "instalar apps desconhecidos" para o navegador/gerenciador de arquivos).
+- **macOS:** `ble-rc-controller-<version>-macos.zip`. O app não é notarizado; na primeira vez: botão direito → **Abrir**.
+- **Windows:** `ble-rc-controller-<version>-windows.zip`. Extraia e execute `ble_rc_controller.exe`. Se o SmartScreen avisar: **Mais informações → Executar assim mesmo**.
 
 ## Primeiros passos
 

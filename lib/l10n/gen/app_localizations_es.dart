@@ -247,6 +247,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'Proyecto de código abierto, independiente y no oficial (MIT). No está afiliado, respaldado ni patrocinado por ninguna marca de coches, juguetes o combustibles. Todos los nombres pertenecen a sus dueños.';
 
   @override
+  String versionLabel(String version) {
+    return 'Versión $version';
+  }
+
+  @override
   String get driveLive => 'Entradas en vivo';
 
   @override

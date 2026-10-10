@@ -526,6 +526,12 @@ abstract class AppLocalizations {
   /// **'Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.'**
   String get disclaimer;
 
+  /// No description provided for @versionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String versionLabel(String version);
+
   /// No description provided for @driveLive.
   ///
   /// In en, this message translates to:

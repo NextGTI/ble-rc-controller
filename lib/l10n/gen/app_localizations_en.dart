@@ -245,6 +245,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.';
 
   @override
+  String versionLabel(String version) {
+    return 'Version $version';
+  }
+
+  @override
   String get driveLive => 'Live inputs';
 
   @override

@@ -116,6 +116,14 @@
   "onScreenHint": "Botões de toque para celulares e tablets (ou cliques do mouse).",
   "about": "Sobre",
   "disclaimer": "Projeto de código aberto, independente e não oficial (MIT). Não é afiliado, endossado nem patrocinado por nenhuma marca de carros, brinquedos ou combustíveis. Todos os nomes pertencem aos seus donos.",
+  "versionLabel": "Versão {version}",
+  "@versionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "driveLive": "Entradas ao vivo",
   "keyboardTipTitle": "Teclado",
   "safetyNote": "As entradas só valem com esta janela em primeiro plano. Se você trocar de app, o carro para.",

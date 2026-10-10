@@ -116,6 +116,14 @@
   "onScreenHint": "Botones táctiles para móviles y tabletas (o clics de ratón).",
   "about": "Acerca de",
   "disclaimer": "Proyecto de código abierto, independiente y no oficial (MIT). No está afiliado, respaldado ni patrocinado por ninguna marca de coches, juguetes o combustibles. Todos los nombres pertenecen a sus dueños.",
+  "versionLabel": "Versión {version}",
+  "@versionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "driveLive": "Entradas en vivo",
   "keyboardTipTitle": "Teclado",
   "safetyNote": "Las entradas solo cuentan con esta ventana en primer plano. Si cambias de app, el coche se detiene.",

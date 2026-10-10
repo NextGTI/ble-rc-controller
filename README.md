@@ -31,9 +31,9 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 
 Get the latest build for your system from the [**Releases**](../../releases) page:
 
-- **Android:** `ble-rc-controller-android.apk` (allow "install unknown apps" for your browser/files app).
-- **macOS:** `ble-rc-controller-macos.zip`. The app is not notarized, so the first time: right-click → **Open**.
-- **Windows:** `ble-rc-controller-windows.zip`. Unzip and run `ble_rc_controller.exe`. If SmartScreen warns you: **More info → Run anyway**.
+- **Android:** `ble-rc-controller-<version>-android.apk` (allow "install unknown apps" for your browser/files app).
+- **macOS:** `ble-rc-controller-<version>-macos.zip`. The app is not notarized, so the first time: right-click → **Open**.
+- **Windows:** `ble-rc-controller-<version>-windows.zip`. Unzip and run `ble_rc_controller.exe`. If SmartScreen warns you: **More info → Run anyway**.
 
 ## Quick start
 

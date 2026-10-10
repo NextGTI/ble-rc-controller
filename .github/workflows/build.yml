@@ -38,13 +38,19 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      - name: Read version
+        id: ver
+        shell: bash
+        run: |
+          v=$(grep '^version:' pubspec.yaml | sed -E 's/version: *//; s/\+.*//')
+          echo "v=$v" >> "$GITHUB_OUTPUT"
       - run: flutter pub get
       - run: flutter build apk --release
-      - run: cp build/app/outputs/flutter-apk/app-release.apk ble-rc-controller-android.apk
+      - run: cp build/app/outputs/flutter-apk/app-release.apk ble-rc-controller-${{ steps.ver.outputs.v }}-android.apk
       - uses: actions/upload-artifact@v4
         with:
           name: android
-          path: ble-rc-controller-android.apk
+          path: ble-rc-controller-*-android.apk
 
   macos:
     needs: test
@@ -56,16 +62,22 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      - name: Read version
+        id: ver
+        shell: bash
+        run: |
+          v=$(grep '^version:' pubspec.yaml | sed -E 's/version: *//; s/\+.*//')
+          echo "v=$v" >> "$GITHUB_OUTPUT"
       - run: flutter pub get
       - run: flutter build macos --release
       - name: Zip app
         run: |
           cd build/macos/Build/Products/Release
-          ditto -c -k --keepParent "BLE RC Controller.app" "$GITHUB_WORKSPACE/ble-rc-controller-macos.zip"
+          ditto -c -k --keepParent "BLE RC Controller.app" "$GITHUB_WORKSPACE/ble-rc-controller-${{ steps.ver.outputs.v }}-macos.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: macos
-          path: ble-rc-controller-macos.zip
+          path: ble-rc-controller-*-macos.zip
 
   windows:
     needs: test
@@ -77,15 +89,21 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+      - name: Read version
+        id: ver
+        shell: bash
+        run: |
+          v=$(grep '^version:' pubspec.yaml | sed -E 's/version: *//; s/\+.*//')
+          echo "v=$v" >> "$GITHUB_OUTPUT"
       - run: flutter pub get
       - run: flutter build windows --release
       - name: Zip app
         shell: pwsh
-        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath ble-rc-controller-windows.zip
+        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath ble-rc-controller-${{ steps.ver.outputs.v }}-windows.zip
       - uses: actions/upload-artifact@v4
         with:
           name: windows
-          path: ble-rc-controller-windows.zip
+          path: ble-rc-controller-*-windows.zip
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -94,11 +112,19 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+      - name: Tag must match the version in pubspec.yaml
+        run: |
+          v=$(grep '^version:' pubspec.yaml | sed -E 's/version: *//; s/\+.*//')
+          if [ "${GITHUB_REF_NAME}" != "v${v}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match pubspec version v${v}"; exit 1
+          fi
       - uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
+          name: ${{ github.ref_name }}
           files: dist/*
           generate_release_notes: true

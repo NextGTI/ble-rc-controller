@@ -91,6 +91,7 @@ T = {
  "disclaimer": ("Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.",
                 "Proyecto de código abierto, independiente y no oficial (MIT). No está afiliado, respaldado ni patrocinado por ninguna marca de coches, juguetes o combustibles. Todos los nombres pertenecen a sus dueños.",
                 "Projeto de código aberto, independente e não oficial (MIT). Não é afiliado, endossado nem patrocinado por nenhuma marca de carros, brinquedos ou combustíveis. Todos os nomes pertencem aos seus donos.", []),
+ "versionLabel": ("Version {version}", "Versión {version}", "Versão {version}", ["version"]),
  "driveLive": ("Live inputs", "Entradas en vivo", "Entradas ao vivo", []),
  "keyboardTipTitle": ("Keyboard", "Teclado", "Teclado", []),
  "safetyNote": ("Inputs only count while this window is in front. If you switch apps the car stops.",
@@ -155,7 +156,7 @@ def write(locale, idx):
     for k, v in T.items():
         out[k] = v[idx]
         if v[3]:
-            out["@" + k] = {"placeholders": {p: {"type": "String" if p in ("car", "key") else "int"} for p in v[3]}}
+            out["@" + k] = {"placeholders": {p: {"type": "String" if p in ("car", "key", "version") else "int"} for p in v[3]}}
     path = os.path.join(os.path.dirname(__file__), "..", "lib", "l10n", f"app_{locale}.arb")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2); f.write("\n")
