@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:ble_rc_controller/core/car_transport.dart';
 import 'package:ble_rc_controller/core/driver.dart';
@@ -11,40 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FakeTransport implements CarTransport {
-  final scan = StreamController<FoundCar>.broadcast();
-  final conn = StreamController<bool>.broadcast();
-  final writes = <Uint8List>[];
-  final connected = <String>[];
-  bool failConnect = false;
-
-  @override
-  Stream<BluetoothState> get availability => const Stream.empty();
-  @override
-  Future<BluetoothState> currentAvailability() async => BluetoothState.ready;
-  @override
-  Future<void> requestPermissions() async {}
-  @override
-  Stream<FoundCar> get scanResults => scan.stream;
-  @override
-  Future<void> startScan() async {}
-  @override
-  Future<void> stopScan() async {}
-  @override
-  Future<void> connect(String id) async {
-    if (failConnect) throw StateError('nope');
-    connected.add(id);
-  }
-
-  @override
-  Future<void> disconnect(String id) async => connected.remove(id);
-  @override
-  Stream<bool> connectionOf(String id) => conn.stream;
-  @override
-  Future<void> writeControl(String id, Uint8List bytes) async => writes.add(bytes);
-  @override
-  Stream<int> batteryOf(String id) => Stream.value(77);
-}
+import 'support/fake_transport.dart';
 
 GamepadEvent btn(String key, double v, {String pad = 'g1'}) => GamepadEvent(
     gamepadId: pad, timestamp: 0, type: KeyType.button, key: key, value: v);
@@ -393,5 +359,86 @@ void main() {
     expect(driver.deadzone, 0.5);
     expect(driver.localeCode, 'es');
     expect(driver.keyboardEnabled, isFalse);
+  });
+
+  test('a dropped link with auto-reconnect on shows the lost car', () async {
+    await setUp0(); await connectCar();
+    transport.conn.add(false); await settle();
+    expect(driver.reconnecting, isTrue);
+    expect(driver.lostCar!.model, 'SF-25');
+  });
+  test('no lost car when auto-reconnect is off', () async {
+    await setUp0({'autoConnect': false}); await connectCar();
+    transport.conn.add(false); await settle();
+    expect(driver.reconnecting, isFalse);
+    expect(driver.message, MessageKind.dropped);
+  });
+  test('Bluetooth turning off clears the lost car', () async {
+    await setUp0(); await connectCar();
+    transport.conn.add(false); await settle();
+    transport.avail.add(BluetoothState.off); await settle();
+    expect(driver.reconnecting, isFalse);
+    expect(driver.bluetooth, BluetoothState.off);
+  });
+  test('a failed connection remembers which car failed', () async {
+    await setUp0();
+    transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55)); await settle();
+    transport.failConnect = true;
+    await driver.connect('car1');
+    expect(driver.failedCar!.model, 'SF-25');
+    driver.dismissMessage();
+    expect(driver.failedCar, isNull);
+  });
+  test('the lost car is cleared by a new connection, a deliberate disconnect and turning auto-reconnect off', () async {
+    await setUp0(); await connectCar();
+    transport.conn.add(false); await settle();
+    expect(driver.reconnecting, isTrue);
+    await driver.connect('car1');
+    expect(driver.lostCar, isNull, reason: 'a successful connection');
+
+    transport.conn.add(false); await settle();
+    expect(driver.reconnecting, isTrue);
+    await driver.disconnect();
+    expect(driver.lostCar, isNull, reason: 'a deliberate disconnect stops the wait');
+
+    await driver.connect('car1');
+    transport.conn.add(false); await settle();
+    expect(driver.reconnecting, isTrue);
+    driver.autoConnect = false;
+    expect(driver.lostCar, isNull, reason: 'auto-reconnect switched off');
+  });
+  test('a drop reported after Bluetooth went off does not start reconnecting', () async {
+    await setUp0(); await connectCar();
+    transport.avail.add(BluetoothState.off); await settle();
+    transport.conn.add(false); await settle();
+    expect(driver.reconnecting, isFalse);
+    expect(driver.message, MessageKind.dropped);
+  });
+  test('the failed car is replaced by the next attempt', () async {
+    await setUp0();
+    transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55)); await settle();
+    transport.failConnect = true;
+    await driver.connect('car1');
+    expect(driver.failedCar, isNotNull);
+    transport.failConnect = false;
+    final retry = driver.connect('car1');
+    expect(driver.failedCar, isNull, reason: 'cleared as soon as a new attempt starts');
+    await retry;
+    expect(driver.link, LinkState.connected);
+    expect(driver.failedCar, isNull);
+  });
+  test('cancelling a connection then picking another car connects only the second', () async {
+    await setUp0();
+    transport.scan..add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55))
+                  ..add(const FoundCar(id: 'car2', name: 'SL-296 GT3', rssi: -60));
+    await settle();
+    transport.connectDelay = const Duration(milliseconds: 200); // car1 is slow
+    final first = driver.connect('car1');
+    await driver.disconnect();                 // Cancel
+    transport.connectDelay = Duration.zero;
+    await driver.connect('car2');
+    await first;
+    expect(driver.carId, 'car2');
+    expect(transport.connected, ['car2'], reason: 'the late car1 connection is undone');
   });
 }

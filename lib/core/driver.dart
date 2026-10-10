@@ -73,6 +73,8 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   String? _carId;
   int? _battery;
   MessageKind? _message;
+  FoundCar? _lostCar;
+  FoundCar? _failedCar;
   bool _scanning = false;
   int _connectToken = 0;
   bool _writing = false;
@@ -136,6 +138,21 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   FoundCar? get connectedCar => _carId == null ? null : _cars[_carId];
   int? get battery => _battery;
   MessageKind? get message => _message;
+
+  /// The car whose link dropped while auto-reconnect was on. The app is waiting
+  /// for it to show up again. Cleared by a new connection, by a deliberate
+  /// disconnect, by switching auto-reconnect off and when Bluetooth stops
+  /// being ready.
+  FoundCar? get lostCar => _lostCar;
+
+  /// True while the app waits to reconnect to [lostCar].
+  bool get reconnecting => _lostCar != null && _link == LinkState.idle;
+
+  /// The car of the last failed connection. Set together with
+  /// [MessageKind.connectFailed]; cleared by [dismissMessage] and by the next
+  /// [connect].
+  FoundCar? get failedCar => _failedCar;
+
   CarCommand get command => _cmd;
   Bindings get bindings => _bindings;
   CarAction? get capturing => _capturing;
@@ -216,6 +233,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       _startScan();
     } else {
       _scanning = false;
+      _lostCar = null;
     }
     notifyListeners();
   }
@@ -261,6 +279,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     if (_link != LinkState.idle) await disconnect();
     final token = ++_connectToken;
     _message = null;
+    _failedCar = null;
     _link = LinkState.connecting;
     _carId = id;
     _scanning = false;
@@ -272,6 +291,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       if (token != _connectToken) return;
       _link = LinkState.idle;
       _carId = null;
+      _failedCar = _cars[id];
       _message = MessageKind.connectFailed;
       notifyListeners();
       _startScan();
@@ -290,6 +310,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     }, onError: (_) {});
     _link = LinkState.connected;
     _autoConnectHeld = false;
+    _lostCar = null;
     _lastCarId = id;
     await _prefs.setString('lastCar', id);
     _lastSentCmd = null;
@@ -298,6 +319,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
 
   Future<void> disconnect() async {
     _autoConnectHeld = true;
+    _lostCar = null;
     _latched.clear();
     _connectToken++;
     final id = _carId;
@@ -317,6 +339,9 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   void _onDropped() {
+    // Only a ready Bluetooth can bring the car back. A drop reported after the
+    // adapter went off must not start a "reconnecting" state.
+    _lostCar = _autoConnect && _bluetooth == BluetoothState.ready ? connectedCar : null;
     _latched.clear();
     _connSub?.cancel();
     _batterySub?.cancel();
@@ -332,6 +357,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
 
   void dismissMessage() {
     _message = null;
+    _failedCar = null;
     notifyListeners();
   }
 
@@ -684,6 +710,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   // ---------------------------------------------------------------------------
   set autoConnect(bool v) {
     _autoConnect = v;
+    if (!v) _lostCar = null;
     _prefs.setBool('autoConnect', v);
     notifyListeners();
   }
