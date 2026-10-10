@@ -449,6 +449,52 @@ void main() {
     expect(driver.lostCar, isNull);
     expect(driver.link, LinkState.connected);
   });
+  group('the list of cars is pruned while nothing is connected', () {
+    const stale = Duration(milliseconds: 50);
+    const pruneTick = Duration(milliseconds: 1300); // the prune timer runs every 1 s
+    const sf25 = FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55);
+
+    test('a failed car keeps its name when "try again" fails after the list was pruned', () async {
+      await setUp0({}, stale);
+      transport.scan.add(sf25); await settle();
+      transport.failConnect = true;
+      await driver.connect('car1');
+      expect(driver.failedCar!.model, 'SF-25');
+
+      await Future<void>.delayed(pruneTick);
+      expect(driver.cars, isEmpty, reason: 'the idle car is no longer advertising: pruned');
+      await driver.connect('car1'); // "try again"
+      expect(driver.message, MessageKind.connectFailed);
+      expect(driver.failedCar!.model, 'SF-25');
+    });
+
+    test('a car connected after being pruned is still the lost car when it drops', () async {
+      await setUp0({}, stale);
+      transport.scan.add(sf25); await settle();
+      transport.failConnect = true;
+      await driver.connect('car1');
+      await Future<void>.delayed(pruneTick);
+      expect(driver.cars, isEmpty);
+
+      transport.failConnect = false;
+      await driver.connect('car1');
+      expect(driver.link, LinkState.connected);
+      expect(driver.connectedCar!.model, 'SF-25', reason: 'not in the list, still has a name');
+      transport.conn.add(false); await settle();
+      expect(driver.reconnecting, isTrue);
+      expect(driver.lostCar!.model, 'SF-25');
+    });
+
+    test('switching cars keeps the target name even if the list is pruned during the disconnect', () async {
+      await setUp0({}, stale);
+      await connectCar();
+      transport.scan.add(const FoundCar(id: 'car2', name: 'SL-296 GT3', rssi: -60)); await settle();
+      transport.disconnectDelay = pruneTick; // the idle link lets the prune timer run
+      transport.failConnect = true;
+      await driver.connect('car2');
+      expect(driver.failedCar!.model, '296 GT3');
+    });
+  });
   test('cancelling a connection then picking another car connects only the second', () async {
     await setUp0();
     transport.scan..add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55))

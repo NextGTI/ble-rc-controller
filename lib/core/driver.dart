@@ -75,6 +75,10 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   MessageKind? _message;
   FoundCar? _lostCar;
   FoundCar? _failedCar;
+
+  /// The car of the current connection, kept apart from [_cars]: that list is
+  /// pruned while idle, and a car connected after being pruned is not in it.
+  FoundCar? _carSnapshot;
   bool _scanning = false;
   int _connectToken = 0;
   bool _writing = false;
@@ -135,7 +139,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       (_cars.values.toList()..sort((a, b) => a.name.compareTo(b.name)));
   LinkState get link => _link;
   String? get carId => _carId;
-  FoundCar? get connectedCar => _carId == null ? null : _cars[_carId];
+  FoundCar? get connectedCar => _carId == null ? null : (_cars[_carId] ?? _carSnapshot);
   int? get battery => _battery;
   MessageKind? get message => _message;
 
@@ -276,6 +280,13 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   Future<void> connect(String id) async {
+    // The car list is pruned while idle (and a car busy elsewhere does not
+    // advertise), so pin down which car this is before anything can drop it.
+    // It names a failure and is the lost car if the link drops later.
+    final car = _cars[id] ??
+        (_carId == id ? _carSnapshot : null) ??
+        (_failedCar?.id == id ? _failedCar : null) ??
+        (_lostCar?.id == id ? _lostCar : null);
     // Picking a different car ends the wait for the lost one, even if this
     // attempt fails. Retrying the lost car keeps it until it connects.
     if (_lostCar != null && _lostCar!.id != id) _lostCar = null;
@@ -285,6 +296,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     _failedCar = null;
     _link = LinkState.connecting;
     _carId = id;
+    _carSnapshot = car;
     _scanning = false;
     notifyListeners();
     try {
@@ -294,7 +306,8 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       if (token != _connectToken) return;
       _link = LinkState.idle;
       _carId = null;
-      _failedCar = _cars[id];
+      _carSnapshot = null;
+      _failedCar = car;
       _message = MessageKind.connectFailed;
       notifyListeners();
       _startScan();
@@ -335,6 +348,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     _batterySub = null;
     _link = LinkState.idle;
     _carId = null;
+    _carSnapshot = null;
     _battery = null;
     notifyListeners();
     if (id != null) await transport.disconnect(id);
@@ -352,6 +366,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     _batterySub = null;
     _link = LinkState.idle;
     _carId = null;
+    _carSnapshot = null;
     _battery = null;
     _message = MessageKind.dropped;
     notifyListeners();

@@ -17,6 +17,9 @@ class FakeTransport implements CarTransport {
   /// How long [connect] takes before it succeeds (or throws).
   Duration connectDelay = Duration.zero;
 
+  /// How long [disconnect] takes.
+  Duration disconnectDelay = Duration.zero;
+
   @override
   Stream<BluetoothState> get availability => avail.stream;
   @override
@@ -37,7 +40,11 @@ class FakeTransport implements CarTransport {
   }
 
   @override
-  Future<void> disconnect(String id) async => connected.remove(id);
+  Future<void> disconnect(String id) async {
+    if (disconnectDelay > Duration.zero) await Future<void>.delayed(disconnectDelay);
+    connected.remove(id);
+  }
+
   @override
   Stream<bool> connectionOf(String id) => conn.stream;
   @override
