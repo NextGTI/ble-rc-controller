@@ -56,7 +56,7 @@
   "cancel": "Cancel",
   "remove": "Remove",
   "restoreDefaults": "Restore defaults",
-  "useKeyboard": "Use the keyboard (only while the app is in front)",
+  "useKeyboard": "Use the keyboard",
   "sharedInput": "This input is also assigned to another action.",
   "controllersTitle": "Controllers",
   "noController": "No controller found",
@@ -104,7 +104,7 @@
     }
   },
   "onScreen": "Show on-screen controls",
-  "onScreenHint": "Touch buttons for phones and tablets (or mouse clicks).",
+  "onScreenHint": "For tablets and phones",
   "about": "About",
   "disclaimer": "Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.",
   "versionLabel": "Version {version}",
@@ -118,6 +118,132 @@
   "driveLive": "Live inputs",
   "keyboardTipTitle": "Keyboard",
   "safetyNote": "Inputs only count while this window is in front. If you switch apps the car stops.",
+  "noCarShort": "No car",
+  "statusSearching": "Searching",
+  "statusConnecting": "Connecting",
+  "statusReconnecting": "Reconnecting",
+  "batteryLabel": "battery",
+  "searchTitle": "Turn the car on",
+  "searchBody": "It shows up here by itself, within a few seconds.",
+  "tipNotShowingLabel": "Not showing up?",
+  "tipNotShowing": "Close other apps connected to it. The car accepts one connection at a time.",
+  "tipStillLabel": "Still nothing?",
+  "tipStill": "Turn the car off and on again.",
+  "carsNearby": "Cars nearby",
+  "actionConnect": "Connect",
+  "actionSwitch": "Switch",
+  "signalStrong": "strong signal",
+  "signalMedium": "medium signal",
+  "signalWeak": "weak signal",
+  "btEnable": "Turn on Bluetooth",
+  "retry": "Try again",
+  "close": "Close",
+  "connectingTitle": "Connecting to {car}",
+  "@connectingTitle": {
+    "placeholders": {
+      "car": {
+        "type": "String"
+      }
+    }
+  },
+  "connectingBody": "It takes a few seconds.",
+  "lostTag": "Connection lost",
+  "lostBody": "The car stopped. The app reconnects as soon as it shows up.",
+  "connectFailedTitle": "Could not connect to {car}",
+  "@connectFailedTitle": {
+    "placeholders": {
+      "car": {
+        "type": "String"
+      }
+    }
+  },
+  "connectFailedBody": "Turn the car off and on, and make sure no other app is connected to it.",
+  "lightOn": "On",
+  "lightOff": "Off",
+  "turboOn": "Active",
+  "turboOff": "Off",
+  "spinOn": "Spinning",
+  "spinOff": "Stopped",
+  "cellController": "Controller",
+  "noControllerShort": "No controller",
+  "steerRight": "{deg}° right",
+  "@steerRight": {
+    "placeholders": {
+      "deg": {
+        "type": "int"
+      }
+    }
+  },
+  "steerLeft": "{deg}° left",
+  "@steerLeft": {
+    "placeholders": {
+      "deg": {
+        "type": "int"
+      }
+    }
+  },
+  "scaleForward": "forward",
+  "scaleReverse": "reverse",
+  "scaleTurbo": "turbo",
+  "groupCommands": "Commands",
+  "groupDriving": "Driving",
+  "groupApp": "App",
+  "bindingsTitle": "Buttons and keys",
+  "bindingsHint": "What each input does",
+  "deadzoneTitle": "Stick dead zone",
+  "deadzoneHint": "Ignores light touches on the stick",
+  "aboutTitle": "About",
+  "aboutHint": "Version {version}, open source",
+  "@aboutHint": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "bindingsLeadTouch": "Tap Add, then press a controller button, move a stick or press a key.",
+  "bindingsLeadClick": "Click Add, then press a controller button, move a stick or press a key.",
+  "captureWaiting": "Press whatever should trigger {action}",
+  "@captureWaiting": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "connectedSection": "Connected",
+  "recognized": "Recognised",
+  "taught": "Taught",
+  "liveSignals": "Live signals",
+  "liveSignalsHint": "Press buttons to see the signals. Handy for checking a controller the app does not know.",
+  "teachNew": "Teach a new controller",
+  "forgetTaught": "Forget what was taught",
+  "teachStep": "Step {n} of {total}",
+  "@teachStep": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "teachGroupFace": "Face buttons",
+  "teachGroupShoulders": "Bumpers and triggers",
+  "teachGroupMiddle": "Middle buttons",
+  "teachGroupSticks": "Sticks",
+  "teachGroupDpad": "D-pad",
+  "teachHint_a": "✕ on PlayStation, A on Xbox, B on Switch",
+  "teachHint_b": "○ on PlayStation, B on Xbox, A on Switch",
+  "teachHint_x": "□ on PlayStation, X on Xbox, Y on Switch",
+  "teachHint_y": "△ on PlayStation, Y on Xbox, X on Switch",
+  "teachHint_leftBumper": "L1 on PlayStation, LB on Xbox, L on Switch",
+  "teachHint_rightBumper": "R1 on PlayStation, RB on Xbox, R on Switch",
+  "teachHint_leftTrigger": "L2 on PlayStation, LT on Xbox, ZL on Switch",
+  "teachHint_rightTrigger": "R2 on PlayStation, RT on Xbox, ZR on Switch",
+  "teachHint_back": "Share on PlayStation, View on Xbox, − on Switch",
+  "teachHint_start": "Options on PlayStation, Menu on Xbox, + on Switch",
   "padA": "Bottom button (A / ✕)",
   "padB": "Right button (B / ○)",
   "padX": "Left button (X / □)",
@@ -144,22 +270,22 @@
   "padRightStickDown": "Right stick ↓",
   "padRightStickLeft": "Right stick ←",
   "padRightStickRight": "Right stick →",
-  "teach_a": "Press the bottom face button (A / ✕)",
-  "teach_b": "Press the right face button (B / ○)",
-  "teach_x": "Press the left face button (X / □)",
-  "teach_y": "Press the top face button (Y / △)",
-  "teach_leftBumper": "Press the left bumper (LB / L1)",
-  "teach_rightBumper": "Press the right bumper (RB / R1)",
-  "teach_leftTrigger": "Squeeze the left trigger (LT / L2)",
-  "teach_rightTrigger": "Squeeze the right trigger (RT / R2)",
-  "teach_back": "Press Back (View / Share / −)",
-  "teach_start": "Press Start (Menu / Options / +)",
-  "teach_leftStickX": "Push the left stick all the way to the RIGHT",
-  "teach_leftStickY": "Push the left stick all the way UP",
-  "teach_rightStickX": "Push the right stick all the way to the RIGHT",
-  "teach_rightStickY": "Push the right stick all the way UP",
-  "teach_dpadUp": "Press D-pad UP",
-  "teach_dpadDown": "Press D-pad DOWN",
-  "teach_dpadLeft": "Press D-pad LEFT",
-  "teach_dpadRight": "Press D-pad RIGHT"
+  "teach_a": "Press the bottom button",
+  "teach_b": "Press the right button",
+  "teach_x": "Press the left button",
+  "teach_y": "Press the top button",
+  "teach_leftBumper": "Press the left bumper",
+  "teach_rightBumper": "Press the right bumper",
+  "teach_leftTrigger": "Squeeze the left trigger",
+  "teach_rightTrigger": "Squeeze the right trigger",
+  "teach_back": "Press the middle button on the left",
+  "teach_start": "Press the middle button on the right",
+  "teach_leftStickX": "Push the left stick all the way right",
+  "teach_leftStickY": "Push the left stick all the way up",
+  "teach_rightStickX": "Push the right stick all the way right",
+  "teach_rightStickY": "Push the right stick all the way up",
+  "teach_dpadUp": "Press the D-pad up",
+  "teach_dpadDown": "Press the D-pad down",
+  "teach_dpadLeft": "Press the D-pad left",
+  "teach_dpadRight": "Press the D-pad right"
 }

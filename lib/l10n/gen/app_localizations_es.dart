@@ -146,7 +146,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get restoreDefaults => 'Restaurar valores';
 
   @override
-  String get useKeyboard => 'Usar el teclado (solo con la app en primer plano)';
+  String get useKeyboard => 'Usar el teclado';
 
   @override
   String get sharedInput => 'Esta entrada también está asignada a otra acción.';
@@ -228,8 +228,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get onScreen => 'Mostrar controles en pantalla';
 
   @override
-  String get onScreenHint =>
-      'Botones táctiles para móviles y tabletas (o clics de ratón).';
+  String get onScreenHint => 'Para tabletas y móviles';
 
   @override
   String get about => 'Acerca de';
@@ -252,6 +251,254 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get safetyNote =>
       'Las entradas solo cuentan con esta ventana en primer plano. Si cambias de app, el coche se detiene.';
+
+  @override
+  String get noCarShort => 'Ningún coche';
+
+  @override
+  String get statusSearching => 'Buscando';
+
+  @override
+  String get statusConnecting => 'Conectando';
+
+  @override
+  String get statusReconnecting => 'Reconectando';
+
+  @override
+  String get batteryLabel => 'batería';
+
+  @override
+  String get searchTitle => 'Enciende el coche';
+
+  @override
+  String get searchBody => 'Aparece aquí solo, en pocos segundos.';
+
+  @override
+  String get tipNotShowingLabel => '¿No aparece?';
+
+  @override
+  String get tipNotShowing =>
+      'Cierra otras apps conectadas a él. El coche acepta una sola conexión a la vez.';
+
+  @override
+  String get tipStillLabel => '¿Todavía nada?';
+
+  @override
+  String get tipStill => 'Apaga y enciende el coche de nuevo.';
+
+  @override
+  String get carsNearby => 'Coches cercanos';
+
+  @override
+  String get actionConnect => 'Conectar';
+
+  @override
+  String get actionSwitch => 'Cambiar';
+
+  @override
+  String get signalStrong => 'señal fuerte';
+
+  @override
+  String get signalMedium => 'señal media';
+
+  @override
+  String get signalWeak => 'señal débil';
+
+  @override
+  String get btEnable => 'Activar el Bluetooth';
+
+  @override
+  String get retry => 'Intentar de nuevo';
+
+  @override
+  String get close => 'Cerrar';
+
+  @override
+  String connectingTitle(String car) {
+    return 'Conectando con $car';
+  }
+
+  @override
+  String get connectingBody => 'Tarda unos segundos.';
+
+  @override
+  String get lostTag => 'Conexión perdida';
+
+  @override
+  String get lostBody =>
+      'El coche se detuvo. La app vuelve a conectar en cuanto aparezca.';
+
+  @override
+  String connectFailedTitle(String car) {
+    return 'No se pudo conectar con $car';
+  }
+
+  @override
+  String get connectFailedBody =>
+      'Apaga y enciende el coche y comprueba que ninguna otra app esté conectada a él.';
+
+  @override
+  String get lightOn => 'Encendida';
+
+  @override
+  String get lightOff => 'Apagada';
+
+  @override
+  String get turboOn => 'Activo';
+
+  @override
+  String get turboOff => 'Desactivado';
+
+  @override
+  String get spinOn => 'Girando';
+
+  @override
+  String get spinOff => 'Parado';
+
+  @override
+  String get cellController => 'Mando';
+
+  @override
+  String get noControllerShort => 'Ningún mando';
+
+  @override
+  String steerRight(int deg) {
+    return '$deg° derecha';
+  }
+
+  @override
+  String steerLeft(int deg) {
+    return '$deg° izquierda';
+  }
+
+  @override
+  String get scaleForward => 'adelante';
+
+  @override
+  String get scaleReverse => 'marcha atrás';
+
+  @override
+  String get scaleTurbo => 'turbo';
+
+  @override
+  String get groupCommands => 'Comandos';
+
+  @override
+  String get groupDriving => 'Conducción';
+
+  @override
+  String get groupApp => 'App';
+
+  @override
+  String get bindingsTitle => 'Botones y teclas';
+
+  @override
+  String get bindingsHint => 'Qué hace cada entrada';
+
+  @override
+  String get deadzoneTitle => 'Zona muerta del stick';
+
+  @override
+  String get deadzoneHint => 'Ignora toques leves en el stick';
+
+  @override
+  String get aboutTitle => 'Acerca de';
+
+  @override
+  String aboutHint(String version) {
+    return 'Versión $version, código abierto';
+  }
+
+  @override
+  String get bindingsLeadTouch =>
+      'Toca Añadir y luego pulsa un botón del mando, mueve un stick o pulsa una tecla.';
+
+  @override
+  String get bindingsLeadClick =>
+      'Haz clic en Añadir y luego pulsa un botón del mando, mueve un stick o pulsa una tecla.';
+
+  @override
+  String captureWaiting(String action) {
+    return 'Pulsa lo que activará $action';
+  }
+
+  @override
+  String get connectedSection => 'Conectados';
+
+  @override
+  String get recognized => 'Reconocido';
+
+  @override
+  String get taught => 'Enseñado';
+
+  @override
+  String get liveSignals => 'Señales en vivo';
+
+  @override
+  String get liveSignalsHint =>
+      'Pulsa botones para ver las señales. Útil para comprobar un mando que la app no conoce.';
+
+  @override
+  String get teachNew => 'Enseñar un mando nuevo';
+
+  @override
+  String get forgetTaught => 'Olvidar lo enseñado';
+
+  @override
+  String teachStep(int n, int total) {
+    return 'Paso $n de $total';
+  }
+
+  @override
+  String get teachGroupFace => 'Botones de acción';
+
+  @override
+  String get teachGroupShoulders => 'Bumpers y gatillos';
+
+  @override
+  String get teachGroupMiddle => 'Botones centrales';
+
+  @override
+  String get teachGroupSticks => 'Sticks';
+
+  @override
+  String get teachGroupDpad => 'Cruceta';
+
+  @override
+  String get teachHint_a => '✕ en PlayStation, A en Xbox, B en Switch';
+
+  @override
+  String get teachHint_b => '○ en PlayStation, B en Xbox, A en Switch';
+
+  @override
+  String get teachHint_x => '□ en PlayStation, X en Xbox, Y en Switch';
+
+  @override
+  String get teachHint_y => '△ en PlayStation, Y en Xbox, X en Switch';
+
+  @override
+  String get teachHint_leftBumper =>
+      'L1 en PlayStation, LB en Xbox, L en Switch';
+
+  @override
+  String get teachHint_rightBumper =>
+      'R1 en PlayStation, RB en Xbox, R en Switch';
+
+  @override
+  String get teachHint_leftTrigger =>
+      'L2 en PlayStation, LT en Xbox, ZL en Switch';
+
+  @override
+  String get teachHint_rightTrigger =>
+      'R2 en PlayStation, RT en Xbox, ZR en Switch';
+
+  @override
+  String get teachHint_back =>
+      'Share en PlayStation, View en Xbox, − en Switch';
+
+  @override
+  String get teachHint_start =>
+      'Options en PlayStation, Menú en Xbox, + en Switch';
 
   @override
   String get padA => 'Botón inferior (A / ✕)';
@@ -332,60 +579,60 @@ class AppLocalizationsEs extends AppLocalizations {
   String get padRightStickRight => 'Stick derecho →';
 
   @override
-  String get teach_a => 'Pulsa el botón inferior (A / ✕)';
+  String get teach_a => 'Pulsa el botón inferior';
 
   @override
-  String get teach_b => 'Pulsa el botón derecho (B / ○)';
+  String get teach_b => 'Pulsa el botón derecho';
 
   @override
-  String get teach_x => 'Pulsa el botón izquierdo (X / □)';
+  String get teach_x => 'Pulsa el botón izquierdo';
 
   @override
-  String get teach_y => 'Pulsa el botón superior (Y / △)';
+  String get teach_y => 'Pulsa el botón superior';
 
   @override
-  String get teach_leftBumper => 'Pulsa el bumper izquierdo (LB / L1)';
+  String get teach_leftBumper => 'Pulsa el bumper izquierdo';
 
   @override
-  String get teach_rightBumper => 'Pulsa el bumper derecho (RB / R1)';
+  String get teach_rightBumper => 'Pulsa el bumper derecho';
 
   @override
-  String get teach_leftTrigger => 'Aprieta el gatillo izquierdo (LT / L2)';
+  String get teach_leftTrigger => 'Aprieta el gatillo izquierdo';
 
   @override
-  String get teach_rightTrigger => 'Aprieta el gatillo derecho (RT / R2)';
+  String get teach_rightTrigger => 'Aprieta el gatillo derecho';
 
   @override
-  String get teach_back => 'Pulsa Atrás (View / Share / −)';
+  String get teach_back => 'Pulsa el botón central izquierdo';
 
   @override
-  String get teach_start => 'Pulsa Inicio (Menú / Options / +)';
+  String get teach_start => 'Pulsa el botón central derecho';
 
   @override
   String get teach_leftStickX =>
-      'Empuja el stick izquierdo del todo a la DERECHA';
+      'Empuja el stick izquierdo del todo a la derecha';
 
   @override
   String get teach_leftStickY =>
-      'Empuja el stick izquierdo del todo hacia ARRIBA';
+      'Empuja el stick izquierdo del todo hacia arriba';
 
   @override
   String get teach_rightStickX =>
-      'Empuja el stick derecho del todo a la DERECHA';
+      'Empuja el stick derecho del todo a la derecha';
 
   @override
   String get teach_rightStickY =>
-      'Empuja el stick derecho del todo hacia ARRIBA';
+      'Empuja el stick derecho del todo hacia arriba';
 
   @override
-  String get teach_dpadUp => 'Pulsa la cruceta ARRIBA';
+  String get teach_dpadUp => 'Pulsa la cruceta hacia arriba';
 
   @override
-  String get teach_dpadDown => 'Pulsa la cruceta ABAJO';
+  String get teach_dpadDown => 'Pulsa la cruceta hacia abajo';
 
   @override
-  String get teach_dpadLeft => 'Pulsa la cruceta IZQUIERDA';
+  String get teach_dpadLeft => 'Pulsa la cruceta a la izquierda';
 
   @override
-  String get teach_dpadRight => 'Pulsa la cruceta DERECHA';
+  String get teach_dpadRight => 'Pulsa la cruceta a la derecha';
 }

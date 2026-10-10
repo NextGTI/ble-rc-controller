@@ -355,7 +355,7 @@ abstract class AppLocalizations {
   /// No description provided for @useKeyboard.
   ///
   /// In en, this message translates to:
-  /// **'Use the keyboard (only while the app is in front)'**
+  /// **'Use the keyboard'**
   String get useKeyboard;
 
   /// No description provided for @sharedInput.
@@ -499,7 +499,7 @@ abstract class AppLocalizations {
   /// No description provided for @onScreenHint.
   ///
   /// In en, this message translates to:
-  /// **'Touch buttons for phones and tablets (or mouse clicks).'**
+  /// **'For tablets and phones'**
   String get onScreenHint;
 
   /// No description provided for @about.
@@ -537,6 +537,450 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Inputs only count while this window is in front. If you switch apps the car stops.'**
   String get safetyNote;
+
+  /// No description provided for @noCarShort.
+  ///
+  /// In en, this message translates to:
+  /// **'No car'**
+  String get noCarShort;
+
+  /// No description provided for @statusSearching.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching'**
+  String get statusSearching;
+
+  /// No description provided for @statusConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting'**
+  String get statusConnecting;
+
+  /// No description provided for @statusReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting'**
+  String get statusReconnecting;
+
+  /// No description provided for @batteryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'battery'**
+  String get batteryLabel;
+
+  /// No description provided for @searchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn the car on'**
+  String get searchTitle;
+
+  /// No description provided for @searchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It shows up here by itself, within a few seconds.'**
+  String get searchBody;
+
+  /// No description provided for @tipNotShowingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Not showing up?'**
+  String get tipNotShowingLabel;
+
+  /// No description provided for @tipNotShowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Close other apps connected to it. The car accepts one connection at a time.'**
+  String get tipNotShowing;
+
+  /// No description provided for @tipStillLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Still nothing?'**
+  String get tipStillLabel;
+
+  /// No description provided for @tipStill.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn the car off and on again.'**
+  String get tipStill;
+
+  /// No description provided for @carsNearby.
+  ///
+  /// In en, this message translates to:
+  /// **'Cars nearby'**
+  String get carsNearby;
+
+  /// No description provided for @actionConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get actionConnect;
+
+  /// No description provided for @actionSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch'**
+  String get actionSwitch;
+
+  /// No description provided for @signalStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'strong signal'**
+  String get signalStrong;
+
+  /// No description provided for @signalMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'medium signal'**
+  String get signalMedium;
+
+  /// No description provided for @signalWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'weak signal'**
+  String get signalWeak;
+
+  /// No description provided for @btEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Bluetooth'**
+  String get btEnable;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get retry;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @connectingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to {car}'**
+  String connectingTitle(String car);
+
+  /// No description provided for @connectingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It takes a few seconds.'**
+  String get connectingBody;
+
+  /// No description provided for @lostTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection lost'**
+  String get lostTag;
+
+  /// No description provided for @lostBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The car stopped. The app reconnects as soon as it shows up.'**
+  String get lostBody;
+
+  /// No description provided for @connectFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect to {car}'**
+  String connectFailedTitle(String car);
+
+  /// No description provided for @connectFailedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn the car off and on, and make sure no other app is connected to it.'**
+  String get connectFailedBody;
+
+  /// No description provided for @lightOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get lightOn;
+
+  /// No description provided for @lightOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get lightOff;
+
+  /// No description provided for @turboOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get turboOn;
+
+  /// No description provided for @turboOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get turboOff;
+
+  /// No description provided for @spinOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Spinning'**
+  String get spinOn;
+
+  /// No description provided for @spinOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get spinOff;
+
+  /// No description provided for @cellController.
+  ///
+  /// In en, this message translates to:
+  /// **'Controller'**
+  String get cellController;
+
+  /// No description provided for @noControllerShort.
+  ///
+  /// In en, this message translates to:
+  /// **'No controller'**
+  String get noControllerShort;
+
+  /// No description provided for @steerRight.
+  ///
+  /// In en, this message translates to:
+  /// **'{deg}° right'**
+  String steerRight(int deg);
+
+  /// No description provided for @steerLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{deg}° left'**
+  String steerLeft(int deg);
+
+  /// No description provided for @scaleForward.
+  ///
+  /// In en, this message translates to:
+  /// **'forward'**
+  String get scaleForward;
+
+  /// No description provided for @scaleReverse.
+  ///
+  /// In en, this message translates to:
+  /// **'reverse'**
+  String get scaleReverse;
+
+  /// No description provided for @scaleTurbo.
+  ///
+  /// In en, this message translates to:
+  /// **'turbo'**
+  String get scaleTurbo;
+
+  /// No description provided for @groupCommands.
+  ///
+  /// In en, this message translates to:
+  /// **'Commands'**
+  String get groupCommands;
+
+  /// No description provided for @groupDriving.
+  ///
+  /// In en, this message translates to:
+  /// **'Driving'**
+  String get groupDriving;
+
+  /// No description provided for @groupApp.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get groupApp;
+
+  /// No description provided for @bindingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Buttons and keys'**
+  String get bindingsTitle;
+
+  /// No description provided for @bindingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What each input does'**
+  String get bindingsHint;
+
+  /// No description provided for @deadzoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stick dead zone'**
+  String get deadzoneTitle;
+
+  /// No description provided for @deadzoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignores light touches on the stick'**
+  String get deadzoneHint;
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutTitle;
+
+  /// No description provided for @aboutHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}, open source'**
+  String aboutHint(String version);
+
+  /// No description provided for @bindingsLeadTouch.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Add, then press a controller button, move a stick or press a key.'**
+  String get bindingsLeadTouch;
+
+  /// No description provided for @bindingsLeadClick.
+  ///
+  /// In en, this message translates to:
+  /// **'Click Add, then press a controller button, move a stick or press a key.'**
+  String get bindingsLeadClick;
+
+  /// No description provided for @captureWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Press whatever should trigger {action}'**
+  String captureWaiting(String action);
+
+  /// No description provided for @connectedSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get connectedSection;
+
+  /// No description provided for @recognized.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognised'**
+  String get recognized;
+
+  /// No description provided for @taught.
+  ///
+  /// In en, this message translates to:
+  /// **'Taught'**
+  String get taught;
+
+  /// No description provided for @liveSignals.
+  ///
+  /// In en, this message translates to:
+  /// **'Live signals'**
+  String get liveSignals;
+
+  /// No description provided for @liveSignalsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press buttons to see the signals. Handy for checking a controller the app does not know.'**
+  String get liveSignalsHint;
+
+  /// No description provided for @teachNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Teach a new controller'**
+  String get teachNew;
+
+  /// No description provided for @forgetTaught.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget what was taught'**
+  String get forgetTaught;
+
+  /// No description provided for @teachStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {n} of {total}'**
+  String teachStep(int n, int total);
+
+  /// No description provided for @teachGroupFace.
+  ///
+  /// In en, this message translates to:
+  /// **'Face buttons'**
+  String get teachGroupFace;
+
+  /// No description provided for @teachGroupShoulders.
+  ///
+  /// In en, this message translates to:
+  /// **'Bumpers and triggers'**
+  String get teachGroupShoulders;
+
+  /// No description provided for @teachGroupMiddle.
+  ///
+  /// In en, this message translates to:
+  /// **'Middle buttons'**
+  String get teachGroupMiddle;
+
+  /// No description provided for @teachGroupSticks.
+  ///
+  /// In en, this message translates to:
+  /// **'Sticks'**
+  String get teachGroupSticks;
+
+  /// No description provided for @teachGroupDpad.
+  ///
+  /// In en, this message translates to:
+  /// **'D-pad'**
+  String get teachGroupDpad;
+
+  /// No description provided for @teachHint_a.
+  ///
+  /// In en, this message translates to:
+  /// **'✕ on PlayStation, A on Xbox, B on Switch'**
+  String get teachHint_a;
+
+  /// No description provided for @teachHint_b.
+  ///
+  /// In en, this message translates to:
+  /// **'○ on PlayStation, B on Xbox, A on Switch'**
+  String get teachHint_b;
+
+  /// No description provided for @teachHint_x.
+  ///
+  /// In en, this message translates to:
+  /// **'□ on PlayStation, X on Xbox, Y on Switch'**
+  String get teachHint_x;
+
+  /// No description provided for @teachHint_y.
+  ///
+  /// In en, this message translates to:
+  /// **'△ on PlayStation, Y on Xbox, X on Switch'**
+  String get teachHint_y;
+
+  /// No description provided for @teachHint_leftBumper.
+  ///
+  /// In en, this message translates to:
+  /// **'L1 on PlayStation, LB on Xbox, L on Switch'**
+  String get teachHint_leftBumper;
+
+  /// No description provided for @teachHint_rightBumper.
+  ///
+  /// In en, this message translates to:
+  /// **'R1 on PlayStation, RB on Xbox, R on Switch'**
+  String get teachHint_rightBumper;
+
+  /// No description provided for @teachHint_leftTrigger.
+  ///
+  /// In en, this message translates to:
+  /// **'L2 on PlayStation, LT on Xbox, ZL on Switch'**
+  String get teachHint_leftTrigger;
+
+  /// No description provided for @teachHint_rightTrigger.
+  ///
+  /// In en, this message translates to:
+  /// **'R2 on PlayStation, RT on Xbox, ZR on Switch'**
+  String get teachHint_rightTrigger;
+
+  /// No description provided for @teachHint_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Share on PlayStation, View on Xbox, − on Switch'**
+  String get teachHint_back;
+
+  /// No description provided for @teachHint_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Options on PlayStation, Menu on Xbox, + on Switch'**
+  String get teachHint_start;
 
   /// No description provided for @padA.
   ///
@@ -697,109 +1141,109 @@ abstract class AppLocalizations {
   /// No description provided for @teach_a.
   ///
   /// In en, this message translates to:
-  /// **'Press the bottom face button (A / ✕)'**
+  /// **'Press the bottom button'**
   String get teach_a;
 
   /// No description provided for @teach_b.
   ///
   /// In en, this message translates to:
-  /// **'Press the right face button (B / ○)'**
+  /// **'Press the right button'**
   String get teach_b;
 
   /// No description provided for @teach_x.
   ///
   /// In en, this message translates to:
-  /// **'Press the left face button (X / □)'**
+  /// **'Press the left button'**
   String get teach_x;
 
   /// No description provided for @teach_y.
   ///
   /// In en, this message translates to:
-  /// **'Press the top face button (Y / △)'**
+  /// **'Press the top button'**
   String get teach_y;
 
   /// No description provided for @teach_leftBumper.
   ///
   /// In en, this message translates to:
-  /// **'Press the left bumper (LB / L1)'**
+  /// **'Press the left bumper'**
   String get teach_leftBumper;
 
   /// No description provided for @teach_rightBumper.
   ///
   /// In en, this message translates to:
-  /// **'Press the right bumper (RB / R1)'**
+  /// **'Press the right bumper'**
   String get teach_rightBumper;
 
   /// No description provided for @teach_leftTrigger.
   ///
   /// In en, this message translates to:
-  /// **'Squeeze the left trigger (LT / L2)'**
+  /// **'Squeeze the left trigger'**
   String get teach_leftTrigger;
 
   /// No description provided for @teach_rightTrigger.
   ///
   /// In en, this message translates to:
-  /// **'Squeeze the right trigger (RT / R2)'**
+  /// **'Squeeze the right trigger'**
   String get teach_rightTrigger;
 
   /// No description provided for @teach_back.
   ///
   /// In en, this message translates to:
-  /// **'Press Back (View / Share / −)'**
+  /// **'Press the middle button on the left'**
   String get teach_back;
 
   /// No description provided for @teach_start.
   ///
   /// In en, this message translates to:
-  /// **'Press Start (Menu / Options / +)'**
+  /// **'Press the middle button on the right'**
   String get teach_start;
 
   /// No description provided for @teach_leftStickX.
   ///
   /// In en, this message translates to:
-  /// **'Push the left stick all the way to the RIGHT'**
+  /// **'Push the left stick all the way right'**
   String get teach_leftStickX;
 
   /// No description provided for @teach_leftStickY.
   ///
   /// In en, this message translates to:
-  /// **'Push the left stick all the way UP'**
+  /// **'Push the left stick all the way up'**
   String get teach_leftStickY;
 
   /// No description provided for @teach_rightStickX.
   ///
   /// In en, this message translates to:
-  /// **'Push the right stick all the way to the RIGHT'**
+  /// **'Push the right stick all the way right'**
   String get teach_rightStickX;
 
   /// No description provided for @teach_rightStickY.
   ///
   /// In en, this message translates to:
-  /// **'Push the right stick all the way UP'**
+  /// **'Push the right stick all the way up'**
   String get teach_rightStickY;
 
   /// No description provided for @teach_dpadUp.
   ///
   /// In en, this message translates to:
-  /// **'Press D-pad UP'**
+  /// **'Press the D-pad up'**
   String get teach_dpadUp;
 
   /// No description provided for @teach_dpadDown.
   ///
   /// In en, this message translates to:
-  /// **'Press D-pad DOWN'**
+  /// **'Press the D-pad down'**
   String get teach_dpadDown;
 
   /// No description provided for @teach_dpadLeft.
   ///
   /// In en, this message translates to:
-  /// **'Press D-pad LEFT'**
+  /// **'Press the D-pad left'**
   String get teach_dpadLeft;
 
   /// No description provided for @teach_dpadRight.
   ///
   /// In en, this message translates to:
-  /// **'Press D-pad RIGHT'**
+  /// **'Press the D-pad right'**
   String get teach_dpadRight;
 }
 

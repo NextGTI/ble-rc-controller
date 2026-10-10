@@ -14,7 +14,7 @@
   "btDeniedTitle": "Bluetooth bloqueado",
   "btDeniedBody": "Libere o Bluetooth para este app nos ajustes do sistema.",
   "btUnsupportedTitle": "Bluetooth LE indisponível",
-  "btUnsupportedBody": "Este dispositivo não consegue falar com o carrinho.",
+  "btUnsupportedBody": "Este aparelho não consegue falar com o carro.",
   "connect": "Conectar",
   "connectTo": "Conectar ao {car}",
   "@connectTo": {
@@ -56,7 +56,7 @@
   "cancel": "Cancelar",
   "remove": "Remover",
   "restoreDefaults": "Restaurar padrão",
-  "useKeyboard": "Usar o teclado (só com o app em primeiro plano)",
+  "useKeyboard": "Usar o teclado",
   "sharedInput": "Esta entrada também está atribuída a outra ação.",
   "controllersTitle": "Controles",
   "noController": "Nenhum controle encontrado",
@@ -79,7 +79,7 @@
     }
   },
   "teachDone": "Pronto! Este controle já funciona com todas as ações.",
-  "done": "Concluir",
+  "done": "Pronto",
   "skip": "Pular",
   "inputMonitor": "Monitor de entradas",
   "monitorHint": "Aperte botões e mova os analógicos: os sinais brutos aparecem aqui. Útil para controles desconhecidos.",
@@ -104,7 +104,7 @@
     }
   },
   "onScreen": "Mostrar controles na tela",
-  "onScreenHint": "Botões de toque para celulares e tablets (ou cliques do mouse).",
+  "onScreenHint": "Para tablet e celular",
   "about": "Sobre",
   "disclaimer": "Projeto de código aberto, independente e não oficial (MIT). Não é afiliado, endossado nem patrocinado por nenhuma marca de carros, brinquedos ou combustíveis. Todos os nomes pertencem aos seus donos.",
   "versionLabel": "Versão {version}",
@@ -118,6 +118,132 @@
   "driveLive": "Entradas ao vivo",
   "keyboardTipTitle": "Teclado",
   "safetyNote": "As entradas só valem com esta janela em primeiro plano. Se você trocar de app, o carro para.",
+  "noCarShort": "Nenhum carro",
+  "statusSearching": "Procurando",
+  "statusConnecting": "Conectando",
+  "statusReconnecting": "Reconectando",
+  "batteryLabel": "bateria",
+  "searchTitle": "Ligue o carro",
+  "searchBody": "Ele aparece aqui sozinho, em poucos segundos.",
+  "tipNotShowingLabel": "Não aparece?",
+  "tipNotShowing": "Feche outros apps ligados a ele. O carro aceita uma conexão por vez.",
+  "tipStillLabel": "Ainda nada?",
+  "tipStill": "Desligue e ligue o carro de novo.",
+  "carsNearby": "Carros por perto",
+  "actionConnect": "Conectar",
+  "actionSwitch": "Trocar",
+  "signalStrong": "sinal forte",
+  "signalMedium": "sinal médio",
+  "signalWeak": "sinal fraco",
+  "btEnable": "Ligar o Bluetooth",
+  "retry": "Tentar de novo",
+  "close": "Fechar",
+  "connectingTitle": "Conectando ao {car}",
+  "@connectingTitle": {
+    "placeholders": {
+      "car": {
+        "type": "String"
+      }
+    }
+  },
+  "connectingBody": "Leva alguns segundos.",
+  "lostTag": "Conexão perdida",
+  "lostBody": "O carro parou. O app volta a conectar assim que ele aparecer.",
+  "connectFailedTitle": "Não foi possível conectar ao {car}",
+  "@connectFailedTitle": {
+    "placeholders": {
+      "car": {
+        "type": "String"
+      }
+    }
+  },
+  "connectFailedBody": "Desligue e ligue o carro e confira se nenhum outro app está conectado a ele.",
+  "lightOn": "Acesa",
+  "lightOff": "Apagada",
+  "turboOn": "Ativo",
+  "turboOff": "Desligado",
+  "spinOn": "Girando",
+  "spinOff": "Parado",
+  "cellController": "Controle",
+  "noControllerShort": "Nenhum controle",
+  "steerRight": "{deg}° direita",
+  "@steerRight": {
+    "placeholders": {
+      "deg": {
+        "type": "int"
+      }
+    }
+  },
+  "steerLeft": "{deg}° esquerda",
+  "@steerLeft": {
+    "placeholders": {
+      "deg": {
+        "type": "int"
+      }
+    }
+  },
+  "scaleForward": "frente",
+  "scaleReverse": "ré",
+  "scaleTurbo": "turbo",
+  "groupCommands": "Comandos",
+  "groupDriving": "Pilotagem",
+  "groupApp": "App",
+  "bindingsTitle": "Botões e teclas",
+  "bindingsHint": "O que cada entrada faz",
+  "deadzoneTitle": "Zona morta do analógico",
+  "deadzoneHint": "Ignora toques leves no analógico",
+  "aboutTitle": "Sobre",
+  "aboutHint": "Versão {version}, código aberto",
+  "@aboutHint": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "bindingsLeadTouch": "Toque em Adicionar e aperte um botão do controle, mova o analógico ou aperte uma tecla.",
+  "bindingsLeadClick": "Clique em Adicionar e aperte um botão do controle, mova o analógico ou aperte uma tecla.",
+  "captureWaiting": "Aperte o que vai acionar {action}",
+  "@captureWaiting": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "connectedSection": "Conectados",
+  "recognized": "Reconhecido",
+  "taught": "Ensinado",
+  "liveSignals": "Sinais ao vivo",
+  "liveSignalsHint": "Aperte botões para ver os sinais. Útil para conferir um controle que o app não conhece.",
+  "teachNew": "Ensinar um controle novo",
+  "forgetTaught": "Esquecer o que foi ensinado",
+  "teachStep": "Passo {n} de {total}",
+  "@teachStep": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "teachGroupFace": "Botões de ação",
+  "teachGroupShoulders": "Ombros e gatilhos",
+  "teachGroupMiddle": "Botões do meio",
+  "teachGroupSticks": "Analógicos",
+  "teachGroupDpad": "Direcional",
+  "teachHint_a": "✕ no PlayStation, A no Xbox, B no Switch",
+  "teachHint_b": "○ no PlayStation, B no Xbox, A no Switch",
+  "teachHint_x": "□ no PlayStation, X no Xbox, Y no Switch",
+  "teachHint_y": "△ no PlayStation, Y no Xbox, X no Switch",
+  "teachHint_leftBumper": "L1 no PlayStation, LB no Xbox, L no Switch",
+  "teachHint_rightBumper": "R1 no PlayStation, RB no Xbox, R no Switch",
+  "teachHint_leftTrigger": "L2 no PlayStation, LT no Xbox, ZL no Switch",
+  "teachHint_rightTrigger": "R2 no PlayStation, RT no Xbox, ZR no Switch",
+  "teachHint_back": "Share no PlayStation, View no Xbox, − no Switch",
+  "teachHint_start": "Options no PlayStation, Menu no Xbox, + no Switch",
   "padA": "Botão de baixo (A / ✕)",
   "padB": "Botão da direita (B / ○)",
   "padX": "Botão da esquerda (X / □)",
@@ -144,22 +270,22 @@
   "padRightStickDown": "Analógico dir. ↓",
   "padRightStickLeft": "Analógico dir. ←",
   "padRightStickRight": "Analógico dir. →",
-  "teach_a": "Aperte o botão de baixo (A / ✕)",
-  "teach_b": "Aperte o botão da direita (B / ○)",
-  "teach_x": "Aperte o botão da esquerda (X / □)",
-  "teach_y": "Aperte o botão de cima (Y / △)",
-  "teach_leftBumper": "Aperte o bumper esquerdo (LB / L1)",
-  "teach_rightBumper": "Aperte o bumper direito (RB / R1)",
-  "teach_leftTrigger": "Aperte o gatilho esquerdo (LT / L2)",
-  "teach_rightTrigger": "Aperte o gatilho direito (RT / R2)",
-  "teach_back": "Aperte Voltar (View / Share / −)",
-  "teach_start": "Aperte Início (Menu / Options / +)",
-  "teach_leftStickX": "Empurre o analógico esquerdo todo para a DIREITA",
-  "teach_leftStickY": "Empurre o analógico esquerdo todo para CIMA",
-  "teach_rightStickX": "Empurre o analógico direito todo para a DIREITA",
-  "teach_rightStickY": "Empurre o analógico direito todo para CIMA",
-  "teach_dpadUp": "Aperte o D-pad para CIMA",
-  "teach_dpadDown": "Aperte o D-pad para BAIXO",
-  "teach_dpadLeft": "Aperte o D-pad para a ESQUERDA",
-  "teach_dpadRight": "Aperte o D-pad para a DIREITA"
+  "teach_a": "Aperte o botão de baixo",
+  "teach_b": "Aperte o botão da direita",
+  "teach_x": "Aperte o botão da esquerda",
+  "teach_y": "Aperte o botão de cima",
+  "teach_leftBumper": "Aperte o ombro esquerdo",
+  "teach_rightBumper": "Aperte o ombro direito",
+  "teach_leftTrigger": "Aperte o gatilho esquerdo",
+  "teach_rightTrigger": "Aperte o gatilho direito",
+  "teach_back": "Aperte o botão do meio, à esquerda",
+  "teach_start": "Aperte o botão do meio, à direita",
+  "teach_leftStickX": "Empurre o analógico esquerdo todo para a direita",
+  "teach_leftStickY": "Empurre o analógico esquerdo todo para cima",
+  "teach_rightStickX": "Empurre o analógico direito todo para a direita",
+  "teach_rightStickY": "Empurre o analógico direito todo para cima",
+  "teach_dpadUp": "Aperte o direcional para cima",
+  "teach_dpadDown": "Aperte o direcional para baixo",
+  "teach_dpadLeft": "Aperte o direcional para a esquerda",
+  "teach_dpadRight": "Aperte o direcional para a direita"
 }

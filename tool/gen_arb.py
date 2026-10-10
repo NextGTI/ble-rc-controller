@@ -4,6 +4,9 @@ always have exactly the same keys. Run: python3 tool/gen_arb.py
 Then: flutter gen-l10n"""
 import json, os
 
+# Placeholders listed here are String; every other placeholder is an int.
+STRING_PARAMS = ("car", "key", "version", "action")
+
 # key: (en, es, pt, placeholders)
 T = {
  "appTitle": ("BLE RC Controller", "BLE RC Controller", "BLE RC Controller", []),
@@ -22,7 +25,7 @@ T = {
  "btDeniedTitle": ("Bluetooth blocked", "Bluetooth bloqueado", "Bluetooth bloqueado", []),
  "btDeniedBody": ("Allow Bluetooth for this app in your system settings.", "Permite el Bluetooth para esta app en los ajustes del sistema.", "Libere o Bluetooth para este app nos ajustes do sistema.", []),
  "btUnsupportedTitle": ("Bluetooth LE not available", "Bluetooth LE no disponible", "Bluetooth LE indisponível", []),
- "btUnsupportedBody": ("This device cannot talk to the car.", "Este dispositivo no puede comunicarse con el coche.", "Este dispositivo não consegue falar com o carrinho.", []),
+ "btUnsupportedBody": ("This device cannot talk to the car.", "Este dispositivo no puede comunicarse con el coche.", "Este aparelho não consegue falar com o carro.", []),
  "connect": ("Connect", "Conectar", "Conectar", []),
  "connectTo": ("Connect to {car}", "Conectar con {car}", "Conectar ao {car}", ["car"]),
  "disconnect": ("Disconnect", "Desconectar", "Desconectar", []),
@@ -54,7 +57,7 @@ T = {
  "cancel": ("Cancel", "Cancelar", "Cancelar", []),
  "remove": ("Remove", "Quitar", "Remover", []),
  "restoreDefaults": ("Restore defaults", "Restaurar valores", "Restaurar padrão", []),
- "useKeyboard": ("Use the keyboard (only while the app is in front)", "Usar el teclado (solo con la app en primer plano)", "Usar o teclado (só com o app em primeiro plano)", []),
+ "useKeyboard": ("Use the keyboard", "Usar el teclado", "Usar o teclado", []),
  "sharedInput": ("This input is also assigned to another action.", "Esta entrada también está asignada a otra acción.", "Esta entrada também está atribuída a outra ação.", []),
  "controllersTitle": ("Controllers", "Mandos", "Controles", []),
  "noController": ("No controller found", "No se encontró ningún mando", "Nenhum controle encontrado", []),
@@ -71,7 +74,7 @@ T = {
                 "Aperte o botão (ou mova o analógico) que o app pedir. Pule o que o seu controle não tiver. Esc cancela.", []),
  "teachProgress": ("Step {n} of {total}", "Paso {n} de {total}", "Passo {n} de {total}", ["n", "total"]),
  "teachDone": ("All set! This controller now works with every action.", "¡Listo! Este mando ya funciona con todas las acciones.", "Pronto! Este controle já funciona com todas as ações.", []),
- "done": ("Done", "Hecho", "Concluir", []),
+ "done": ("Done", "Hecho", "Pronto", []),
  "skip": ("Skip", "Omitir", "Pular", []),
  "inputMonitor": ("Input monitor", "Monitor de entradas", "Monitor de entradas", []),
  "monitorHint": ("Press buttons and move sticks: the raw signals show up here. Handy for unknown controllers.",
@@ -84,7 +87,7 @@ T = {
  "languageSystem": ("System default", "Predeterminado del sistema", "Padrão do sistema", []),
  "deadzone": ("Stick dead zone: {percent}%", "Zona muerta del stick: {percent} %", "Zona morta do analógico: {percent}%", ["percent"]),
  "onScreen": ("Show on-screen controls", "Mostrar controles en pantalla", "Mostrar controles na tela", []),
- "onScreenHint": ("Touch buttons for phones and tablets (or mouse clicks).", "Botones táctiles para móviles y tabletas (o clics de ratón).", "Botões de toque para celulares e tablets (ou cliques do mouse).", []),
+ "onScreenHint": ("For tablets and phones", "Para tabletas y móviles", "Para tablet e celular", []),
  "about": ("About", "Acerca de", "Sobre", []),
  "disclaimer": ("Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.",
                 "Proyecto de código abierto, independiente y no oficial (MIT). No está afiliado, respaldado ni patrocinado por ninguna marca de coches, juguetes o combustibles. Todos los nombres pertenecen a sus dueños.",
@@ -96,6 +99,102 @@ T = {
                 "Las entradas solo cuentan con esta ventana en primer plano. Si cambias de app, el coche se detiene.",
                 "As entradas só valem com esta janela em primeiro plano. Se você trocar de app, o carro para.", []),
 }
+
+# Strings for the redesigned screens (docs/superpowers/specs/2026-10-10-redesign-design.md, 5.2-5.7)
+T.update({
+ # Dashboard header and states
+ "noCarShort": ("No car", "Ningún coche", "Nenhum carro", []),
+ "statusSearching": ("Searching", "Buscando", "Procurando", []),
+ "statusConnecting": ("Connecting", "Conectando", "Conectando", []),
+ "statusReconnecting": ("Reconnecting", "Reconectando", "Reconectando", []),
+ "batteryLabel": ("battery", "batería", "bateria", []),
+ "searchTitle": ("Turn the car on", "Enciende el coche", "Ligue o carro", []),
+ "searchBody": ("It shows up here by itself, within a few seconds.", "Aparece aquí solo, en pocos segundos.", "Ele aparece aqui sozinho, em poucos segundos.", []),
+ "tipNotShowingLabel": ("Not showing up?", "¿No aparece?", "Não aparece?", []),
+ "tipNotShowing": ("Close other apps connected to it. The car accepts one connection at a time.",
+                   "Cierra otras apps conectadas a él. El coche acepta una sola conexión a la vez.",
+                   "Feche outros apps ligados a ele. O carro aceita uma conexão por vez.", []),
+ "tipStillLabel": ("Still nothing?", "¿Todavía nada?", "Ainda nada?", []),
+ "tipStill": ("Turn the car off and on again.", "Apaga y enciende el coche de nuevo.", "Desligue e ligue o carro de novo.", []),
+ "carsNearby": ("Cars nearby", "Coches cercanos", "Carros por perto", []),
+ "actionConnect": ("Connect", "Conectar", "Conectar", []),
+ "actionSwitch": ("Switch", "Cambiar", "Trocar", []),
+ "signalStrong": ("strong signal", "señal fuerte", "sinal forte", []),
+ "signalMedium": ("medium signal", "señal media", "sinal médio", []),
+ "signalWeak": ("weak signal", "señal débil", "sinal fraco", []),
+ "btEnable": ("Turn on Bluetooth", "Activar el Bluetooth", "Ligar o Bluetooth", []),
+ "retry": ("Try again", "Intentar de nuevo", "Tentar de novo", []),
+ "close": ("Close", "Cerrar", "Fechar", []),
+ "connectingTitle": ("Connecting to {car}", "Conectando con {car}", "Conectando ao {car}", ["car"]),
+ "connectingBody": ("It takes a few seconds.", "Tarda unos segundos.", "Leva alguns segundos.", []),
+ "lostTag": ("Connection lost", "Conexión perdida", "Conexão perdida", []),
+ "lostBody": ("The car stopped. The app reconnects as soon as it shows up.",
+              "El coche se detuvo. La app vuelve a conectar en cuanto aparezca.",
+              "O carro parou. O app volta a conectar assim que ele aparecer.", []),
+ "connectFailedTitle": ("Could not connect to {car}", "No se pudo conectar con {car}", "Não foi possível conectar ao {car}", ["car"]),
+ "connectFailedBody": ("Turn the car off and on, and make sure no other app is connected to it.",
+                       "Apaga y enciende el coche y comprueba que ninguna otra app esté conectada a él.",
+                       "Desligue e ligue o carro e confira se nenhum outro app está conectado a ele.", []),
+ # Status cells and throttle scale
+ "lightOn": ("On", "Encendida", "Acesa", []),
+ "lightOff": ("Off", "Apagada", "Apagada", []),
+ "turboOn": ("Active", "Activo", "Ativo", []),
+ "turboOff": ("Off", "Desactivado", "Desligado", []),
+ "spinOn": ("Spinning", "Girando", "Girando", []),
+ "spinOff": ("Stopped", "Parado", "Parado", []),
+ "cellController": ("Controller", "Mando", "Controle", []),
+ "noControllerShort": ("No controller", "Ningún mando", "Nenhum controle", []),
+ "steerRight": ("{deg}° right", "{deg}° derecha", "{deg}° direita", ["deg"]),
+ "steerLeft": ("{deg}° left", "{deg}° izquierda", "{deg}° esquerda", ["deg"]),
+ "scaleForward": ("forward", "adelante", "frente", []),
+ "scaleReverse": ("reverse", "marcha atrás", "ré", []),
+ "scaleTurbo": ("turbo", "turbo", "turbo", []),
+ # Settings
+ "groupCommands": ("Commands", "Comandos", "Comandos", []),
+ "groupDriving": ("Driving", "Conducción", "Pilotagem", []),
+ "groupApp": ("App", "App", "App", []),
+ "bindingsTitle": ("Buttons and keys", "Botones y teclas", "Botões e teclas", []),
+ "bindingsHint": ("What each input does", "Qué hace cada entrada", "O que cada entrada faz", []),
+ "deadzoneTitle": ("Stick dead zone", "Zona muerta del stick", "Zona morta do analógico", []),
+ "deadzoneHint": ("Ignores light touches on the stick", "Ignora toques leves en el stick", "Ignora toques leves no analógico", []),
+ "aboutTitle": ("About", "Acerca de", "Sobre", []),
+ "aboutHint": ("Version {version}, open source", "Versión {version}, código abierto", "Versão {version}, código aberto", ["version"]),
+ # Buttons and keys
+ "bindingsLeadTouch": ("Tap Add, then press a controller button, move a stick or press a key.",
+                       "Toca Añadir y luego pulsa un botón del mando, mueve un stick o pulsa una tecla.",
+                       "Toque em Adicionar e aperte um botão do controle, mova o analógico ou aperte uma tecla.", []),
+ "bindingsLeadClick": ("Click Add, then press a controller button, move a stick or press a key.",
+                       "Haz clic en Añadir y luego pulsa un botón del mando, mueve un stick o pulsa una tecla.",
+                       "Clique em Adicionar e aperte um botão do controle, mova o analógico ou aperte uma tecla.", []),
+ "captureWaiting": ("Press whatever should trigger {action}", "Pulsa lo que activará {action}", "Aperte o que vai acionar {action}", ["action"]),
+ # Controllers
+ "connectedSection": ("Connected", "Conectados", "Conectados", []),
+ "recognized": ("Recognised", "Reconocido", "Reconhecido", []),
+ "taught": ("Taught", "Enseñado", "Ensinado", []),
+ "liveSignals": ("Live signals", "Señales en vivo", "Sinais ao vivo", []),
+ "liveSignalsHint": ("Press buttons to see the signals. Handy for checking a controller the app does not know.",
+                     "Pulsa botones para ver las señales. Útil para comprobar un mando que la app no conoce.",
+                     "Aperte botões para ver os sinais. Útil para conferir um controle que o app não conhece.", []),
+ "teachNew": ("Teach a new controller", "Enseñar un mando nuevo", "Ensinar um controle novo", []),
+ "forgetTaught": ("Forget what was taught", "Olvidar lo enseñado", "Esquecer o que foi ensinado", []),
+ # Teach controller (teachTitle and done already exist above)
+ "teachStep": ("Step {n} of {total}", "Paso {n} de {total}", "Passo {n} de {total}", ["n", "total"]),
+ "teachGroupFace": ("Face buttons", "Botones de acción", "Botões de ação", []),
+ "teachGroupShoulders": ("Bumpers and triggers", "Bumpers y gatillos", "Ombros e gatilhos", []),
+ "teachGroupMiddle": ("Middle buttons", "Botones centrales", "Botões do meio", []),
+ "teachGroupSticks": ("Sticks", "Sticks", "Analógicos", []),
+ "teachGroupDpad": ("D-pad", "Cruceta", "Direcional", []),
+ "teachHint_a": ("✕ on PlayStation, A on Xbox, B on Switch", "✕ en PlayStation, A en Xbox, B en Switch", "✕ no PlayStation, A no Xbox, B no Switch", []),
+ "teachHint_b": ("○ on PlayStation, B on Xbox, A on Switch", "○ en PlayStation, B en Xbox, A en Switch", "○ no PlayStation, B no Xbox, A no Switch", []),
+ "teachHint_x": ("□ on PlayStation, X on Xbox, Y on Switch", "□ en PlayStation, X en Xbox, Y en Switch", "□ no PlayStation, X no Xbox, Y no Switch", []),
+ "teachHint_y": ("△ on PlayStation, Y on Xbox, X on Switch", "△ en PlayStation, Y en Xbox, X en Switch", "△ no PlayStation, Y no Xbox, X no Switch", []),
+ "teachHint_leftBumper": ("L1 on PlayStation, LB on Xbox, L on Switch", "L1 en PlayStation, LB en Xbox, L en Switch", "L1 no PlayStation, LB no Xbox, L no Switch", []),
+ "teachHint_rightBumper": ("R1 on PlayStation, RB on Xbox, R on Switch", "R1 en PlayStation, RB en Xbox, R en Switch", "R1 no PlayStation, RB no Xbox, R no Switch", []),
+ "teachHint_leftTrigger": ("L2 on PlayStation, LT on Xbox, ZL on Switch", "L2 en PlayStation, LT en Xbox, ZL en Switch", "L2 no PlayStation, LT no Xbox, ZL no Switch", []),
+ "teachHint_rightTrigger": ("R2 on PlayStation, RT on Xbox, ZR on Switch", "R2 en PlayStation, RT en Xbox, ZR en Switch", "R2 no PlayStation, RT no Xbox, ZR no Switch", []),
+ "teachHint_back": ("Share on PlayStation, View on Xbox, − on Switch", "Share en PlayStation, View en Xbox, − en Switch", "Share no PlayStation, View no Xbox, − no Switch", []),
+ "teachHint_start": ("Options on PlayStation, Menu on Xbox, + on Switch", "Options en PlayStation, Menú en Xbox, + en Switch", "Options no PlayStation, Menu no Xbox, + no Switch", []),
+})
 
 PADS = {
  "padA": ("Bottom button (A / ✕)", "Botón inferior (A / ✕)", "Botão de baixo (A / ✕)"),
@@ -128,24 +227,24 @@ PADS = {
 for k, v in PADS.items(): T[k] = (*v, [])
 
 TEACH = {
- "teach_a": ("Press the bottom face button (A / ✕)", "Pulsa el botón inferior (A / ✕)", "Aperte o botão de baixo (A / ✕)"),
- "teach_b": ("Press the right face button (B / ○)", "Pulsa el botón derecho (B / ○)", "Aperte o botão da direita (B / ○)"),
- "teach_x": ("Press the left face button (X / □)", "Pulsa el botón izquierdo (X / □)", "Aperte o botão da esquerda (X / □)"),
- "teach_y": ("Press the top face button (Y / △)", "Pulsa el botón superior (Y / △)", "Aperte o botão de cima (Y / △)"),
- "teach_leftBumper": ("Press the left bumper (LB / L1)", "Pulsa el bumper izquierdo (LB / L1)", "Aperte o bumper esquerdo (LB / L1)"),
- "teach_rightBumper": ("Press the right bumper (RB / R1)", "Pulsa el bumper derecho (RB / R1)", "Aperte o bumper direito (RB / R1)"),
- "teach_leftTrigger": ("Squeeze the left trigger (LT / L2)", "Aprieta el gatillo izquierdo (LT / L2)", "Aperte o gatilho esquerdo (LT / L2)"),
- "teach_rightTrigger": ("Squeeze the right trigger (RT / R2)", "Aprieta el gatillo derecho (RT / R2)", "Aperte o gatilho direito (RT / R2)"),
- "teach_back": ("Press Back (View / Share / −)", "Pulsa Atrás (View / Share / −)", "Aperte Voltar (View / Share / −)"),
- "teach_start": ("Press Start (Menu / Options / +)", "Pulsa Inicio (Menú / Options / +)", "Aperte Início (Menu / Options / +)"),
- "teach_leftStickX": ("Push the left stick all the way to the RIGHT", "Empuja el stick izquierdo del todo a la DERECHA", "Empurre o analógico esquerdo todo para a DIREITA"),
- "teach_leftStickY": ("Push the left stick all the way UP", "Empuja el stick izquierdo del todo hacia ARRIBA", "Empurre o analógico esquerdo todo para CIMA"),
- "teach_rightStickX": ("Push the right stick all the way to the RIGHT", "Empuja el stick derecho del todo a la DERECHA", "Empurre o analógico direito todo para a DIREITA"),
- "teach_rightStickY": ("Push the right stick all the way UP", "Empuja el stick derecho del todo hacia ARRIBA", "Empurre o analógico direito todo para CIMA"),
- "teach_dpadUp": ("Press D-pad UP", "Pulsa la cruceta ARRIBA", "Aperte o D-pad para CIMA"),
- "teach_dpadDown": ("Press D-pad DOWN", "Pulsa la cruceta ABAJO", "Aperte o D-pad para BAIXO"),
- "teach_dpadLeft": ("Press D-pad LEFT", "Pulsa la cruceta IZQUIERDA", "Aperte o D-pad para a ESQUERDA"),
- "teach_dpadRight": ("Press D-pad RIGHT", "Pulsa la cruceta DERECHA", "Aperte o D-pad para a DIREITA"),
+ "teach_a": ("Press the bottom button", "Pulsa el botón inferior", "Aperte o botão de baixo"),
+ "teach_b": ("Press the right button", "Pulsa el botón derecho", "Aperte o botão da direita"),
+ "teach_x": ("Press the left button", "Pulsa el botón izquierdo", "Aperte o botão da esquerda"),
+ "teach_y": ("Press the top button", "Pulsa el botón superior", "Aperte o botão de cima"),
+ "teach_leftBumper": ("Press the left bumper", "Pulsa el bumper izquierdo", "Aperte o ombro esquerdo"),
+ "teach_rightBumper": ("Press the right bumper", "Pulsa el bumper derecho", "Aperte o ombro direito"),
+ "teach_leftTrigger": ("Squeeze the left trigger", "Aprieta el gatillo izquierdo", "Aperte o gatilho esquerdo"),
+ "teach_rightTrigger": ("Squeeze the right trigger", "Aprieta el gatillo derecho", "Aperte o gatilho direito"),
+ "teach_back": ("Press the middle button on the left", "Pulsa el botón central izquierdo", "Aperte o botão do meio, à esquerda"),
+ "teach_start": ("Press the middle button on the right", "Pulsa el botón central derecho", "Aperte o botão do meio, à direita"),
+ "teach_leftStickX": ("Push the left stick all the way right", "Empuja el stick izquierdo del todo a la derecha", "Empurre o analógico esquerdo todo para a direita"),
+ "teach_leftStickY": ("Push the left stick all the way up", "Empuja el stick izquierdo del todo hacia arriba", "Empurre o analógico esquerdo todo para cima"),
+ "teach_rightStickX": ("Push the right stick all the way right", "Empuja el stick derecho del todo a la derecha", "Empurre o analógico direito todo para a direita"),
+ "teach_rightStickY": ("Push the right stick all the way up", "Empuja el stick derecho del todo hacia arriba", "Empurre o analógico direito todo para cima"),
+ "teach_dpadUp": ("Press the D-pad up", "Pulsa la cruceta hacia arriba", "Aperte o direcional para cima"),
+ "teach_dpadDown": ("Press the D-pad down", "Pulsa la cruceta hacia abajo", "Aperte o direcional para baixo"),
+ "teach_dpadLeft": ("Press the D-pad left", "Pulsa la cruceta a la izquierda", "Aperte o direcional para a esquerda"),
+ "teach_dpadRight": ("Press the D-pad right", "Pulsa la cruceta a la derecha", "Aperte o direcional para a direita"),
 }
 for k, v in TEACH.items(): T[k] = (*v, [])
 
@@ -154,7 +253,7 @@ def write(locale, idx):
     for k, v in T.items():
         out[k] = v[idx]
         if v[3]:
-            out["@" + k] = {"placeholders": {p: {"type": "String" if p in ("car", "key", "version") else "int"} for p in v[3]}}
+            out["@" + k] = {"placeholders": {p: {"type": "String" if p in STRING_PARAMS else "int"} for p in v[3]}}
     path = os.path.join(os.path.dirname(__file__), "..", "lib", "l10n", f"app_{locale}.arb")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2); f.write("\n")
