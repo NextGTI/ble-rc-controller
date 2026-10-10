@@ -10,7 +10,7 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 
 ## Carrinhos compatíveis
 
-- **Carrinhos RC Bluetooth da Shell** (os vendidos nos postos Shell). Verificado com um modelo; os outros modelos parecem usar a mesma interface Bluetooth e devem funcionar. Relatos são bem-vindos.
+- **Carrinhos RC Bluetooth da Shell** (os vendidos nos postos Shell). Verificado com dois modelos (SF-25 e 296 GT3); os outros modelos parecem usar a mesma interface Bluetooth e devem funcionar. Relatos são bem-vindos.
 - **Mais carrinhos virão.** O suporte a outros carrinhos de brinquedo Bluetooth LE será ampliado aos poucos; veja o [CONTRIBUTING.md](CONTRIBUTING.md) para ajudar.
 
 ## Recursos
@@ -28,7 +28,7 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 | Plataforma | Situação |
 |---|---|
 | macOS | ✅ Verificado com um modelo de carrinho e um DualShock 4: conecta, mostra a bateria e reconhece o controle. |
-| Android | 🟡 Compila no CI; ainda sem teste em aparelho real — relatos são bem-vindos. |
+| Android | ✅ Verificado em um tablet (Android 16) com dois carrinhos, um DualShock 4 e os botões da tela. |
 | Windows | 🟡 Compila no CI; ainda sem teste em PC real — relatos são bem-vindos. |
 | iOS | ❌ Não suportado. |
 

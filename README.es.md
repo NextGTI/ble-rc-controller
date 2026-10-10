@@ -10,7 +10,7 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 
 ## Coches compatibles
 
-- **Coches RC Bluetooth de Shell** (los que se venden en las gasolineras Shell). Verificado con un modelo; los demás modelos parecen usar la misma interfaz Bluetooth y deberían funcionar. Se agradecen reportes.
+- **Coches RC Bluetooth de Shell** (los que se venden en las gasolineras Shell). Verificado con dos modelos (SF-25 y 296 GT3); los demás modelos parecen usar la misma interfaz Bluetooth y deberían funcionar. Se agradecen reportes.
 - **Vendrán más coches.** Se irá añadiendo compatibilidad con otros coches de juguete Bluetooth LE; consulta [CONTRIBUTING.md](CONTRIBUTING.md) para ayudar.
 
 ## Funciones
@@ -28,7 +28,7 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 | Plataforma | Estado |
 |---|---|
 | macOS | ✅ Verificado con un modelo de coche y un DualShock 4: conecta, muestra la batería y reconoce el mando. |
-| Android | 🟡 Se compila en CI; aún sin probar en un dispositivo real — se agradecen reportes. |
+| Android | ✅ Verificado en una tableta (Android 16) con dos coches, un DualShock 4 y los botones en pantalla. |
 | Windows | 🟡 Se compila en CI; aún sin probar en un PC real — se agradecen reportes. |
 | iOS | ❌ No compatible. |
 

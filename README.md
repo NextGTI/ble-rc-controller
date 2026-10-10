@@ -10,7 +10,7 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 
 ## Compatible cars
 
-- **Shell Bluetooth RC cars** (the ones sold at Shell fuel stations). Verified with one model; the other models appear to use the same Bluetooth interface and should work. Reports are welcome.
+- **Shell Bluetooth RC cars** (the ones sold at Shell fuel stations). Verified with two models (SF-25 and 296 GT3); the other models appear to use the same Bluetooth interface and should work. Reports are welcome.
 - **More cars are coming.** Support for other Bluetooth LE toy cars will be added over time; see [CONTRIBUTING.md](CONTRIBUTING.md) to help.
 
 ## Features
@@ -28,7 +28,7 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 | Platform | Status |
 |---|---|
 | macOS | ✅ Verified with one car model and a DualShock 4: connects, shows battery, recognises the controller. |
-| Android | 🟡 Builds in CI; not yet tested on a real device — reports welcome. |
+| Android | ✅ Verified on a tablet (Android 16) with two cars, a DualShock 4 and the on-screen buttons. |
 | Windows | 🟡 Builds in CI; not yet tested on a real PC — reports welcome. |
 | iOS | ❌ Not supported. |
 
