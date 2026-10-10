@@ -30,7 +30,7 @@ Write **8 bytes** to `FFF1`, **without response**:
 
 | Byte | Field | Values |
 |---|---|---|
-| 0 | mode | `1` or `2` |
+| 0 | mode | `1` (see below) |
 | 1 | forward | `0` / `1` |
 | 2 | reverse | `0` / `1` |
 | 3 | left | `0` / `1` |
@@ -39,7 +39,7 @@ Write **8 bytes** to `FFF1`, **without response**:
 | 6 | turbo | `0` / `1` |
 | 7 | 360° spin | `0` / `1` |
 
-Every field except `mode` is a plain on/off flag; there is no proportional speed or steering. A packet with all flags at `0` stops the car.
+Every field is a plain on/off flag (the first byte is fixed); there is no proportional speed or steering. A packet with all flags at `0` stops the car.
 
 Example — forward with the light on: `01 01 00 00 00 01 00 00`.
 
@@ -51,5 +51,5 @@ Always send an all-zero (neutral) packet before disconnecting.
 
 ## Notes and unknowns
 
-- The meaning of `mode` (1 vs 2) on the car itself is not documented here.
+- `mode`: the car's own app can flip this byte between `1` and `2`. On the two cars tested (SF-25 and 296 GT3) driving with `1` and with `2` felt identical, so this app always sends `1` and does not offer it. What `2` does, if anything, is unknown.
 - Tested on one car model. Other models appear to use the same interface; reports are welcome.

@@ -304,18 +304,6 @@ abstract class AppLocalizations {
   /// **'360° spin'**
   String get actionDonut;
 
-  /// No description provided for @actionMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Mode 1/2'**
-  String get actionMode;
-
-  /// No description provided for @modeValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Mode {mode}'**
-  String modeValue(int mode);
-
   /// No description provided for @hintHold.
   ///
   /// In en, this message translates to:

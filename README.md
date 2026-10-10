@@ -17,7 +17,7 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 
 - Finds nearby cars automatically and lets you **pick which car** to drive (several can be on at once).
 - **Gamepad support** for the most common controllers, plus a **"Teach controller"** wizard and an **input monitor** for controllers the app does not know.
-- **Remap every button.** Each action (forward, reverse, left, right, light, turbo, 360° spin, mode) can have several inputs: controller buttons, stick directions, keyboard keys.
+- **Remap every button.** Each action (forward, reverse, left, right, light, turbo, 360° spin) can have several inputs: controller buttons, stick directions, keyboard keys.
 - **Keyboard** control (WASD / arrow keys by default) and **on-screen buttons** for touch screens.
 - Battery level, signal strength, automatic reconnection to your last car.
 - Safety: the car stops when you disconnect, switch apps, or lose the controller.
@@ -57,9 +57,10 @@ Get the latest build for your system from the [**Releases**](../../releases) pag
 | Light (on/off) | Bottom button (✕ / A) | L |
 | Turbo (hold) | Right button (○ / B) | Space |
 | 360° spin (hold) | Top button (△ / Y) | Q |
-| Mode 1 ↔ 2 | Start (Options / Menu) | M |
 
 Pushing the left stick up/down does **not** drive by default. If you like that, add it in **Buttons** (*Forward* → Add → push the stick up).
+
+On the on-screen buttons, **Light**, **Turbo** and **360° spin** switch on and off with each tap.
 
 All of this is editable in the **Buttons** tab. Everything is on/off: the car has no proportional speed or steering.
 

@@ -121,14 +121,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get actionDonut => 'Giro 360°';
 
   @override
-  String get actionMode => 'Modo 1/2';
-
-  @override
-  String modeValue(int mode) {
-    return 'Modo $mode';
-  }
-
-  @override
   String get hintHold => 'mientras se mantiene pulsado';
 
   @override

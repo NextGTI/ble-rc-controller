@@ -30,7 +30,7 @@ Escreva **8 bytes** em `FFF1`, **sem resposta**:
 
 | Byte | Campo | Valores |
 |---|---|---|
-| 0 | modo | `1` ou `2` |
+| 0 | modo | `1` (veja abaixo) |
 | 1 | frente | `0` / `1` |
 | 2 | ré | `0` / `1` |
 | 3 | esquerda | `0` / `1` |
@@ -39,7 +39,7 @@ Escreva **8 bytes** em `FFF1`, **sem resposta**:
 | 6 | turbo | `0` / `1` |
 | 7 | giro 360° | `0` / `1` |
 
-Todos os campos, exceto `modo`, são simples liga/desliga; não há velocidade nem direção proporcionais. Um pacote com todos os campos em `0` para o carrinho.
+Todos os campos são simples liga/desliga (o primeiro byte é fixo); não há velocidade nem direção proporcionais. Um pacote com todos os campos em `0` para o carrinho.
 
 Exemplo — frente com a luz ligada: `01 01 00 00 00 01 00 00`.
 
@@ -51,5 +51,5 @@ Sempre envie um pacote neutro (tudo zero) antes de desconectar.
 
 ## Notas e dúvidas
 
-- O significado de `modo` (1 ou 2) no próprio carrinho não está documentado aqui.
+- `modo`: o app oficial do carrinho pode alternar este byte entre `1` e `2`. Nos dois carrinhos testados (SF-25 e 296 GT3), pilotar com `1` e com `2` pareceu igual; por isso este app sempre envia `1` e não oferece a opção. O que o `2` faz, se é que faz algo, não se sabe.
 - Testado com um único modelo de carrinho. Os demais parecem usar a mesma interface; relatos são bem-vindos.

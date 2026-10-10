@@ -48,15 +48,6 @@
   "actionLight": "Light",
   "actionTurbo": "Turbo",
   "actionDonut": "360° spin",
-  "actionMode": "Mode 1/2",
-  "modeValue": "Mode {mode}",
-  "@modeValue": {
-    "placeholders": {
-      "mode": {
-        "type": "int"
-      }
-    }
-  },
   "hintHold": "while pressed",
   "hintToggle": "each press switches on/off",
   "controlsIntro": "Tap “Add”, then press a controller button, push a stick or press a key. Each action can have several inputs.",

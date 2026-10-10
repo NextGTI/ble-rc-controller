@@ -35,6 +35,15 @@ void main() {
     expect(decodeBindings('not json')[CarAction.turbo], defaultBindings()[CarAction.turbo]);
   });
 
+  test('a binding saved for the removed "mode" action is ignored', () {
+    // Releases up to 1.0.1 had a Mode action; their saved settings still hold it.
+    final back = decodeBindings(
+        '{"mode":["pad:start","key:458767"],"turbo":["raw:X|+"]}');
+    expect(back.keys.toSet(), CarAction.values.toSet());
+    expect(back[CarAction.turbo], [InputRef.raw('X', 1)]);
+    expect(back[CarAction.forward], defaultBindings()[CarAction.forward]);
+  });
+
   test('InputRef parsing', () {
     final raw = InputRef.raw('AXIS_HAT_X', -1);
     expect(raw.kind, InputKind.raw);

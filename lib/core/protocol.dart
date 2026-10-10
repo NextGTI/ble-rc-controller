@@ -30,22 +30,22 @@ enum CarAction {
   right,
   light,
   turbo,
-  donut,
-  mode;
+  donut;
 
-  /// Light and mode flip on each press; the others apply while held.
-  bool get isToggle => this == light || this == mode;
+  /// Light flips on each press; the others apply while held.
+  bool get isToggle => this == light;
 }
 
 /// The 8-byte packet sent to the car.
 ///
-/// `[mode, forward, reverse, left, right, light, turbo, donut]`
+/// `[1, forward, reverse, left, right, light, turbo, donut]`
 ///
-/// [mode] is 1 or 2; every other field is 0 or 1. There is no proportional
-/// speed or steering: everything is on/off.
+/// The first byte is a "mode" that the car's own app can flip between 1 and 2.
+/// It had no visible effect on either car tested, so it is always sent as
+/// [protocolMode]. Every other field is 0 or 1. There is no proportional speed
+/// or steering: everything is on/off.
 class CarCommand {
   const CarCommand({
-    this.mode = 1,
     this.forward = false,
     this.reverse = false,
     this.left = false,
@@ -55,7 +55,6 @@ class CarCommand {
     this.donut = false,
   });
 
-  final int mode;
   final bool forward;
   final bool reverse;
   final bool left;
@@ -66,8 +65,11 @@ class CarCommand {
 
   static const int length = 8;
 
+  /// First byte of every packet.
+  static const int protocolMode = 1;
+
   Uint8List toBytes() => Uint8List.fromList([
-        mode,
+        protocolMode,
         forward ? 1 : 0,
         reverse ? 1 : 0,
         left ? 1 : 0,
@@ -77,8 +79,8 @@ class CarCommand {
         donut ? 1 : 0,
       ]);
 
-  /// Same mode and light, but no movement.
-  CarCommand get neutral => CarCommand(mode: mode, light: light);
+  /// Same light, but no movement.
+  CarCommand get neutral => CarCommand(light: light);
 
   bool get isMoving =>
       forward || reverse || left || right || turbo || donut;
@@ -86,7 +88,6 @@ class CarCommand {
   @override
   bool operator ==(Object other) =>
       other is CarCommand &&
-      other.mode == mode &&
       other.forward == forward &&
       other.reverse == reverse &&
       other.left == left &&
@@ -97,7 +98,7 @@ class CarCommand {
 
   @override
   int get hashCode =>
-      Object.hash(mode, forward, reverse, left, right, light, turbo, donut);
+      Object.hash(forward, reverse, left, right, light, turbo, donut);
 
   @override
   String toString() => 'CarCommand(${toBytes()})';

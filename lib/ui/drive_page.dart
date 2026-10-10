@@ -107,7 +107,6 @@ class DrivePage extends StatelessWidget {
                 StatePill(icon: Icons.light_mode_outlined, label: l.actionLight, on: cmd.light, color: Colors.yellow.shade600),
                 StatePill(icon: Icons.bolt_rounded, label: l.actionTurbo, on: cmd.turbo, color: Colors.red.shade400),
                 StatePill(icon: Icons.sync_rounded, label: l.actionDonut, on: cmd.donut, color: Colors.purple.shade300),
-                StatePill(icon: Icons.tune_rounded, label: l.modeValue(cmd.mode), on: cmd.mode == 2, color: Colors.teal.shade300),
               ]),
               const SizedBox(height: 12),
               Text(l.safetyNote, style: t.bodySmall?.copyWith(color: Theme.of(context).hintColor)),

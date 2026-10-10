@@ -30,7 +30,7 @@ Escribe **8 bytes** en `FFF1`, **sin respuesta**:
 
 | Byte | Campo | Valores |
 |---|---|---|
-| 0 | modo | `1` o `2` |
+| 0 | modo | `1` (ver abajo) |
 | 1 | adelante | `0` / `1` |
 | 2 | marcha atrás | `0` / `1` |
 | 3 | izquierda | `0` / `1` |
@@ -39,7 +39,7 @@ Escribe **8 bytes** en `FFF1`, **sin respuesta**:
 | 6 | turbo | `0` / `1` |
 | 7 | giro 360° | `0` / `1` |
 
-Todos los campos salvo `modo` son indicadores de encendido/apagado; no hay velocidad ni dirección proporcionales. Un paquete con todos los indicadores a `0` detiene el coche.
+Todos los campos son indicadores de encendido/apagado (el primer byte es fijo); no hay velocidad ni dirección proporcionales. Un paquete con todos los indicadores a `0` detiene el coche.
 
 Ejemplo — adelante con la luz encendida: `01 01 00 00 00 01 00 00`.
 
@@ -51,5 +51,5 @@ Envía siempre un paquete neutro (todo a cero) antes de desconectar.
 
 ## Notas y dudas
 
-- El significado de `modo` (1 o 2) en el propio coche no está documentado aquí.
+- `modo`: la app oficial del coche puede cambiar este byte entre `1` y `2`. En los dos coches probados (SF-25 y 296 GT3), conducir con `1` y con `2` se sintió igual, así que esta app siempre envía `1` y no lo ofrece. Qué hace `2`, si es que hace algo, no se sabe.
 - Probado con un solo modelo de coche. Los demás parecen usar la misma interfaz; se agradecen reportes.

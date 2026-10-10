@@ -119,14 +119,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionDonut => '360° spin';
 
   @override
-  String get actionMode => 'Mode 1/2';
-
-  @override
-  String modeValue(int mode) {
-    return 'Mode $mode';
-  }
-
-  @override
   String get hintHold => 'while pressed';
 
   @override

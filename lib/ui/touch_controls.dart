@@ -43,9 +43,8 @@ class TouchControls extends StatelessWidget {
         runSpacing: 8,
         children: [
           _HoldButton(action: CarAction.light, icon: Icons.light_mode_outlined, label: l.actionLight, size: small),
-          _HoldButton(action: CarAction.turbo, icon: Icons.bolt_rounded, label: l.actionTurbo, size: small),
-          _HoldButton(action: CarAction.donut, icon: Icons.sync_rounded, label: l.actionDonut, size: small),
-          _HoldButton(action: CarAction.mode, icon: Icons.tune_rounded, label: l.actionMode, size: small),
+          _HoldButton(action: CarAction.turbo, icon: Icons.bolt_rounded, label: l.actionTurbo, size: small, latch: true),
+          _HoldButton(action: CarAction.donut, icon: Icons.sync_rounded, label: l.actionDonut, size: small, latch: true),
         ],
       );
       if (narrow) {
@@ -71,6 +70,7 @@ class _HoldButton extends StatefulWidget {
     required this.size,
     this.label,
     this.primary = false,
+    this.latch = false,
   });
 
   final CarAction action;
@@ -78,6 +78,10 @@ class _HoldButton extends StatefulWidget {
   final double size;
   final String? label;
   final bool primary;
+
+  /// A tap switches the action on and it stays on until tapped again, instead
+  /// of lasting only while the finger is down.
+  final bool latch;
 
   @override
   State<_HoldButton> createState() => _HoldButtonState();
@@ -96,13 +100,17 @@ class _HoldButtonState extends State<_HoldButton> {
   void _set(bool v) {
     if (_down == v) return;
     setState(() => _down = v);
-    _driver.setVirtual(widget.action, v);
+    if (widget.latch) {
+      if (v) _driver.toggleLatched(widget.action);
+    } else {
+      _driver.setVirtual(widget.action, v);
+    }
   }
 
   @override
   void dispose() {
     // A button that disappears while held must not stay "pressed".
-    if (_down) _driver.setVirtual(widget.action, false);
+    if (_down && !widget.latch) _driver.setVirtual(widget.action, false);
     super.dispose();
   }
 
@@ -111,19 +119,21 @@ class _HoldButtonState extends State<_HoldButton> {
     final scheme = Theme.of(context).colorScheme;
     final base = widget.primary ? scheme.primary : scheme.surfaceContainerHighest;
     final fg = widget.primary ? scheme.onPrimary : scheme.onSurface;
+    // A latched button stays lit while on; the others only while touched.
+    final active = widget.latch ? _driver.isLatched(widget.action) : _down;
     final tile = AnimatedContainer(
       duration: motion(context, 70),
       width: widget.size,
       height: widget.size,
       decoration: BoxDecoration(
-        color: _down ? scheme.tertiary : base,
+        color: active ? scheme.tertiary : base,
         borderRadius: BorderRadius.circular(widget.size / 4),
-        boxShadow: _down ? [] : [BoxShadow(color: Colors.black.withValues(alpha: 0.18), blurRadius: 6, offset: const Offset(0, 2))],
+        boxShadow: active ? [] : [BoxShadow(color: Colors.black.withValues(alpha: 0.18), blurRadius: 6, offset: const Offset(0, 2))],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(widget.icon, size: widget.size * 0.42, color: _down ? scheme.onTertiary : fg),
+          Icon(widget.icon, size: widget.size * 0.42, color: active ? scheme.onTertiary : fg),
           if (widget.label != null)
             Padding(
               padding: const EdgeInsets.only(top: 2),
@@ -131,7 +141,7 @@ class _HoldButtonState extends State<_HoldButton> {
                 widget.label!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 11, color: _down ? scheme.onTertiary : fg),
+                style: TextStyle(fontSize: 11, color: active ? scheme.onTertiary : fg),
               ),
             ),
         ],

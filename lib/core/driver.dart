@@ -37,6 +37,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     Future<List<GamepadController>> Function()? listGamepads,
     GamepadNormalizer? normalizer,
     this.enableKeyboard = true,
+    this.carStaleAfter = const Duration(seconds: 6),
   })  : _prefs = prefs,
         _rawEvents = rawEvents,
         _connectionEvents = connectionEvents,
@@ -61,6 +62,9 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   final GamepadNormalizer _normalizer;
   final bool enableKeyboard;
 
+  /// A car not heard from for this long drops off the list.
+  final Duration carStaleAfter;
+
   // --- Bluetooth state ------------------------------------------------------
   BluetoothState _bluetooth = BluetoothState.unknown;
   final Map<String, FoundCar> _cars = {};
@@ -83,6 +87,11 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   late Bindings _bindings;
   late Map<String, ControllerProfile> _profiles;
   late bool _autoConnect;
+
+  /// Set when the user disconnects on purpose, so the car that is still
+  /// advertising does not pull the app straight back in. Cleared by the next
+  /// successful connection.
+  bool _autoConnectHeld = false;
   late bool _keyboardEnabled;
   late double _deadzone;
   late bool _onScreenControls;
@@ -93,12 +102,14 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   final Map<String, ControllerInfo> _controllers = {};
   final Set<int> _keysDown = {};
   final Set<CarAction> _virtual = {};
+
+  /// On-screen buttons that stay on until tapped again (turbo and 360° spin).
+  final Set<CarAction> _latched = {};
   final Map<String, double> _rawValues = {};
   final Map<String, double> _rawRest = {};
   final Set<String> _rawAnalog = {};
   final Map<CarAction, bool> _prevHeld = {};
   bool _light = false;
-  int _mode = 1;
   CarAction? _capturing;
   TeachSession? _teach;
   CarCommand _cmd = const CarCommand();
@@ -190,6 +201,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     _pad.clear();
     _rawValues.clear();
     _virtual.clear();
+    _latched.clear();
     _prevHeld.clear();
     _sendNow(_cmd.neutral);
     notifyListeners();
@@ -226,7 +238,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     _seen[car.id] = DateTime.now();
     if (isNew) {
       notifyListeners();
-      if (_autoConnect && _link == LinkState.idle && car.id == _lastCarId) {
+      if (_autoConnect && !_autoConnectHeld && _link == LinkState.idle && car.id == _lastCarId) {
         connect(car.id);
       }
     } else if (_link == LinkState.idle) {
@@ -236,7 +248,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
 
   void _prune() {
     if (_link != LinkState.idle) return;
-    final limit = DateTime.now().subtract(const Duration(seconds: 6));
+    final limit = DateTime.now().subtract(carStaleAfter);
     final stale = _seen.entries.where((e) => e.value.isBefore(limit)).map((e) => e.key).toList();
     for (final id in stale) {
       _cars.remove(id);
@@ -277,6 +289,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       notifyListeners();
     }, onError: (_) {});
     _link = LinkState.connected;
+    _autoConnectHeld = false;
     _lastCarId = id;
     await _prefs.setString('lastCar', id);
     _lastSentCmd = null;
@@ -284,6 +297,8 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   Future<void> disconnect() async {
+    _autoConnectHeld = true;
+    _latched.clear();
     _connectToken++;
     final id = _carId;
     if (id != null && _link == LinkState.connected) {
@@ -302,6 +317,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   void _onDropped() {
+    _latched.clear();
     _connSub?.cancel();
     _batterySub?.cancel();
     _connSub = null;
@@ -653,6 +669,16 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     if (changed) _tick();
   }
 
+  bool isLatched(CarAction action) => _latched.contains(action);
+
+  /// A tap on an on-screen button that switches on and stays on until tapped
+  /// again. Controller and keyboard inputs still apply only while held.
+  void toggleLatched(CarAction action) {
+    if (!_latched.remove(action)) _latched.add(action);
+    _tick();
+    notifyListeners();
+  }
+
   // ---------------------------------------------------------------------------
   // Settings
   // ---------------------------------------------------------------------------
@@ -677,6 +703,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
 
   set onScreenControls(bool v) {
     _onScreenControls = v;
+    if (!v) _latched.clear(); // nothing left on screen to switch it off
     _prefs.setBool('onScreen', v);
     notifyListeners();
   }
@@ -703,20 +730,12 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   bool _held(CarAction a) =>
-      _virtual.contains(a) || (_bindings[a]?.any(_refDown) ?? false);
+      _virtual.contains(a) || _latched.contains(a) || (_bindings[a]?.any(_refDown) ?? false);
 
   CarCommand _read({required bool toggles}) {
     final held = {for (final a in CarAction.values) a: _held(a)};
-    if (toggles) {
-      for (final a in CarAction.values.where((a) => a.isToggle)) {
-        if (held[a]! && _prevHeld[a] != true) {
-          if (a == CarAction.light) {
-            _light = !_light;
-          } else {
-            _mode = _mode == 1 ? 2 : 1;
-          }
-        }
-      }
+    if (toggles && held[CarAction.light]! && _prevHeld[CarAction.light] != true) {
+      _light = !_light;
     }
     _prevHeld
       ..clear()
@@ -724,7 +743,6 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     final f = held[CarAction.forward]!, r = held[CarAction.reverse]!;
     final l = held[CarAction.left]!, rt = held[CarAction.right]!;
     return CarCommand(
-      mode: _mode,
       forward: f && !r,
       reverse: r && !f,
       left: l && !rt,

@@ -61,7 +61,7 @@ void main() {
   late StreamController<GamepadConnectionEvent> connEvents;
   late Driver driver;
 
-  Future<void> setUp0([Map<String, Object> prefs = const {}]) async {
+  Future<void> setUp0([Map<String, Object> prefs = const {}, Duration? carStaleAfter]) async {
     SharedPreferences.setMockInitialValues(prefs);
     transport = FakeTransport();
     raw = StreamController<GamepadEvent>.broadcast();
@@ -75,6 +75,7 @@ void main() {
       // Windows key names, so the test does not depend on the host OS.
       normalizer: GamepadNormalizer.forPlatform(GamepadPlatform.windows),
       enableKeyboard: false,
+      carStaleAfter: carStaleAfter ?? const Duration(seconds: 6),
     );
     await driver.start();
   }
@@ -100,6 +101,35 @@ void main() {
     expect(driver.link, LinkState.connected);
     await settle();
     expect(driver.battery, 77);
+  });
+
+  test('a deliberate disconnect is not undone by auto-reconnect', () async {
+    // The last car is remembered, so it would be picked up again on its own.
+    await setUp0({'lastCar': 'car1'}, const Duration(milliseconds: 50));
+    transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55));
+    await settle();
+    expect(driver.link, LinkState.connected, reason: 'auto-connect to the last car on startup');
+
+    await driver.disconnect();
+    expect(driver.link, LinkState.idle);
+
+    // The car keeps advertising. Once its stale entry has been pruned, it is
+    // "new" again when it reappears: that must not reconnect.
+    await Future<void>.delayed(const Duration(milliseconds: 1200));
+    transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55));
+    await settle();
+    expect(driver.link, LinkState.idle);
+
+    // Connecting by hand works, and re-arms auto-reconnect for dropped links.
+    await driver.connect('car1');
+    expect(driver.link, LinkState.connected);
+    transport.conn.add(false);
+    await settle();
+    expect(driver.link, LinkState.idle);
+    await Future<void>.delayed(const Duration(milliseconds: 1200));
+    transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55));
+    await settle();
+    expect(driver.link, LinkState.connected, reason: 'a dropped link still reconnects');
   });
 
   test('failed connection reports a message and returns to idle', () async {
@@ -208,6 +238,63 @@ void main() {
     expect(driver.command.forward, isFalse);
   });
 
+  for (final action in [CarAction.turbo, CarAction.donut]) {
+    bool on() => action == CarAction.turbo ? driver.command.turbo : driver.command.donut;
+    final byte = action == CarAction.turbo ? 6 : 7;
+
+    test('the on-screen ${action.name} stays on until tapped again', () async {
+      await setUp0();
+      await connectCar();
+      driver.toggleLatched(action);
+      await settle();
+      expect(driver.isLatched(action), isTrue);
+      expect(on(), isTrue);
+      expect(transport.writes.last[byte], 1);
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      expect(on(), isTrue, reason: 'no finger on the screen, still on');
+      driver.toggleLatched(action);
+      await settle();
+      expect(on(), isFalse);
+      expect(transport.writes.last[byte], 0);
+    });
+
+    test('a latched ${action.name} is released on disconnect, on a dropped link and on clearInputs', () async {
+      await setUp0();
+      await connectCar();
+      driver.toggleLatched(action);
+      await driver.disconnect();
+      expect(driver.isLatched(action), isFalse);
+
+      await connectCar();
+      driver.toggleLatched(action);
+      transport.conn.add(false);
+      await settle();
+      expect(driver.isLatched(action), isFalse);
+
+      await driver.connect('car1');
+      driver.toggleLatched(action);
+      driver.clearInputs();
+      await settle();
+      expect(driver.isLatched(action), isFalse);
+      expect(on(), isFalse);
+    });
+  }
+
+  test('the controller turbo and 360° spin still only apply while held', () async {
+    await setUp0();
+    await connectCar();
+    raw.add(btn('b', 1));
+    raw.add(btn('y', 1));
+    await settle();
+    expect(driver.command.turbo, isTrue);
+    expect(driver.command.donut, isTrue);
+    raw.add(btn('b', 0));
+    raw.add(btn('y', 0));
+    await settle();
+    expect(driver.command.turbo, isFalse);
+    expect(driver.command.donut, isFalse);
+  });
+
   test('capture binds a standard controller input to an action', () async {
     await setUp0();
     driver.beginCapture(CarAction.turbo);
@@ -287,7 +374,7 @@ void main() {
 
   test('bindings and profiles persist', () async {
     await setUp0();
-    driver.addBinding(CarAction.mode, InputRef.raw('X', 1));
+    driver.addBinding(CarAction.turbo, InputRef.raw('X', 1));
     final prefs = await SharedPreferences.getInstance();
     final again = Driver(
       transport: FakeTransport(),
@@ -297,7 +384,7 @@ void main() {
       listGamepads: () async => [],
       enableKeyboard: false,
     );
-    expect(again.bindings[CarAction.mode], contains(InputRef.raw('X', 1)));
+    expect(again.bindings[CarAction.turbo], contains(InputRef.raw('X', 1)));
     again.dispose();
   });
 

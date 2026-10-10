@@ -32,8 +32,6 @@ extension L10nText on AppLocalizations {
         return actionTurbo;
       case CarAction.donut:
         return actionDonut;
-      case CarAction.mode:
-        return actionMode;
     }
   }
 

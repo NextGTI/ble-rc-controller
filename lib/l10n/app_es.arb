@@ -48,15 +48,6 @@
   "actionLight": "Luz",
   "actionTurbo": "Turbo",
   "actionDonut": "Giro 360°",
-  "actionMode": "Modo 1/2",
-  "modeValue": "Modo {mode}",
-  "@modeValue": {
-    "placeholders": {
-      "mode": {
-        "type": "int"
-      }
-    }
-  },
   "hintHold": "mientras se mantiene pulsado",
   "hintToggle": "cada pulsación activa/desactiva",
   "controlsIntro": "Pulsa «Añadir» y luego un botón del mando, mueve un stick o pulsa una tecla. Cada acción puede tener varias entradas.",

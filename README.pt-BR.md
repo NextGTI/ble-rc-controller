@@ -17,7 +17,7 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 
 - Encontra os carrinhos por perto e deixa você **escolher qual pilotar** (pode haver vários ligados).
 - **Suporte aos controles mais comuns**, com um assistente **"Ensinar controle"** e um **monitor de entradas** para controles que o app não conhece.
-- **Remapeie todos os botões.** Cada ação (frente, ré, esquerda, direita, luz, turbo, giro 360°, modo) aceita várias entradas: botões do controle, direções do analógico e teclas.
+- **Remapeie todos os botões.** Cada ação (frente, ré, esquerda, direita, luz, turbo, giro 360°) aceita várias entradas: botões do controle, direções do analógico e teclas.
 - Controle pelo **teclado** (WASD / setas por padrão) e **botões na tela** para telas de toque.
 - Nível de bateria, intensidade do sinal e reconexão automática ao último carro.
 - Segurança: o carro para quando você desconecta, troca de app ou perde o controle.
@@ -57,9 +57,10 @@ Baixe a versão mais recente para o seu sistema na página de [**Releases**](../
 | Luz (liga/desliga) | Botão de baixo (✕ / A) | L |
 | Turbo (segurar) | Botão da direita (○ / B) | Espaço |
 | Giro 360° (segurar) | Botão de cima (△ / Y) | Q |
-| Modo 1 ↔ 2 | Start (Options / Menu) | M |
 
 Empurrar o analógico esquerdo para cima/baixo **não** pilota por padrão. Se você gosta disso, adicione em **Botões** (*Frente* → Adicionar → empurre o analógico para cima).
+
+Nos botões da tela, **Luz**, **Turbo** e **Giro 360°** ligam e desligam a cada toque.
 
 Tudo é editável na aba **Botões**. Tudo é liga/desliga: o carrinho não tem velocidade nem direção proporcionais.
 

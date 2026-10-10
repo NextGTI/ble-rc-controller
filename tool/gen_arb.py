@@ -44,8 +44,6 @@ T = {
  "actionLight": ("Light", "Luz", "Luz", []),
  "actionTurbo": ("Turbo", "Turbo", "Turbo", []),
  "actionDonut": ("360° spin", "Giro 360°", "Giro 360°", []),
- "actionMode": ("Mode 1/2", "Modo 1/2", "Modo 1/2", []),
- "modeValue": ("Mode {mode}", "Modo {mode}", "Modo {mode}", ["mode"]),
  "hintHold": ("while pressed", "mientras se mantiene pulsado", "enquanto estiver pressionado", []),
  "hintToggle": ("each press switches on/off", "cada pulsación activa/desactiva", "cada toque liga/desliga", []),
  "controlsIntro": ("Tap “Add”, then press a controller button, push a stick or press a key. Each action can have several inputs.",

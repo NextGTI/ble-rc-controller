@@ -45,10 +45,6 @@ Bindings defaultBindings() => {
         InputRef.pad(PadInput.y),
         InputRef.key(PhysicalKeyboardKey.keyQ),
       ],
-      CarAction.mode: [
-        InputRef.pad(PadInput.start),
-        InputRef.key(PhysicalKeyboardKey.keyM),
-      ],
     };
 
 String encodeBindings(Bindings b) => jsonEncode({

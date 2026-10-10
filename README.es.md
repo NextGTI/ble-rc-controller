@@ -17,7 +17,7 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 
 - Encuentra los coches cercanos y te deja **elegir cuál conducir** (puede haber varios encendidos).
 - **Compatible con los mandos más comunes**, con un asistente **«Enseñar mando»** y un **monitor de entradas** para mandos que la app no conoce.
-- **Reasigna todos los botones.** Cada acción (adelante, marcha atrás, izquierda, derecha, luz, turbo, giro 360°, modo) admite varias entradas: botones del mando, direcciones del stick y teclas.
+- **Reasigna todos los botones.** Cada acción (adelante, marcha atrás, izquierda, derecha, luz, turbo, giro 360°) admite varias entradas: botones del mando, direcciones del stick y teclas.
 - Control por **teclado** (WASD / flechas por defecto) y **botones en pantalla** para pantallas táctiles.
 - Nivel de batería, intensidad de señal y reconexión automática con el último coche.
 - Seguridad: el coche se detiene al desconectar, cambiar de app o perder el mando.
@@ -57,9 +57,10 @@ Descarga la última versión para tu sistema desde [**Releases**](../../releases
 | Luz (on/off) | Botón inferior (✕ / A) | L |
 | Turbo (mantener) | Botón derecho (○ / B) | Espacio |
 | Giro 360° (mantener) | Botón superior (△ / Y) | Q |
-| Modo 1 ↔ 2 | Start (Options / Menú) | M |
 
 Empujar el stick izquierdo hacia arriba/abajo **no** conduce por defecto. Si lo prefieres, añádelo en **Botones** (*Adelante* → Añadir → empuja el stick hacia arriba).
+
+En los botones en pantalla, **Luz**, **Turbo** y **Giro 360°** se activan y desactivan con cada toque.
 
 Todo es editable en la pestaña **Botones**. Todo es encendido/apagado: el coche no tiene velocidad ni dirección proporcionales.
 

@@ -83,4 +83,65 @@ void main() {
       driver.dispose();
     });
   }
+
+  testWidgets('the on-screen turbo and 360° buttons are toggles, the others are held', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final driver = Driver(
+      transport: _NoBle(),
+      prefs: await SharedPreferences.getInstance(),
+      rawEvents: const Stream<GamepadEvent>.empty(),
+      connectionEvents: const Stream<GamepadConnectionEvent>.empty(),
+      listGamepads: () async => [],
+      enableKeyboard: false,
+    );
+    tester.view.physicalSize = const Size(800, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: DriverScope(
+        driver: driver,
+        child: const Scaffold(body: Padding(padding: EdgeInsets.all(16), child: TouchControls())),
+      ),
+    ));
+
+    final turbo = find.text('Turbo');
+    await tester.tap(turbo);
+    await tester.pump();
+    expect(driver.command.turbo, isTrue, reason: 'one tap switches it on...');
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(driver.command.turbo, isTrue, reason: '...and it stays on after the finger is lifted');
+
+    await tester.tap(turbo);
+    await tester.pump();
+    expect(driver.command.turbo, isFalse, reason: 'a second tap switches it off');
+
+    // The 360° spin works the same way.
+    final spin = find.byIcon(Icons.sync_rounded);
+    await tester.tap(spin);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(driver.command.donut, isTrue, reason: 'stays on after the finger is lifted');
+    await tester.tap(spin);
+    await tester.pump();
+    expect(driver.command.donut, isFalse);
+
+    // Forward is still "while held".
+    final forward = find.byIcon(Icons.arrow_upward_rounded);
+    final g = await tester.startGesture(tester.getCenter(forward));
+    await tester.pump();
+    expect(driver.command.forward, isTrue);
+    await g.up();
+    await tester.pump();
+    expect(driver.command.forward, isFalse);
+
+    await tester.pumpWidget(const SizedBox());
+    driver.dispose();
+  });
 }
