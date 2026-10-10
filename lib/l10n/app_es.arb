@@ -1,0 +1,166 @@
+{
+  "@@locale": "es",
+  "appTitle": "BLE RC Controller",
+  "navCars": "Coches",
+  "navDrive": "Conducir",
+  "navControls": "Botones",
+  "navControllers": "Mandos",
+  "navSettings": "Ajustes",
+  "carsTitle": "Coches",
+  "carsSearching": "Buscando coches…",
+  "carsHint": "Enciende el coche. Aparece aquí solo (nombres que empiezan por «SL-»).",
+  "btOffTitle": "Bluetooth apagado",
+  "btOffBody": "Activa el Bluetooth para encontrar tu coche.",
+  "btDeniedTitle": "Bluetooth bloqueado",
+  "btDeniedBody": "Permite el Bluetooth para esta app en los ajustes del sistema.",
+  "btUnsupportedTitle": "Bluetooth LE no disponible",
+  "btUnsupportedBody": "Este dispositivo no puede comunicarse con el coche.",
+  "connect": "Conectar",
+  "connectTo": "Conectar con {car}",
+  "@connectTo": {
+    "placeholders": {
+      "car": {
+        "type": "String"
+      }
+    }
+  },
+  "disconnect": "Desconectar",
+  "connecting": "Conectando…",
+  "connectedLabel": "Conectado",
+  "noCar": "Ningún coche conectado",
+  "noCarHint": "Elige un coche de la lista para conectar (clic o toque).",
+  "msgConnectFailed": "No se pudo conectar. Apaga y enciende el coche y comprueba que ninguna otra app esté conectada.",
+  "msgDropped": "El coche se desconectó.",
+  "msgPermission": "Se denegó el permiso de Bluetooth.",
+  "batteryPercent": "Batería {percent} %",
+  "@batteryPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "rememberLast": "Reconectar con el último coche",
+  "actionForward": "Adelante",
+  "actionReverse": "Marcha atrás",
+  "actionLeft": "Izquierda",
+  "actionRight": "Derecha",
+  "actionLight": "Luz",
+  "actionTurbo": "Turbo",
+  "actionDonut": "Giro 360°",
+  "actionMode": "Modo 1/2",
+  "modeValue": "Modo {mode}",
+  "@modeValue": {
+    "placeholders": {
+      "mode": {
+        "type": "int"
+      }
+    }
+  },
+  "hintHold": "mientras se mantiene pulsado",
+  "hintToggle": "cada pulsación activa/desactiva",
+  "controlsIntro": "Pulsa «Añadir» y luego un botón del mando, mueve un stick o pulsa una tecla. Cada acción puede tener varias entradas.",
+  "add": "Añadir",
+  "pressAnything": "Pulsa un botón, dirección o tecla…",
+  "cancel": "Cancelar",
+  "remove": "Quitar",
+  "restoreDefaults": "Restaurar valores",
+  "useKeyboard": "Usar el teclado (solo con la app en primer plano)",
+  "sharedInput": "Esta entrada también está asignada a otra acción.",
+  "controllersTitle": "Mandos",
+  "noController": "No se encontró ningún mando",
+  "noControllerHint": "Empareja tu mando por Bluetooth o USB y pulsa cualquier botón.",
+  "controllerRecognised": "Disposición reconocida",
+  "controllerCustom": "Mapeo personalizado",
+  "teachController": "Enseñar este mando…",
+  "forgetMapping": "Olvidar mapeo personalizado",
+  "teachTitle": "Enseñar mando",
+  "teachIntro": "Pulsa el botón (o mueve el stick) que pide la app. Omite lo que tu mando no tenga. Pulsa Esc para cancelar.",
+  "teachProgress": "Paso {n} de {total}",
+  "@teachProgress": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "teachDone": "¡Listo! Este mando ya funciona con todas las acciones.",
+  "done": "Hecho",
+  "skip": "Omitir",
+  "inputMonitor": "Monitor de entradas",
+  "monitorHint": "Pulsa botones y mueve sticks: aquí aparecen las señales en bruto. Útil con mandos desconocidos.",
+  "monitorEmpty": "Aún no hay señales.",
+  "rawInput": "En bruto: {key}",
+  "@rawInput": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Ajustes",
+  "language": "Idioma",
+  "languageSystem": "Predeterminado del sistema",
+  "deadzone": "Zona muerta del stick: {percent} %",
+  "@deadzone": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "onScreen": "Mostrar controles en pantalla",
+  "onScreenHint": "Botones táctiles para móviles y tabletas (o clics de ratón).",
+  "about": "Acerca de",
+  "disclaimer": "Proyecto de código abierto, independiente y no oficial (MIT). No está afiliado, respaldado ni patrocinado por ninguna marca de coches, juguetes o combustibles. Todos los nombres pertenecen a sus dueños.",
+  "driveLive": "Entradas en vivo",
+  "keyboardTipTitle": "Teclado",
+  "safetyNote": "Las entradas solo cuentan con esta ventana en primer plano. Si cambias de app, el coche se detiene.",
+  "padA": "Botón inferior (A / ✕)",
+  "padB": "Botón derecho (B / ○)",
+  "padX": "Botón izquierdo (X / □)",
+  "padY": "Botón superior (Y / △)",
+  "padLeftBumper": "Bumper izquierdo (LB / L1)",
+  "padRightBumper": "Bumper derecho (RB / R1)",
+  "padLeftTrigger": "Gatillo izquierdo (LT / L2)",
+  "padRightTrigger": "Gatillo derecho (RT / R2)",
+  "padBack": "Atrás (View / Share / −)",
+  "padStart": "Inicio (Menú / Options / +)",
+  "padHome": "Inicio (Guide / PS)",
+  "padLeftStick": "Pulsar stick izquierdo (L3)",
+  "padRightStick": "Pulsar stick derecho (R3)",
+  "padTouchpad": "Panel táctil",
+  "padDpadUp": "Cruceta ↑",
+  "padDpadDown": "Cruceta ↓",
+  "padDpadLeft": "Cruceta ←",
+  "padDpadRight": "Cruceta →",
+  "padLeftStickUp": "Stick izquierdo ↑",
+  "padLeftStickDown": "Stick izquierdo ↓",
+  "padLeftStickLeft": "Stick izquierdo ←",
+  "padLeftStickRight": "Stick izquierdo →",
+  "padRightStickUp": "Stick derecho ↑",
+  "padRightStickDown": "Stick derecho ↓",
+  "padRightStickLeft": "Stick derecho ←",
+  "padRightStickRight": "Stick derecho →",
+  "teach_a": "Pulsa el botón inferior (A / ✕)",
+  "teach_b": "Pulsa el botón derecho (B / ○)",
+  "teach_x": "Pulsa el botón izquierdo (X / □)",
+  "teach_y": "Pulsa el botón superior (Y / △)",
+  "teach_leftBumper": "Pulsa el bumper izquierdo (LB / L1)",
+  "teach_rightBumper": "Pulsa el bumper derecho (RB / R1)",
+  "teach_leftTrigger": "Aprieta el gatillo izquierdo (LT / L2)",
+  "teach_rightTrigger": "Aprieta el gatillo derecho (RT / R2)",
+  "teach_back": "Pulsa Atrás (View / Share / −)",
+  "teach_start": "Pulsa Inicio (Menú / Options / +)",
+  "teach_leftStickX": "Empuja el stick izquierdo del todo a la DERECHA",
+  "teach_leftStickY": "Empuja el stick izquierdo del todo hacia ARRIBA",
+  "teach_rightStickX": "Empuja el stick derecho del todo a la DERECHA",
+  "teach_rightStickY": "Empuja el stick derecho del todo hacia ARRIBA",
+  "teach_dpadUp": "Pulsa la cruceta ARRIBA",
+  "teach_dpadDown": "Pulsa la cruceta ABAJO",
+  "teach_dpadLeft": "Pulsa la cruceta IZQUIERDA",
+  "teach_dpadRight": "Pulsa la cruceta DERECHA"
+}

@@ -1,0 +1,166 @@
+{
+  "@@locale": "en",
+  "appTitle": "BLE RC Controller",
+  "navCars": "Cars",
+  "navDrive": "Drive",
+  "navControls": "Buttons",
+  "navControllers": "Controllers",
+  "navSettings": "Settings",
+  "carsTitle": "Cars",
+  "carsSearching": "Looking for cars…",
+  "carsHint": "Turn the car on. It shows up here by itself (names starting with “SL-”).",
+  "btOffTitle": "Bluetooth is off",
+  "btOffBody": "Turn Bluetooth on to find your car.",
+  "btDeniedTitle": "Bluetooth blocked",
+  "btDeniedBody": "Allow Bluetooth for this app in your system settings.",
+  "btUnsupportedTitle": "Bluetooth LE not available",
+  "btUnsupportedBody": "This device cannot talk to the car.",
+  "connect": "Connect",
+  "connectTo": "Connect to {car}",
+  "@connectTo": {
+    "placeholders": {
+      "car": {
+        "type": "String"
+      }
+    }
+  },
+  "disconnect": "Disconnect",
+  "connecting": "Connecting…",
+  "connectedLabel": "Connected",
+  "noCar": "No car connected",
+  "noCarHint": "Pick a car from the list to connect (click or tap).",
+  "msgConnectFailed": "Could not connect. Turn the car off and on, and make sure no other app is connected to it.",
+  "msgDropped": "The car disconnected.",
+  "msgPermission": "Bluetooth permission was denied.",
+  "batteryPercent": "Battery {percent}%",
+  "@batteryPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "rememberLast": "Reconnect to the last car",
+  "actionForward": "Forward",
+  "actionReverse": "Reverse",
+  "actionLeft": "Left",
+  "actionRight": "Right",
+  "actionLight": "Light",
+  "actionTurbo": "Turbo",
+  "actionDonut": "360° spin",
+  "actionMode": "Mode 1/2",
+  "modeValue": "Mode {mode}",
+  "@modeValue": {
+    "placeholders": {
+      "mode": {
+        "type": "int"
+      }
+    }
+  },
+  "hintHold": "while pressed",
+  "hintToggle": "each press switches on/off",
+  "controlsIntro": "Tap “Add”, then press a controller button, push a stick or press a key. Each action can have several inputs.",
+  "add": "Add",
+  "pressAnything": "Press a button, direction or key…",
+  "cancel": "Cancel",
+  "remove": "Remove",
+  "restoreDefaults": "Restore defaults",
+  "useKeyboard": "Use the keyboard (only while the app is in front)",
+  "sharedInput": "This input is also assigned to another action.",
+  "controllersTitle": "Controllers",
+  "noController": "No controller found",
+  "noControllerHint": "Pair your controller over Bluetooth or USB, then press any button.",
+  "controllerRecognised": "Recognised layout",
+  "controllerCustom": "Custom mapping",
+  "teachController": "Teach this controller…",
+  "forgetMapping": "Forget custom mapping",
+  "teachTitle": "Teach controller",
+  "teachIntro": "Press the button (or move the stick) the app asks for. Skip anything your controller does not have. Press Esc to cancel.",
+  "teachProgress": "Step {n} of {total}",
+  "@teachProgress": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "teachDone": "All set! This controller now works with every action.",
+  "done": "Done",
+  "skip": "Skip",
+  "inputMonitor": "Input monitor",
+  "monitorHint": "Press buttons and move sticks: the raw signals show up here. Handy for unknown controllers.",
+  "monitorEmpty": "No signals yet.",
+  "rawInput": "Raw: {key}",
+  "@rawInput": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Settings",
+  "language": "Language",
+  "languageSystem": "System default",
+  "deadzone": "Stick dead zone: {percent}%",
+  "@deadzone": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "onScreen": "Show on-screen controls",
+  "onScreenHint": "Touch buttons for phones and tablets (or mouse clicks).",
+  "about": "About",
+  "disclaimer": "Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.",
+  "driveLive": "Live inputs",
+  "keyboardTipTitle": "Keyboard",
+  "safetyNote": "Inputs only count while this window is in front. If you switch apps the car stops.",
+  "padA": "Bottom button (A / ✕)",
+  "padB": "Right button (B / ○)",
+  "padX": "Left button (X / □)",
+  "padY": "Top button (Y / △)",
+  "padLeftBumper": "Left bumper (LB / L1)",
+  "padRightBumper": "Right bumper (RB / R1)",
+  "padLeftTrigger": "Left trigger (LT / L2)",
+  "padRightTrigger": "Right trigger (RT / R2)",
+  "padBack": "Back (View / Share / −)",
+  "padStart": "Start (Menu / Options / +)",
+  "padHome": "Home (Guide / PS)",
+  "padLeftStick": "Left stick click (L3)",
+  "padRightStick": "Right stick click (R3)",
+  "padTouchpad": "Touchpad",
+  "padDpadUp": "D-pad ↑",
+  "padDpadDown": "D-pad ↓",
+  "padDpadLeft": "D-pad ←",
+  "padDpadRight": "D-pad →",
+  "padLeftStickUp": "Left stick ↑",
+  "padLeftStickDown": "Left stick ↓",
+  "padLeftStickLeft": "Left stick ←",
+  "padLeftStickRight": "Left stick →",
+  "padRightStickUp": "Right stick ↑",
+  "padRightStickDown": "Right stick ↓",
+  "padRightStickLeft": "Right stick ←",
+  "padRightStickRight": "Right stick →",
+  "teach_a": "Press the bottom face button (A / ✕)",
+  "teach_b": "Press the right face button (B / ○)",
+  "teach_x": "Press the left face button (X / □)",
+  "teach_y": "Press the top face button (Y / △)",
+  "teach_leftBumper": "Press the left bumper (LB / L1)",
+  "teach_rightBumper": "Press the right bumper (RB / R1)",
+  "teach_leftTrigger": "Squeeze the left trigger (LT / L2)",
+  "teach_rightTrigger": "Squeeze the right trigger (RT / R2)",
+  "teach_back": "Press Back (View / Share / −)",
+  "teach_start": "Press Start (Menu / Options / +)",
+  "teach_leftStickX": "Push the left stick all the way to the RIGHT",
+  "teach_leftStickY": "Push the left stick all the way UP",
+  "teach_rightStickX": "Push the right stick all the way to the RIGHT",
+  "teach_rightStickY": "Push the right stick all the way UP",
+  "teach_dpadUp": "Press D-pad UP",
+  "teach_dpadDown": "Press D-pad DOWN",
+  "teach_dpadLeft": "Press D-pad LEFT",
+  "teach_dpadRight": "Press D-pad RIGHT"
+}
