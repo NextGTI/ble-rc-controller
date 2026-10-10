@@ -427,6 +427,28 @@ void main() {
     expect(driver.link, LinkState.connected);
     expect(driver.failedCar, isNull);
   });
+  test('picking another car ends the reconnect even when that connection fails', () async {
+    await setUp0(); await connectCar();
+    transport.conn.add(false); await settle();
+    expect(driver.reconnecting, isTrue);
+    transport.scan.add(const FoundCar(id: 'car2', name: 'SL-296 GT3', rssi: -60)); await settle();
+    transport.failConnect = true;
+    await driver.connect('car2');
+    expect(driver.reconnecting, isFalse);
+    expect(driver.lostCar, isNull);
+    expect(driver.failedCar!.model, '296 GT3');
+  });
+  test('retrying the lost car keeps the reconnect until it succeeds', () async {
+    await setUp0(); await connectCar();
+    transport.conn.add(false); await settle();
+    transport.failConnect = true;
+    await driver.connect('car1');
+    expect(driver.lostCar!.id, 'car1', reason: 'same car: still waiting for it');
+    transport.failConnect = false;
+    await driver.connect('car1');
+    expect(driver.lostCar, isNull);
+    expect(driver.link, LinkState.connected);
+  });
   test('cancelling a connection then picking another car connects only the second', () async {
     await setUp0();
     transport.scan..add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55))

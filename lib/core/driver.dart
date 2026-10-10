@@ -140,9 +140,9 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   MessageKind? get message => _message;
 
   /// The car whose link dropped while auto-reconnect was on. The app is waiting
-  /// for it to show up again. Cleared by a new connection, by a deliberate
-  /// disconnect, by switching auto-reconnect off and when Bluetooth stops
-  /// being ready.
+  /// for it to show up again. Cleared by a new connection, by connecting to a
+  /// different car (even if that attempt fails), by a deliberate disconnect, by
+  /// switching auto-reconnect off and when Bluetooth stops being ready.
   FoundCar? get lostCar => _lostCar;
 
   /// True while the app waits to reconnect to [lostCar].
@@ -276,6 +276,9 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   Future<void> connect(String id) async {
+    // Picking a different car ends the wait for the lost one, even if this
+    // attempt fails. Retrying the lost car keeps it until it connects.
+    if (_lostCar != null && _lostCar!.id != id) _lostCar = null;
     if (_link != LinkState.idle) await disconnect();
     final token = ++_connectToken;
     _message = null;
