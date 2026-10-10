@@ -48,6 +48,25 @@ void main() {
     expect(l.teachStep(4, 18), 'Passo 4 de 18');
   });
 
+  test('pt keeps the old screens\' texts in line with the spec', () async {
+    final l = await _load('pt');
+    expect(l.btOffBody, 'Ligue o Bluetooth para encontrar o carro.');
+    expect(l.onScreen, 'Botões na tela');
+    expect(l.hintHold, 'enquanto pressionado');
+    expect(l.hintToggle, 'cada toque liga e desliga');
+    expect(l.languageSystem, 'Sistema');
+  });
+
+  test('en and es name the on-screen buttons and the system language as the spec does',
+      () async {
+    final en = await _load('en');
+    expect(en.onScreen, 'On-screen buttons');
+    expect(en.languageSystem, 'System');
+    final es = await _load('es');
+    expect(es.onScreen, 'Botones en pantalla');
+    expect(es.languageSystem, 'Sistema');
+  });
+
   test('pt teach_leftStickX has no capitals after the first letter', () async {
     final l = await _load('pt');
     expect(l.teach_leftStickX, matches(RegExp(r'^.[^A-ZÀ-Ú]*$')));

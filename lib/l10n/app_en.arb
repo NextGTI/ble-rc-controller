@@ -94,7 +94,7 @@
   },
   "settingsTitle": "Settings",
   "language": "Language",
-  "languageSystem": "System default",
+  "languageSystem": "System",
   "deadzone": "Stick dead zone: {percent}%",
   "@deadzone": {
     "placeholders": {
@@ -103,7 +103,7 @@
       }
     }
   },
-  "onScreen": "Show on-screen controls",
+  "onScreen": "On-screen buttons",
   "onScreenHint": "For tablets and phones",
   "about": "About",
   "disclaimer": "Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.",

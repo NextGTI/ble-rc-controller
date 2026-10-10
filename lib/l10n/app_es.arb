@@ -94,7 +94,7 @@
   },
   "settingsTitle": "Ajustes",
   "language": "Idioma",
-  "languageSystem": "Predeterminado del sistema",
+  "languageSystem": "Sistema",
   "deadzone": "Zona muerta del stick: {percent} %",
   "@deadzone": {
     "placeholders": {
@@ -103,7 +103,7 @@
       }
     }
   },
-  "onScreen": "Mostrar controles en pantalla",
+  "onScreen": "Botones en pantalla",
   "onScreenHint": "Para tabletas y móviles",
   "about": "Acerca de",
   "disclaimer": "Proyecto de código abierto, independiente y no oficial (MIT). No está afiliado, respaldado ni patrocinado por ninguna marca de coches, juguetes o combustibles. Todos los nombres pertenecen a sus dueños.",

@@ -41,7 +41,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get btOffTitle => 'Bluetooth desligado';
 
   @override
-  String get btOffBody => 'Ligue o Bluetooth para encontrar o carrinho.';
+  String get btOffBody => 'Ligue o Bluetooth para encontrar o carro.';
 
   @override
   String get btDeniedTitle => 'Bluetooth bloqueado';
@@ -121,10 +121,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get actionDonut => 'Giro 360°';
 
   @override
-  String get hintHold => 'enquanto estiver pressionado';
+  String get hintHold => 'enquanto pressionado';
 
   @override
-  String get hintToggle => 'cada toque liga/desliga';
+  String get hintToggle => 'cada toque liga e desliga';
 
   @override
   String get controlsIntro =>
@@ -217,7 +217,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get language => 'Idioma';
 
   @override
-  String get languageSystem => 'Padrão do sistema';
+  String get languageSystem => 'Sistema';
 
   @override
   String deadzone(int percent) {
@@ -225,7 +225,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get onScreen => 'Mostrar controles na tela';
+  String get onScreen => 'Botões na tela';
 
   @override
   String get onScreenHint => 'Para tablet e celular';

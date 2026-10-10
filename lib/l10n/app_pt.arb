@@ -10,7 +10,7 @@
   "carsSearching": "Procurando carros…",
   "carsHint": "Ligue o carrinho. Ele aparece aqui sozinho (nomes que começam com “SL-”).",
   "btOffTitle": "Bluetooth desligado",
-  "btOffBody": "Ligue o Bluetooth para encontrar o carrinho.",
+  "btOffBody": "Ligue o Bluetooth para encontrar o carro.",
   "btDeniedTitle": "Bluetooth bloqueado",
   "btDeniedBody": "Libere o Bluetooth para este app nos ajustes do sistema.",
   "btUnsupportedTitle": "Bluetooth LE indisponível",
@@ -48,8 +48,8 @@
   "actionLight": "Luz",
   "actionTurbo": "Turbo",
   "actionDonut": "Giro 360°",
-  "hintHold": "enquanto estiver pressionado",
-  "hintToggle": "cada toque liga/desliga",
+  "hintHold": "enquanto pressionado",
+  "hintToggle": "cada toque liga e desliga",
   "controlsIntro": "Clique em “Adicionar” e aperte um botão do controle, empurre um analógico ou aperte uma tecla. Cada ação pode ter várias entradas.",
   "add": "Adicionar",
   "pressAnything": "Aperte um botão, direção ou tecla…",
@@ -94,7 +94,7 @@
   },
   "settingsTitle": "Ajustes",
   "language": "Idioma",
-  "languageSystem": "Padrão do sistema",
+  "languageSystem": "Sistema",
   "deadzone": "Zona morta do analógico: {percent}%",
   "@deadzone": {
     "placeholders": {
@@ -103,7 +103,7 @@
       }
     }
   },
-  "onScreen": "Mostrar controles na tela",
+  "onScreen": "Botões na tela",
   "onScreenHint": "Para tablet e celular",
   "about": "Sobre",
   "disclaimer": "Projeto de código aberto, independente e não oficial (MIT). Não é afiliado, endossado nem patrocinado por nenhuma marca de carros, brinquedos ou combustíveis. Todos os nomes pertencem aos seus donos.",

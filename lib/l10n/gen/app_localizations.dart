@@ -481,7 +481,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageSystem.
   ///
   /// In en, this message translates to:
-  /// **'System default'**
+  /// **'System'**
   String get languageSystem;
 
   /// No description provided for @deadzone.
@@ -493,7 +493,7 @@ abstract class AppLocalizations {
   /// No description provided for @onScreen.
   ///
   /// In en, this message translates to:
-  /// **'Show on-screen controls'**
+  /// **'On-screen buttons'**
   String get onScreen;
 
   /// No description provided for @onScreenHint.

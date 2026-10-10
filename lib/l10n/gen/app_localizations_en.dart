@@ -215,7 +215,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language => 'Language';
 
   @override
-  String get languageSystem => 'System default';
+  String get languageSystem => 'System';
 
   @override
   String deadzone(int percent) {
@@ -223,7 +223,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get onScreen => 'Show on-screen controls';
+  String get onScreen => 'On-screen buttons';
 
   @override
   String get onScreenHint => 'For tablets and phones';
