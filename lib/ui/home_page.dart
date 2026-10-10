@@ -5,6 +5,7 @@ import 'cars_panel.dart';
 import 'controllers_page.dart';
 import 'controls_page.dart';
 import 'drive_page.dart';
+import 'motion.dart';
 import 'settings_page.dart';
 
 /// Wide windows: car list on the left, tabs on the right.
@@ -52,7 +53,14 @@ class _HomePageState extends State<HomePage> {
                         onSelectionChanged: (s) => setState(() => _wide = s.first),
                       ),
                     ),
-                    Expanded(child: pages[_wide]),
+                    Expanded(
+                      child: AnimatedSwitcher(
+                        duration: motion(context, 240),
+                        transitionBuilder: fadeSlide,
+                        layoutBuilder: fillStack,
+                        child: KeyedSubtree(key: ValueKey('wide$_wide'), child: pages[_wide]),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -64,7 +72,14 @@ class _HomePageState extends State<HomePage> {
 
     const pages = [CarsPanel(), DrivePage(), ControlsPage(), ControllersPage(), SettingsPage()];
     return Scaffold(
-      body: SafeArea(child: pages[_narrow]),
+      body: SafeArea(
+        child: AnimatedSwitcher(
+          duration: motion(context, 240),
+          transitionBuilder: fadeSlide,
+          layoutBuilder: fillStack,
+          child: KeyedSubtree(key: ValueKey('narrow$_narrow'), child: pages[_narrow]),
+        ),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _narrow,
         onDestinationSelected: (i) => setState(() => _narrow = i),

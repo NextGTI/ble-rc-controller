@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/protocol.dart';
 import '../input/input_ref.dart';
 import '../l10n/gen/app_localizations.dart';
+import 'motion.dart';
 import 'strings.dart';
 import 'widgets.dart';
 
@@ -91,7 +92,7 @@ class _ActionRow extends StatelessWidget {
             onRemove: () => d.removeBinding(action, ref),
           ),
         if (capturing)
-          Container(
+          Pulse(child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
@@ -108,7 +109,7 @@ class _ActionRow extends StatelessWidget {
                 ),
               ],
             ),
-          )
+          ))
         else
           ActionChip(
             avatar: const Icon(Icons.add, size: 18),

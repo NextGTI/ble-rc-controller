@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../input/controller_profile.dart';
 import '../input/pad_input.dart';
 import '../l10n/gen/app_localizations.dart';
+import 'motion.dart';
 import 'strings.dart';
 import 'widgets.dart';
 
@@ -180,9 +181,22 @@ class _TeachWizard extends StatelessWidget {
               ] else ...[
                 Text(l.teachProgress(session.index + 1, total), style: t.labelLarge),
                 const SizedBox(height: 8),
-                LinearProgressIndicator(value: session.index / total),
+                TweenAnimationBuilder<double>(
+                  tween: Tween(end: session.index / total),
+                  duration: motion(context, 300),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, v, _) => LinearProgressIndicator(value: v),
+                ),
                 const SizedBox(height: 24),
-                Text(l.teach(session.current.id), style: t.headlineSmall),
+                AnimatedSwitcher(
+                  duration: motion(context, 260),
+                  transitionBuilder: fadeSlide,
+                  layoutBuilder: (current, previous) => Stack(
+                    alignment: Alignment.topLeft,
+                    children: [...previous, ?current],
+                  ),
+                  child: Text(l.teach(session.current.id), key: ValueKey(session.index), style: t.headlineSmall),
+                ),
                 const SizedBox(height: 8),
                 Text(l.teachIntro, style: t.bodySmall?.copyWith(color: Theme.of(context).hintColor)),
                 const SizedBox(height: 20),

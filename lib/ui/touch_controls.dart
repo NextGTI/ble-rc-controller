@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/driver.dart';
 import '../core/protocol.dart';
+import 'motion.dart';
 import 'strings.dart';
 import '../l10n/gen/app_localizations.dart';
 
@@ -111,7 +112,7 @@ class _HoldButtonState extends State<_HoldButton> {
     final base = widget.primary ? scheme.primary : scheme.surfaceContainerHighest;
     final fg = widget.primary ? scheme.onPrimary : scheme.onSurface;
     final tile = AnimatedContainer(
-      duration: const Duration(milliseconds: 70),
+      duration: motion(context, 70),
       width: widget.size,
       height: widget.size,
       decoration: BoxDecoration(
@@ -140,7 +141,7 @@ class _HoldButtonState extends State<_HoldButton> {
       onPointerDown: (_) => _set(true),
       onPointerUp: (_) => _set(false),
       onPointerCancel: (_) => _set(false),
-      child: tile,
+      child: AnimatedScale(scale: _down ? .93 : 1, duration: motion(context, 80), curve: Curves.easeOut, child: tile),
     );
   }
 }

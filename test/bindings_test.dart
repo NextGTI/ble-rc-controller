@@ -55,4 +55,44 @@ void main() {
     expect(InputRef.keyLabel(PhysicalKeyboardKey.space), 'Space');
     expect(InputRef.keyLabel(PhysicalKeyboardKey.digit5), '5');
   });
+
+  // Regression: PhysicalKeyboardKey.debugName is null in release builds, so the
+  // Buttons tab showed raw numbers (458834...) instead of "↑", "W", "Space".
+  test('key labels come from our own table, not from debug-only names', () {
+    final expected = {
+      PhysicalKeyboardKey.arrowUp: '↑',
+      PhysicalKeyboardKey.arrowDown: '↓',
+      PhysicalKeyboardKey.arrowLeft: '←',
+      PhysicalKeyboardKey.arrowRight: '→',
+      PhysicalKeyboardKey.keyW: 'W',
+      PhysicalKeyboardKey.keyA: 'A',
+      PhysicalKeyboardKey.keyS: 'S',
+      PhysicalKeyboardKey.keyD: 'D',
+      PhysicalKeyboardKey.keyL: 'L',
+      PhysicalKeyboardKey.keyQ: 'Q',
+      PhysicalKeyboardKey.keyM: 'M',
+      PhysicalKeyboardKey.space: 'Space',
+      PhysicalKeyboardKey.shiftLeft: 'Shift',
+      PhysicalKeyboardKey.digit7: '7',
+      PhysicalKeyboardKey.f5: 'F5',
+    };
+    expected.forEach((key, label) {
+      expect(InputRef.keyLabelForUsage(key.usbHidUsage), label, reason: key.usbHidUsage.toString());
+    });
+  });
+
+  test('a label saved as a bare number by an old release build is shown correctly', () {
+    // This is exactly what v1.0.0/v1.0.1 release builds stored for the ↑ key.
+    final old = InputRef('key:${PhysicalKeyboardKey.arrowUp.usbHidUsage}:${PhysicalKeyboardKey.arrowUp.usbHidUsage}');
+    expect(old.keyText, '↑');
+  });
+
+  test('no default keyboard binding is labelled with a number', () {
+    final numeric = RegExp(r'^\d{4,}$');
+    for (final refs in defaultBindings().values) {
+      for (final r in refs.where((r) => r.kind == InputKind.key)) {
+        expect(numeric.hasMatch(r.keyText), isFalse, reason: r.id);
+      }
+    }
+  });
 }

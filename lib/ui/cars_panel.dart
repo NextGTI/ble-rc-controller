@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/car_transport.dart';
 import '../core/driver.dart';
 import '../l10n/gen/app_localizations.dart';
+import 'motion.dart';
 import 'strings.dart';
 import 'widgets.dart';
 
@@ -28,7 +29,7 @@ class CarsPanel extends StatelessWidget {
         body = d.cars.isEmpty
             ? Notice(title: l.carsSearching, body: l.carsHint, icon: Icons.bluetooth_searching)
             : ListView(
-                children: [for (final c in d.cars) _CarTile(car: c)],
+                children: [for (final c in d.cars) EntranceAnimation(key: ValueKey(c.id), child: _CarTile(car: c))],
               );
     }
 
