@@ -2,6 +2,9 @@ import 'dart:typed_data';
 
 enum BluetoothState { unknown, ready, off, unauthorized, unsupported }
 
+/// The four signal bars, said in three words.
+enum SignalStrength { strong, medium, weak }
+
 /// A car seen during a scan.
 class FoundCar {
   const FoundCar({required this.id, required this.name, required this.rssi});
@@ -21,6 +24,19 @@ class FoundCar {
     if (rssi >= -85) return 2;
     return 1;
   }
+
+  /// Level 4 is strong, levels 3 and 2 are medium, level 1 is weak.
+  SignalStrength get signalStrength {
+    switch (signalLevel) {
+      case 4:
+        return SignalStrength.strong;
+      case 3:
+      case 2:
+        return SignalStrength.medium;
+      default:
+        return SignalStrength.weak;
+    }
+  }
 }
 
 /// Everything the app needs from Bluetooth, so it can be faked in tests.
@@ -30,6 +46,12 @@ abstract class CarTransport {
 
   /// Throws if the user denies the permission.
   Future<void> requestPermissions();
+
+  /// Whether the app can ask the system to turn Bluetooth on (Android only).
+  bool get canEnableBluetooth;
+
+  /// Asks the system to turn Bluetooth on. Returns `false` if it could not.
+  Future<bool> enableBluetooth();
 
   Stream<FoundCar> get scanResults;
   Future<void> startScan();

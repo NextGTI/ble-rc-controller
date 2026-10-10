@@ -20,6 +20,10 @@ class _NoBle implements CarTransport {
   @override
   Future<void> requestPermissions() async {}
   @override
+  bool get canEnableBluetooth => false;
+  @override
+  Future<bool> enableBluetooth() async => false;
+  @override
   Stream<FoundCar> get scanResults => const Stream.empty();
   @override
   Future<void> startScan() async {}

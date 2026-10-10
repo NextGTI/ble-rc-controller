@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform;
 import 'package:universal_ble/universal_ble.dart';
 
 import 'car_transport.dart';
@@ -43,6 +44,18 @@ class UniversalBleTransport implements CarTransport {
 
   @override
   Future<void> requestPermissions() => UniversalBle.requestPermissions();
+
+  @override
+  bool get canEnableBluetooth => defaultTargetPlatform == TargetPlatform.android;
+
+  @override
+  Future<bool> enableBluetooth() async {
+    try {
+      return await UniversalBle.enableBluetooth();
+    } catch (_) {
+      return false;
+    }
+  }
 
   static bool _isCar(BleDevice d) {
     final name = d.name ?? d.rawName ?? '';

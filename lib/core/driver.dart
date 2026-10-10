@@ -231,6 +231,27 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   // ---------------------------------------------------------------------------
   // Bluetooth
   // ---------------------------------------------------------------------------
+  /// Whether the system can be asked to turn Bluetooth on (Android only).
+  bool get canEnableBluetooth => transport.canEnableBluetooth;
+
+  /// Asks the system to turn Bluetooth on. The availability stream reports
+  /// the result, so nothing else is needed here.
+  Future<void> enableBluetooth() async {
+    await transport.enableBluetooth();
+  }
+
+  /// Asks for the Bluetooth permission again. If it is granted the denial
+  /// goes away and Bluetooth is read afresh; if not, the message stays.
+  Future<void> retryPermissions() async {
+    try {
+      await transport.requestPermissions();
+    } catch (_) {
+      return;
+    }
+    if (_message == MessageKind.permissionDenied) _message = null;
+    _onAvailability(await transport.currentAvailability());
+  }
+
   void _onAvailability(BluetoothState s) {
     _bluetooth = s;
     if (s == BluetoothState.ready) {

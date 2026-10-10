@@ -21,6 +21,10 @@ class _Ble implements CarTransport {
   @override
   Future<void> requestPermissions() async {}
   @override
+  bool get canEnableBluetooth => false;
+  @override
+  Future<bool> enableBluetooth() async => false;
+  @override
   Stream<FoundCar> get scanResults => scan.stream;
   @override
   Future<void> startScan() async {}

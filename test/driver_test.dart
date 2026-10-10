@@ -27,9 +27,15 @@ void main() {
   late StreamController<GamepadConnectionEvent> connEvents;
   late Driver driver;
 
-  Future<void> setUp0([Map<String, Object> prefs = const {}, Duration? carStaleAfter]) async {
+  /// [fake] lets a test set up the transport (for example `denyPermission`)
+  /// before the driver starts; otherwise a fresh one is used.
+  Future<void> setUp0([
+    Map<String, Object> prefs = const {},
+    Duration? carStaleAfter,
+    FakeTransport? fake,
+  ]) async {
     SharedPreferences.setMockInitialValues(prefs);
-    transport = FakeTransport();
+    transport = fake ?? FakeTransport();
     raw = StreamController<GamepadEvent>.broadcast();
     connEvents = StreamController<GamepadConnectionEvent>.broadcast();
     driver = Driver(
@@ -508,5 +514,35 @@ void main() {
     await first;
     expect(driver.carId, 'car2');
     expect(transport.connected, ['car2'], reason: 'the late car1 connection is undone');
+  });
+
+  test('retrying the permission clears the denial when it is granted', () async {
+    await setUp0(const {}, null, FakeTransport()..denyPermission = true);
+    expect(driver.message, MessageKind.permissionDenied);
+    transport.denyPermission = false;
+    await driver.retryPermissions();
+    expect(driver.message, isNull);
+  });
+
+  test('retrying the permission reads Bluetooth again', () async {
+    await setUp0(const {}, null, FakeTransport()..state = BluetoothState.unauthorized);
+    expect(driver.bluetooth, BluetoothState.unauthorized);
+    transport.state = BluetoothState.ready;
+    await driver.retryPermissions();
+    expect(driver.bluetooth, BluetoothState.ready);
+  });
+
+  test('retrying the permission keeps the denial while it is still refused', () async {
+    await setUp0(const {}, null, FakeTransport()..denyPermission = true);
+    await driver.retryPermissions();
+    expect(driver.message, MessageKind.permissionDenied);
+    expect(transport.permissionCalls, 2, reason: 'once at start, once on retry');
+  });
+
+  test('enableBluetooth goes through the transport', () async {
+    await setUp0();
+    expect(driver.canEnableBluetooth, isTrue);
+    await driver.enableBluetooth();
+    expect(transport.enableCalls, 1);
   });
 }

@@ -104,4 +104,27 @@ void main() {
       }
     }
   });
+
+  test('shortcut helpers read the current bindings', () {
+    final b = defaultBindings();
+    expect(firstPadInput(b, CarAction.turbo), InputRef.pad(PadInput.b));
+    expect(keyInputs(b, CarAction.forward).map((r) => r.keyText), ['↑', 'W']);
+    expect(
+        firstPadInput({
+          CarAction.turbo: [InputRef.key(PhysicalKeyboardKey.space)]
+        }, CarAction.turbo),
+        isNull);
+  });
+
+  test('a learned controller signal counts as the controller input', () {
+    final b = {
+      CarAction.light: [
+        InputRef.key(PhysicalKeyboardKey.keyL),
+        InputRef.raw('KEYCODE_FOO', 1),
+      ],
+    };
+    expect(firstPadInput(b, CarAction.light), InputRef.raw('KEYCODE_FOO', 1));
+    expect(keyInputs(b, CarAction.light).map((r) => r.keyText), ['L']);
+    expect(keyInputs(b, CarAction.turbo), isEmpty);
+  });
 }

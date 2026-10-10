@@ -14,6 +14,21 @@ class FakeTransport implements CarTransport {
   final connected = <String>[];
   bool failConnect = false;
 
+  /// What [currentAvailability] reports.
+  BluetoothState state = BluetoothState.ready;
+
+  /// When true, [requestPermissions] throws, like a user who said no.
+  bool denyPermission = false;
+
+  /// How many times [requestPermissions] was called.
+  int permissionCalls = 0;
+
+  /// How many times [enableBluetooth] was called.
+  int enableCalls = 0;
+
+  @override
+  bool canEnableBluetooth = true;
+
   /// How long [connect] takes before it succeeds (or throws).
   Duration connectDelay = Duration.zero;
 
@@ -23,9 +38,19 @@ class FakeTransport implements CarTransport {
   @override
   Stream<BluetoothState> get availability => avail.stream;
   @override
-  Future<BluetoothState> currentAvailability() async => BluetoothState.ready;
+  Future<BluetoothState> currentAvailability() async => state;
   @override
-  Future<void> requestPermissions() async {}
+  Future<void> requestPermissions() async {
+    permissionCalls++;
+    if (denyPermission) throw StateError('permission denied');
+  }
+
+  @override
+  Future<bool> enableBluetooth() async {
+    enableCalls++;
+    return true;
+  }
+
   @override
   Stream<FoundCar> get scanResults => scan.stream;
   @override

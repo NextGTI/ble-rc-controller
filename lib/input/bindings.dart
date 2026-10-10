@@ -47,6 +47,21 @@ Bindings defaultBindings() => {
       ],
     };
 
+/// The first controller input (pad button or learned raw signal) bound to
+/// [a], or null if it only has keys.
+InputRef? firstPadInput(Bindings b, CarAction a) {
+  for (final r in b[a] ?? const <InputRef>[]) {
+    if (r.kind != InputKind.key) return r;
+  }
+  return null;
+}
+
+/// Every keyboard key bound to [a], in order.
+List<InputRef> keyInputs(Bindings b, CarAction a) => [
+      for (final r in b[a] ?? const <InputRef>[])
+        if (r.kind == InputKind.key) r,
+    ];
+
 String encodeBindings(Bindings b) => jsonEncode({
       for (final e in b.entries) e.key.name: [for (final r in e.value) r.id],
     });
