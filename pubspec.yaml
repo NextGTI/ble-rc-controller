@@ -97,6 +97,14 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
+  assets:
+    - assets/fonts/OFL-Saira.txt
+
+  fonts:
+    - family: Saira
+      fonts:
+        - asset: assets/fonts/Saira-Variable.ttf
+
 flutter_launcher_icons:
   image_path: "assets/icon/icon.png"
   min_sdk_android: 21
