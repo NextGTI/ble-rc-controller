@@ -35,20 +35,23 @@ class ControlsPage extends StatelessWidget {
         const Divider(height: 1),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Row(
-            children: [
-              Expanded(
-                child: CheckboxListTile(
-                  dense: true,
-                  controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(l.useKeyboard),
-                  value: d.keyboardEnabled,
-                  onChanged: (v) => d.keyboardEnabled = v ?? true,
-                ),
-              ),
-              TextButton(onPressed: d.resetBindings, child: Text(l.restoreDefaults)),
-            ],
-          ),
+          // Phones: stack the checkbox and the button; side by side when wide.
+          child: LayoutBuilder(builder: (context, c) {
+            final keyboard = CheckboxListTile(
+              dense: true,
+              controlAffinity: ListTileControlAffinity.leading,
+              title: Text(l.useKeyboard),
+              value: d.keyboardEnabled,
+              onChanged: (v) => d.keyboardEnabled = v ?? true,
+            );
+            final reset = TextButton(onPressed: d.resetBindings, child: Text(l.restoreDefaults));
+            return c.maxWidth < 560
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [keyboard, Align(alignment: Alignment.centerRight, child: reset)],
+                  )
+                : Row(children: [Expanded(child: keyboard), reset]);
+          }),
         ),
       ],
     );
@@ -66,58 +69,66 @@ class _ActionRow extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final t = Theme.of(context).textTheme;
     final capturing = d.capturing == action;
-    return SectionCard(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(l.action(action), style: t.titleMedium),
-                Text(l.actionHint(action), style: t.bodySmall?.copyWith(color: Theme.of(context).hintColor)),
-              ],
-            ),
+    final header = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l.action(action), style: t.titleMedium),
+        Text(l.actionHint(action), style: t.bodySmall?.copyWith(color: Theme.of(context).hintColor)),
+      ],
+    );
+    final chips = Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        for (final ref in d.bindings[action] ?? const <InputRef>[])
+          _BindingChip(
+            label: l.input(ref),
+            kind: ref.kind,
+            shared: d.actionsUsing(ref).length > 1,
+            sharedMessage: l.sharedInput,
+            removeLabel: l.remove,
+            onRemove: () => d.removeBinding(action, ref),
           ),
-          Expanded(
+        if (capturing)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(99),
+            ),
             child: Wrap(
-              spacing: 6,
-              runSpacing: 6,
+              spacing: 8,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                for (final ref in d.bindings[action] ?? const <InputRef>[])
-                  _BindingChip(
-                    label: l.input(ref),
-                    kind: ref.kind,
-                    shared: d.actionsUsing(ref).length > 1,
-                    sharedMessage: l.sharedInput,
-                    removeLabel: l.remove,
-                    onRemove: () => d.removeBinding(action, ref),
-                  ),
-                if (capturing)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Text(l.pressAnything),
-                      const SizedBox(width: 8),
-                      InkWell(onTap: d.cancelCapture, child: Text(l.cancel, style: TextStyle(color: Theme.of(context).colorScheme.primary))),
-                    ]),
-                  )
-                else
-                  ActionChip(
-                    avatar: const Icon(Icons.add, size: 18),
-                    label: Text(l.add),
-                    onPressed: () => d.beginCapture(action),
-                  ),
+                Text(l.pressAnything),
+                InkWell(
+                  onTap: d.cancelCapture,
+                  child: Text(l.cancel, style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                ),
               ],
             ),
+          )
+        else
+          ActionChip(
+            avatar: const Icon(Icons.add, size: 18),
+            label: Text(l.add),
+            onPressed: () => d.beginCapture(action),
           ),
-        ],
+      ],
+    );
+    return SectionCard(
+      // Phones: title on top, chips below at full width. Wide: title on the left.
+      child: LayoutBuilder(
+        builder: (context, c) => c.maxWidth < 440
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [header, const SizedBox(height: 10), chips],
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [SizedBox(width: 120, child: header), Expanded(child: chips)],
+              ),
       ),
     );
   }
@@ -150,7 +161,7 @@ class _BindingChip extends StatelessWidget {
     return InputChip(
       avatar: Icon(icon, size: 18),
       label: Row(mainAxisSize: MainAxisSize.min, children: [
-        Text(label),
+        Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
         if (shared) ...[
           const SizedBox(width: 4),
           Tooltip(message: sharedMessage, child: const Icon(Icons.warning_amber_rounded, size: 16, color: Colors.orange)),
