@@ -16,20 +16,24 @@ class TouchControls extends StatelessWidget {
     final l = AppLocalizations.of(context);
     return LayoutBuilder(builder: (context, c) {
       final narrow = c.maxWidth < 520;
+      // On phones four big buttons share one row, so size them to fit the
+      // available width (a 360 dp phone has only ~328 dp inside the margins).
+      final big = narrow ? ((c.maxWidth - 36) / 4).clamp(52.0, 84.0) : 84.0;
+      final small = ((c.maxWidth - 24) / 4).clamp(48.0, 64.0);
       final steer = Row(
         mainAxisSize: MainAxisSize.min,
-        children: const [
-          _HoldButton(action: CarAction.left, icon: Icons.arrow_back_rounded, size: 84),
-          SizedBox(width: 12),
-          _HoldButton(action: CarAction.right, icon: Icons.arrow_forward_rounded, size: 84),
+        children: [
+          _HoldButton(action: CarAction.left, icon: Icons.arrow_back_rounded, size: big),
+          const SizedBox(width: 12),
+          _HoldButton(action: CarAction.right, icon: Icons.arrow_forward_rounded, size: big),
         ],
       );
       final pedals = Row(
         mainAxisSize: MainAxisSize.min,
-        children: const [
-          _HoldButton(action: CarAction.reverse, icon: Icons.arrow_downward_rounded, size: 84),
-          SizedBox(width: 12),
-          _HoldButton(action: CarAction.forward, icon: Icons.arrow_upward_rounded, size: 84, primary: true),
+        children: [
+          _HoldButton(action: CarAction.reverse, icon: Icons.arrow_downward_rounded, size: big),
+          const SizedBox(width: 12),
+          _HoldButton(action: CarAction.forward, icon: Icons.arrow_upward_rounded, size: big, primary: true),
         ],
       );
       final extras = Wrap(
@@ -37,10 +41,10 @@ class TouchControls extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          _HoldButton(action: CarAction.light, icon: Icons.light_mode_outlined, label: l.actionLight, size: 64),
-          _HoldButton(action: CarAction.turbo, icon: Icons.bolt_rounded, label: l.actionTurbo, size: 64),
-          _HoldButton(action: CarAction.donut, icon: Icons.sync_rounded, label: l.actionDonut, size: 64),
-          _HoldButton(action: CarAction.mode, icon: Icons.tune_rounded, label: l.actionMode, size: 64),
+          _HoldButton(action: CarAction.light, icon: Icons.light_mode_outlined, label: l.actionLight, size: small),
+          _HoldButton(action: CarAction.turbo, icon: Icons.bolt_rounded, label: l.actionTurbo, size: small),
+          _HoldButton(action: CarAction.donut, icon: Icons.sync_rounded, label: l.actionDonut, size: small),
+          _HoldButton(action: CarAction.mode, icon: Icons.tune_rounded, label: l.actionMode, size: small),
         ],
       );
       if (narrow) {
