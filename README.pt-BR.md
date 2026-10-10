@@ -6,7 +6,12 @@ Pilote carrinhos de controle remoto com Bluetooth LE usando um **controle** (Dua
 
 O app oficial do carrinho só roda em celulares. Este app usa a mesma interface Bluetooth, então você pode usar um controle de verdade.
 
-> **Projeto não oficial.** É independente, de código aberto (MIT) e **não é afiliado, endossado nem patrocinado** por nenhuma marca de carros, brinquedos ou combustíveis. Todos os nomes pertencem aos seus donos. Veja o [Aviso legal](#aviso-legal).
+> **Projeto não oficial.** É independente, de código aberto (MIT) e **não é afiliado, endossado nem patrocinado** pela Shell nem por nenhuma outra marca de carros, brinquedos ou combustíveis. "Shell" e todos os outros nomes pertencem aos seus respectivos donos e são usados aqui apenas para dizer com quais carrinhos este app funciona. Veja o [Aviso legal](#aviso-legal).
+
+## Carrinhos compatíveis
+
+- **Carrinhos RC Bluetooth da Shell** (os vendidos nos postos Shell). Verificado com um modelo; os outros modelos parecem usar a mesma interface Bluetooth e devem funcionar. Relatos são bem-vindos.
+- **Mais carrinhos virão.** O suporte a outros carrinhos de brinquedo Bluetooth LE será ampliado aos poucos; veja o [CONTRIBUTING.md](CONTRIBUTING.md) para ajudar.
 
 ## Recursos
 
@@ -99,7 +104,7 @@ Issues e pull requests são bem-vindos — principalmente relatos de teste em ha
 
 ## Aviso legal
 
-É um projeto independente de interoperabilidade. Não contém, distribui nem depende de código, arquivos ou marcas do fabricante do carrinho ou do app dele. Use por sua conta e risco: o carro pode se mexer de repente, então use em área livre. As leis sobre engenharia reversa e interoperabilidade variam por país; nada aqui é orientação jurídica.
+É um projeto independente de interoperabilidade. Não contém, distribui nem depende de código ou arquivos do fabricante do carrinho ou do app dele, e não usa logotipos. Nomes de marcas aparecem apenas para descrever a compatibilidade. Use por sua conta e risco: o carro pode se mexer de repente, então use em área livre. As leis sobre engenharia reversa e interoperabilidade variam por país; nada aqui é orientação jurídica.
 
 ## Licença
 

@@ -21,7 +21,15 @@ flutter test
 - Keep `flutter analyze` clean and add a test for logic changes (`test/`).
 - UI text goes in `tool/gen_arb.py` for **all three languages** (English, Spanish, Portuguese), then run `python3 tool/gen_arb.py && flutter gen-l10n`.
 - The car protocol lives in `lib/core/protocol.dart` and `docs/PROTOCOL.md` (keep the three translated copies in sync).
-- Please don't add code, assets or trademarks that belong to a car, toy or fuel brand.
+- Please don't add code, assets or logos that belong to a car, toy or fuel brand. Brand names are fine only to describe compatibility.
+
+## Adding support for another car
+
+More cars are planned. To help, open an issue with:
+
+- the car's Bluetooth name as advertised (e.g. `SL-…`) and its brand/model;
+- the GATT services and characteristics (a BLE scanner app such as nRF Connect shows them);
+- whether the car reacts to the 8-byte packet described in [docs/PROTOCOL.md](docs/PROTOCOL.md).
 
 ## Adding a controller
 

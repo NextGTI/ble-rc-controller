@@ -6,7 +6,12 @@ Conduce coches de juguete RC con Bluetooth LE usando un **mando** (DualShock 4, 
 
 La app oficial del coche solo funciona en móviles. Esta app usa la misma interfaz Bluetooth, así que puedes usar un mando de verdad.
 
-> **Proyecto no oficial.** Es independiente, de código abierto (MIT) y **no está afiliado, respaldado ni patrocinado** por ninguna marca de coches, juguetes o combustibles. Todos los nombres pertenecen a sus dueños. Consulta el [Aviso legal](#aviso-legal).
+> **Proyecto no oficial.** Es independiente, de código abierto (MIT) y **no está afiliado, respaldado ni patrocinado** por Shell ni por ninguna otra marca de coches, juguetes o combustibles. «Shell» y todos los demás nombres pertenecen a sus respectivos dueños y se usan aquí solo para indicar con qué coches funciona esta app. Consulta el [Aviso legal](#aviso-legal).
+
+## Coches compatibles
+
+- **Coches RC Bluetooth de Shell** (los que se venden en las gasolineras Shell). Verificado con un modelo; los demás modelos parecen usar la misma interfaz Bluetooth y deberían funcionar. Se agradecen reportes.
+- **Vendrán más coches.** Se irá añadiendo compatibilidad con otros coches de juguete Bluetooth LE; consulta [CONTRIBUTING.md](CONTRIBUTING.md) para ayudar.
 
 ## Funciones
 
@@ -99,7 +104,7 @@ Se agradecen issues y pull requests, sobre todo reportes de pruebas con hardware
 
 ## Aviso legal
 
-Es un proyecto independiente de interoperabilidad. No contiene, distribuye ni depende de código, recursos o marcas del fabricante del coche ni de su app. Úsalo bajo tu responsabilidad: el coche puede moverse de golpe, así que úsalo en un lugar despejado. Las leyes sobre ingeniería inversa e interoperabilidad varían según el país; nada aquí es asesoría legal.
+Es un proyecto independiente de interoperabilidad. No contiene, distribuye ni depende de código ni recursos del fabricante del coche ni de su app, y no usa logotipos. Los nombres de marcas aparecen solo para describir la compatibilidad. Úsalo bajo tu responsabilidad: el coche puede moverse de golpe, así que úsalo en un lugar despejado. Las leyes sobre ingeniería inversa e interoperabilidad varían según el país; nada aquí es asesoría legal.
 
 ## Licencia
 

@@ -6,7 +6,12 @@ Drive Bluetooth LE toy RC cars with a **gamepad** (DualShock 4, DualSense, Xbox,
 
 The car's own companion app only runs on phones. This app talks to the same Bluetooth interface, so you can use a real controller instead.
 
-> **Unofficial project.** It is independent, open source (MIT) and **not affiliated with, endorsed by or sponsored by** any car, toy or fuel brand. All product names belong to their owners. See [Disclaimer](#disclaimer).
+> **Unofficial project.** It is independent, open source (MIT) and **not affiliated with, endorsed by or sponsored by** Shell or any other car, toy or fuel brand. "Shell" and all other names belong to their respective owners and are used here only to say which cars this app works with. See [Disclaimer](#disclaimer).
+
+## Compatible cars
+
+- **Shell Bluetooth RC cars** (the ones sold at Shell fuel stations). Verified with one model; the other models appear to use the same Bluetooth interface and should work. Reports are welcome.
+- **More cars are coming.** Support for other Bluetooth LE toy cars will be added over time; see [CONTRIBUTING.md](CONTRIBUTING.md) to help.
 
 ## Features
 
@@ -99,7 +104,7 @@ Issues and pull requests are welcome — especially test reports from real hardw
 
 ## Disclaimer
 
-This is an independent interoperability project. It does not contain, distribute or depend on any code, assets or trademarks from the car's manufacturer or its app. Use it at your own risk: the car can move suddenly, so use it in a clear area. Laws on reverse engineering and interoperability vary by country; nothing here is legal advice.
+This is an independent interoperability project. It does not contain, distribute or depend on any code or assets from the car's manufacturer or its app, and it uses no logos. Brand names appear only to describe compatibility. Use it at your own risk: the car can move suddenly, so use it in a clear area. Laws on reverse engineering and interoperability vary by country; nothing here is legal advice.
 
 ## License
 
