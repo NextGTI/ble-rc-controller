@@ -425,6 +425,27 @@ void main() {
       );
     }
 
+    for (final size in const [Size(320, 568), Size(390, 844), Size(600, 960)]) {
+      for (final code in _locales) {
+        _cockpitTest(
+          'a narrow window on a computer keeps the legend and fits '
+          '(${size.width.toInt()}x${size.height.toInt()}, $code)',
+          (t, rig) async {
+            await _mount(t, rig, size: size, locale: code);
+            await t.pumpAndSettle();
+            expect(t.takeException(), isNull);
+            expect(find.byType(KeyLegend), findsOneWidget);
+            final legend = t.getRect(find.byType(KeyLegend));
+            expect(legend.bottom, lessThanOrEqualTo(size.height));
+            expect(legend.right, lessThanOrEqualTo(size.width));
+            expect(t.getSize(_frame()).width, greaterThanOrEqualTo(100));
+          },
+          prefs: _noArrows,
+          platform: TargetPlatform.macOS,
+        );
+      }
+    }
+
     _cockpitTest(
       'a computer with the keyboard off has no legend',
       (t, rig) async {
