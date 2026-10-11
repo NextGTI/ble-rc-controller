@@ -1,10 +1,13 @@
 package io.github.blerc.ble_rc_controller
 
 import android.hardware.input.InputManager
+import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.WindowInsetsController
 import io.flutter.embedding.android.FlutterActivity
 import org.flame_engine.gamepads_android.GamepadsCompatibleActivity
 
@@ -15,6 +18,29 @@ import org.flame_engine.gamepads_android.GamepadsCompatibleActivity
 class MainActivity : FlutterActivity(), GamepadsCompatibleActivity {
     private var keyListener: ((KeyEvent) -> Boolean)? = null
     private var motionListener: ((MotionEvent) -> Boolean)? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        keepNavigationButtonsLight()
+    }
+
+    /**
+     * The app is dark only, so the Android navigation buttons must be light.
+     * On Android 15 and later the system marks the navigation bar as light
+     * (dark buttons) on the first layout, after Flutter has asked for light
+     * buttons, which leaves them invisible on the dark background. Clear the
+     * mark whenever it comes back; reading it each frame costs nothing.
+     */
+    private fun keepNavigationButtonsLight() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return
+        val lightBar = WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+        window.decorView.viewTreeObserver.addOnPreDrawListener {
+            window.insetsController?.let { c ->
+                if (c.systemBarsAppearance and lightBar != 0) c.setSystemBarsAppearance(0, lightBar)
+            }
+            true
+        }
+    }
 
     override fun dispatchGenericMotionEvent(motionEvent: MotionEvent): Boolean {
         if (motionListener?.invoke(motionEvent) == true) return true
