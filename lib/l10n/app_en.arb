@@ -1,45 +1,18 @@
 {
   "@@locale": "en",
   "appTitle": "BLE RC Controller",
-  "navCars": "Cars",
-  "navDrive": "Drive",
-  "navControls": "Buttons",
-  "navControllers": "Controllers",
-  "navSettings": "Settings",
-  "carsTitle": "Cars",
-  "carsSearching": "Looking for cars…",
-  "carsHint": "Turn the car on. It shows up here by itself (names starting with “SL-”).",
   "btOffTitle": "Bluetooth is off",
   "btOffBody": "Turn Bluetooth on to find your car.",
   "btDeniedTitle": "Bluetooth blocked",
   "btDeniedBody": "Allow Bluetooth for this app in your system settings.",
   "btUnsupportedTitle": "Bluetooth LE not available",
   "btUnsupportedBody": "This device cannot talk to the car.",
-  "connect": "Connect",
-  "connectTo": "Connect to {car}",
-  "@connectTo": {
-    "placeholders": {
-      "car": {
-        "type": "String"
-      }
-    }
-  },
   "disconnect": "Disconnect",
   "connecting": "Connecting…",
   "connectedLabel": "Connected",
-  "noCar": "No car connected",
-  "noCarHint": "Pick a car from the list to connect (click or tap).",
   "msgConnectFailed": "Could not connect. Turn the car off and on, and make sure no other app is connected to it.",
   "msgDropped": "The car disconnected.",
   "msgPermission": "Bluetooth permission was denied.",
-  "batteryPercent": "Battery {percent}%",
-  "@batteryPercent": {
-    "placeholders": {
-      "percent": {
-        "type": "int"
-      }
-    }
-  },
   "rememberLast": "Reconnect to the last car",
   "actionForward": "Forward",
   "actionReverse": "Reverse",
@@ -50,9 +23,7 @@
   "actionDonut": "360° spin",
   "hintHold": "while pressed",
   "hintToggle": "each press switches on/off",
-  "controlsIntro": "Tap “Add”, then press a controller button, push a stick or press a key. Each action can have several inputs.",
   "add": "Add",
-  "pressAnything": "Press a button, direction or key…",
   "cancel": "Cancel",
   "remove": "Remove",
   "restoreDefaults": "Restore defaults",
@@ -64,26 +35,11 @@
   "controllerRecognised": "Recognised layout",
   "controllerCustom": "Custom mapping",
   "teachController": "Teach this controller…",
-  "forgetMapping": "Forget custom mapping",
   "teachTitle": "Teach controller",
   "teachIntro": "Press the button (or move the stick) the app asks for. Skip anything your controller does not have. Press Esc to cancel.",
-  "teachProgress": "Step {n} of {total}",
-  "@teachProgress": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "teachDone": "All set! This controller now works with every action.",
   "done": "Done",
   "skip": "Skip",
-  "inputMonitor": "Input monitor",
-  "monitorHint": "Press buttons and move sticks: the raw signals show up here. Handy for unknown controllers.",
-  "monitorEmpty": "No signals yet.",
   "rawInput": "Raw: {key}",
   "@rawInput": {
     "placeholders": {
@@ -115,9 +71,6 @@
       }
     }
   },
-  "driveLive": "Live inputs",
-  "keyboardTipTitle": "Keyboard",
-  "safetyNote": "Inputs only count while this window is in front. If you switch apps the car stops.",
   "noCarShort": "No car",
   "statusSearching": "Searching",
   "statusConnecting": "Connecting",

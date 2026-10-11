@@ -1,45 +1,18 @@
 {
   "@@locale": "pt",
   "appTitle": "BLE RC Controller",
-  "navCars": "Carros",
-  "navDrive": "Pilotar",
-  "navControls": "Botões",
-  "navControllers": "Controles",
-  "navSettings": "Ajustes",
-  "carsTitle": "Carros",
-  "carsSearching": "Procurando carros…",
-  "carsHint": "Ligue o carrinho. Ele aparece aqui sozinho (nomes que começam com “SL-”).",
   "btOffTitle": "Bluetooth desligado",
   "btOffBody": "Ligue o Bluetooth para encontrar o carro.",
   "btDeniedTitle": "Bluetooth bloqueado",
   "btDeniedBody": "Libere o Bluetooth para este app nos ajustes do sistema.",
   "btUnsupportedTitle": "Bluetooth LE indisponível",
   "btUnsupportedBody": "Este aparelho não consegue falar com o carro.",
-  "connect": "Conectar",
-  "connectTo": "Conectar ao {car}",
-  "@connectTo": {
-    "placeholders": {
-      "car": {
-        "type": "String"
-      }
-    }
-  },
   "disconnect": "Desconectar",
   "connecting": "Conectando…",
   "connectedLabel": "Conectado",
-  "noCar": "Nenhum carro conectado",
-  "noCarHint": "Escolha um carro na lista para conectar (clique ou toque).",
   "msgConnectFailed": "Não foi possível conectar. Desligue e ligue o carro e confira se nenhum outro app está conectado a ele.",
   "msgDropped": "O carro desconectou.",
   "msgPermission": "A permissão de Bluetooth foi negada.",
-  "batteryPercent": "Bateria {percent}%",
-  "@batteryPercent": {
-    "placeholders": {
-      "percent": {
-        "type": "int"
-      }
-    }
-  },
   "rememberLast": "Reconectar ao último carro",
   "actionForward": "Frente",
   "actionReverse": "Ré",
@@ -50,9 +23,7 @@
   "actionDonut": "Giro 360°",
   "hintHold": "enquanto pressionado",
   "hintToggle": "cada toque liga e desliga",
-  "controlsIntro": "Clique em “Adicionar” e aperte um botão do controle, empurre um analógico ou aperte uma tecla. Cada ação pode ter várias entradas.",
   "add": "Adicionar",
-  "pressAnything": "Aperte um botão, direção ou tecla…",
   "cancel": "Cancelar",
   "remove": "Remover",
   "restoreDefaults": "Restaurar padrão",
@@ -64,26 +35,11 @@
   "controllerRecognised": "Layout reconhecido",
   "controllerCustom": "Mapeamento personalizado",
   "teachController": "Ensinar este controle…",
-  "forgetMapping": "Esquecer mapeamento personalizado",
   "teachTitle": "Ensinar controle",
   "teachIntro": "Aperte o botão (ou mova o analógico) que o app pedir. Pule o que o seu controle não tiver. Esc cancela.",
-  "teachProgress": "Passo {n} de {total}",
-  "@teachProgress": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "teachDone": "Pronto! Este controle já funciona com todas as ações.",
   "done": "Pronto",
   "skip": "Pular",
-  "inputMonitor": "Monitor de entradas",
-  "monitorHint": "Aperte botões e mova os analógicos: os sinais brutos aparecem aqui. Útil para controles desconhecidos.",
-  "monitorEmpty": "Nenhum sinal ainda.",
   "rawInput": "Bruto: {key}",
   "@rawInput": {
     "placeholders": {
@@ -115,9 +71,6 @@
       }
     }
   },
-  "driveLive": "Entradas ao vivo",
-  "keyboardTipTitle": "Teclado",
-  "safetyNote": "As entradas só valem com esta janela em primeiro plano. Se você trocar de app, o carro para.",
   "noCarShort": "Nenhum carro",
   "statusSearching": "Procurando",
   "statusConnecting": "Conectando",

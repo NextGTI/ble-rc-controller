@@ -13,31 +13,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'BLE RC Controller';
 
   @override
-  String get navCars => 'Cars';
-
-  @override
-  String get navDrive => 'Drive';
-
-  @override
-  String get navControls => 'Buttons';
-
-  @override
-  String get navControllers => 'Controllers';
-
-  @override
-  String get navSettings => 'Settings';
-
-  @override
-  String get carsTitle => 'Cars';
-
-  @override
-  String get carsSearching => 'Looking for cars…';
-
-  @override
-  String get carsHint =>
-      'Turn the car on. It shows up here by itself (names starting with “SL-”).';
-
-  @override
   String get btOffTitle => 'Bluetooth is off';
 
   @override
@@ -57,14 +32,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get btUnsupportedBody => 'This device cannot talk to the car.';
 
   @override
-  String get connect => 'Connect';
-
-  @override
-  String connectTo(String car) {
-    return 'Connect to $car';
-  }
-
-  @override
   String get disconnect => 'Disconnect';
 
   @override
@@ -72,12 +39,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connectedLabel => 'Connected';
-
-  @override
-  String get noCar => 'No car connected';
-
-  @override
-  String get noCarHint => 'Pick a car from the list to connect (click or tap).';
 
   @override
   String get msgConnectFailed =>
@@ -88,11 +49,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get msgPermission => 'Bluetooth permission was denied.';
-
-  @override
-  String batteryPercent(int percent) {
-    return 'Battery $percent%';
-  }
 
   @override
   String get rememberLast => 'Reconnect to the last car';
@@ -125,14 +81,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintToggle => 'each press switches on/off';
 
   @override
-  String get controlsIntro =>
-      'Tap “Add”, then press a controller button, push a stick or press a key. Each action can have several inputs.';
-
-  @override
   String get add => 'Add';
-
-  @override
-  String get pressAnything => 'Press a button, direction or key…';
 
   @override
   String get cancel => 'Cancel';
@@ -169,19 +118,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teachController => 'Teach this controller…';
 
   @override
-  String get forgetMapping => 'Forget custom mapping';
-
-  @override
   String get teachTitle => 'Teach controller';
 
   @override
   String get teachIntro =>
       'Press the button (or move the stick) the app asks for. Skip anything your controller does not have. Press Esc to cancel.';
-
-  @override
-  String teachProgress(int n, int total) {
-    return 'Step $n of $total';
-  }
 
   @override
   String get teachDone =>
@@ -192,16 +133,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get skip => 'Skip';
-
-  @override
-  String get inputMonitor => 'Input monitor';
-
-  @override
-  String get monitorHint =>
-      'Press buttons and move sticks: the raw signals show up here. Handy for unknown controllers.';
-
-  @override
-  String get monitorEmpty => 'No signals yet.';
 
   @override
   String rawInput(String key) {
@@ -239,16 +170,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String versionLabel(String version) {
     return 'Version $version';
   }
-
-  @override
-  String get driveLive => 'Live inputs';
-
-  @override
-  String get keyboardTipTitle => 'Keyboard';
-
-  @override
-  String get safetyNote =>
-      'Inputs only count while this window is in front. If you switch apps the car stops.';
 
   @override
   String get noCarShort => 'No car';

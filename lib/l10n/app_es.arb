@@ -1,45 +1,18 @@
 {
   "@@locale": "es",
   "appTitle": "BLE RC Controller",
-  "navCars": "Coches",
-  "navDrive": "Conducir",
-  "navControls": "Botones",
-  "navControllers": "Mandos",
-  "navSettings": "Ajustes",
-  "carsTitle": "Coches",
-  "carsSearching": "Buscando coches…",
-  "carsHint": "Enciende el coche. Aparece aquí solo (nombres que empiezan por «SL-»).",
   "btOffTitle": "Bluetooth apagado",
   "btOffBody": "Activa el Bluetooth para encontrar tu coche.",
   "btDeniedTitle": "Bluetooth bloqueado",
   "btDeniedBody": "Permite el Bluetooth para esta app en los ajustes del sistema.",
   "btUnsupportedTitle": "Bluetooth LE no disponible",
   "btUnsupportedBody": "Este dispositivo no puede comunicarse con el coche.",
-  "connect": "Conectar",
-  "connectTo": "Conectar con {car}",
-  "@connectTo": {
-    "placeholders": {
-      "car": {
-        "type": "String"
-      }
-    }
-  },
   "disconnect": "Desconectar",
   "connecting": "Conectando…",
   "connectedLabel": "Conectado",
-  "noCar": "Ningún coche conectado",
-  "noCarHint": "Elige un coche de la lista para conectar (clic o toque).",
   "msgConnectFailed": "No se pudo conectar. Apaga y enciende el coche y comprueba que ninguna otra app esté conectada.",
   "msgDropped": "El coche se desconectó.",
   "msgPermission": "Se denegó el permiso de Bluetooth.",
-  "batteryPercent": "Batería {percent} %",
-  "@batteryPercent": {
-    "placeholders": {
-      "percent": {
-        "type": "int"
-      }
-    }
-  },
   "rememberLast": "Reconectar con el último coche",
   "actionForward": "Adelante",
   "actionReverse": "Marcha atrás",
@@ -50,9 +23,7 @@
   "actionDonut": "Giro 360°",
   "hintHold": "mientras se mantiene pulsado",
   "hintToggle": "cada pulsación activa/desactiva",
-  "controlsIntro": "Pulsa «Añadir» y luego un botón del mando, mueve un stick o pulsa una tecla. Cada acción puede tener varias entradas.",
   "add": "Añadir",
-  "pressAnything": "Pulsa un botón, dirección o tecla…",
   "cancel": "Cancelar",
   "remove": "Quitar",
   "restoreDefaults": "Restaurar valores",
@@ -64,26 +35,11 @@
   "controllerRecognised": "Disposición reconocida",
   "controllerCustom": "Mapeo personalizado",
   "teachController": "Enseñar este mando…",
-  "forgetMapping": "Olvidar mapeo personalizado",
   "teachTitle": "Enseñar mando",
   "teachIntro": "Pulsa el botón (o mueve el stick) que pide la app. Omite lo que tu mando no tenga. Pulsa Esc para cancelar.",
-  "teachProgress": "Paso {n} de {total}",
-  "@teachProgress": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "teachDone": "¡Listo! Este mando ya funciona con todas las acciones.",
   "done": "Hecho",
   "skip": "Omitir",
-  "inputMonitor": "Monitor de entradas",
-  "monitorHint": "Pulsa botones y mueve sticks: aquí aparecen las señales en bruto. Útil con mandos desconocidos.",
-  "monitorEmpty": "Aún no hay señales.",
   "rawInput": "En bruto: {key}",
   "@rawInput": {
     "placeholders": {
@@ -115,9 +71,6 @@
       }
     }
   },
-  "driveLive": "Entradas en vivo",
-  "keyboardTipTitle": "Teclado",
-  "safetyNote": "Las entradas solo cuentan con esta ventana en primer plano. Si cambias de app, el coche se detiene.",
   "noCarShort": "Ningún coche",
   "statusSearching": "Buscando",
   "statusConnecting": "Conectando",

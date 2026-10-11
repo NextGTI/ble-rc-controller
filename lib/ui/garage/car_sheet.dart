@@ -17,9 +17,14 @@ import 'car_list.dart';
 /// connected when it opened. A connection that fails keeps it open, with the
 /// notice. With the system's "reduce motion" on it appears and goes at once.
 ///
+/// The car it opened on is the one connected at this call, read before the
+/// route is pushed: the sheet is built a frame later, and again whenever its
+/// page is built afresh, and a car that connects meanwhile is another car.
+///
 /// Needs a `DriverScope` above [context]. Completes when the sheet is gone.
 Future<void> showCarSheet(BuildContext context) {
   final driver = DriverScope.of(context);
+  final openedOn = driver.link == LinkState.connected ? driver.carId : null;
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -32,10 +37,7 @@ Future<void> showCarSheet(BuildContext context) {
     sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
         ? AnimationStyle.noAnimation
         : null,
-    builder: (_) => _CarSheet(
-      driver: driver,
-      openedOn: driver.link == LinkState.connected ? driver.carId : null,
-    ),
+    builder: (_) => _CarSheet(driver: driver, openedOn: openedOn),
   );
 }
 

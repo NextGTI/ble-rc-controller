@@ -3,8 +3,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/driver.dart';
 import 'l10n/gen/app_localizations.dart';
-import 'ui/home_page.dart';
+import 'ui/shell.dart';
 import 'ui/strings.dart';
+import 'ui/theme/theme.dart';
 
 class BleRcApp extends StatelessWidget {
   const BleRcApp({super.key, required this.driver});
@@ -28,30 +29,14 @@ class BleRcApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          theme: _theme(Brightness.light),
-          darkTheme: _theme(Brightness.dark),
-          builder: (context, child) => DriverScope(driver: driver, child: child!),
-          home: const HomePage(),
+          // One theme, dark (spec 3.1): no light theme and no darkTheme, so
+          // the system's brightness changes nothing.
+          theme: buildAppTheme(),
+          builder: (context, child) =>
+              DriverScope(driver: driver, child: child!),
+          home: const Shell(),
         );
       },
-    );
-  }
-
-  /// Neutral surfaces with a red accent (the default seed tints every card pink).
-  ThemeData _theme(Brightness b) {
-    final dark = b == Brightness.dark;
-    final scheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFFD32F2F),
-      brightness: b,
-      dynamicSchemeVariant: DynamicSchemeVariant.neutral,
-    ).copyWith(
-      primary: dark ? const Color(0xFFEF5350) : const Color(0xFFD32F2F),
-      onPrimary: dark ? Colors.black : Colors.white,
-    );
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: scheme,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
     );
   }
 }

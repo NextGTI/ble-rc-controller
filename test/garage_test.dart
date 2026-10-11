@@ -558,6 +558,25 @@ void main() {
       expect(find.byType(CarList), findsNothing);
     });
 
+    _rigTest('the car it was opened on is the one at the call, not at the '
+        'first frame', (t, rig) async {
+      await pumpWithDriver(t, rig.driver, _opener());
+      expect(rig.driver.link, LinkState.idle);
+
+      // The call is made with no car connected...
+      await t.tap(find.text('abrir'));
+      // ...and a car connects before the sheet is on the screen.
+      await _connect(t, rig, 'car1');
+      await t.pumpAndSettle();
+      expect(find.byType(CarList), findsOneWidget);
+
+      // That car came after the sheet was asked for, so it is "another car":
+      // the next thing the driver says takes the sheet away.
+      rig.driver.autoConnect = false;
+      await t.pumpAndSettle();
+      expect(find.byType(CarList), findsNothing);
+    });
+
     _rigTest('a failed attempt keeps the sheet open, with the notice', (
       t,
       rig,

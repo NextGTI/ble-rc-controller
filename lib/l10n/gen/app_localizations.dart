@@ -106,54 +106,6 @@ abstract class AppLocalizations {
   /// **'BLE RC Controller'**
   String get appTitle;
 
-  /// No description provided for @navCars.
-  ///
-  /// In en, this message translates to:
-  /// **'Cars'**
-  String get navCars;
-
-  /// No description provided for @navDrive.
-  ///
-  /// In en, this message translates to:
-  /// **'Drive'**
-  String get navDrive;
-
-  /// No description provided for @navControls.
-  ///
-  /// In en, this message translates to:
-  /// **'Buttons'**
-  String get navControls;
-
-  /// No description provided for @navControllers.
-  ///
-  /// In en, this message translates to:
-  /// **'Controllers'**
-  String get navControllers;
-
-  /// No description provided for @navSettings.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get navSettings;
-
-  /// No description provided for @carsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Cars'**
-  String get carsTitle;
-
-  /// No description provided for @carsSearching.
-  ///
-  /// In en, this message translates to:
-  /// **'Looking for cars…'**
-  String get carsSearching;
-
-  /// No description provided for @carsHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Turn the car on. It shows up here by itself (names starting with “SL-”).'**
-  String get carsHint;
-
   /// No description provided for @btOffTitle.
   ///
   /// In en, this message translates to:
@@ -190,18 +142,6 @@ abstract class AppLocalizations {
   /// **'This device cannot talk to the car.'**
   String get btUnsupportedBody;
 
-  /// No description provided for @connect.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect'**
-  String get connect;
-
-  /// No description provided for @connectTo.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect to {car}'**
-  String connectTo(String car);
-
   /// No description provided for @disconnect.
   ///
   /// In en, this message translates to:
@@ -220,18 +160,6 @@ abstract class AppLocalizations {
   /// **'Connected'**
   String get connectedLabel;
 
-  /// No description provided for @noCar.
-  ///
-  /// In en, this message translates to:
-  /// **'No car connected'**
-  String get noCar;
-
-  /// No description provided for @noCarHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Pick a car from the list to connect (click or tap).'**
-  String get noCarHint;
-
   /// No description provided for @msgConnectFailed.
   ///
   /// In en, this message translates to:
@@ -249,12 +177,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bluetooth permission was denied.'**
   String get msgPermission;
-
-  /// No description provided for @batteryPercent.
-  ///
-  /// In en, this message translates to:
-  /// **'Battery {percent}%'**
-  String batteryPercent(int percent);
 
   /// No description provided for @rememberLast.
   ///
@@ -316,23 +238,11 @@ abstract class AppLocalizations {
   /// **'each press switches on/off'**
   String get hintToggle;
 
-  /// No description provided for @controlsIntro.
-  ///
-  /// In en, this message translates to:
-  /// **'Tap “Add”, then press a controller button, push a stick or press a key. Each action can have several inputs.'**
-  String get controlsIntro;
-
   /// No description provided for @add.
   ///
   /// In en, this message translates to:
   /// **'Add'**
   String get add;
-
-  /// No description provided for @pressAnything.
-  ///
-  /// In en, this message translates to:
-  /// **'Press a button, direction or key…'**
-  String get pressAnything;
 
   /// No description provided for @cancel.
   ///
@@ -400,12 +310,6 @@ abstract class AppLocalizations {
   /// **'Teach this controller…'**
   String get teachController;
 
-  /// No description provided for @forgetMapping.
-  ///
-  /// In en, this message translates to:
-  /// **'Forget custom mapping'**
-  String get forgetMapping;
-
   /// No description provided for @teachTitle.
   ///
   /// In en, this message translates to:
@@ -417,12 +321,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Press the button (or move the stick) the app asks for. Skip anything your controller does not have. Press Esc to cancel.'**
   String get teachIntro;
-
-  /// No description provided for @teachProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Step {n} of {total}'**
-  String teachProgress(int n, int total);
 
   /// No description provided for @teachDone.
   ///
@@ -441,24 +339,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skip'**
   String get skip;
-
-  /// No description provided for @inputMonitor.
-  ///
-  /// In en, this message translates to:
-  /// **'Input monitor'**
-  String get inputMonitor;
-
-  /// No description provided for @monitorHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Press buttons and move sticks: the raw signals show up here. Handy for unknown controllers.'**
-  String get monitorHint;
-
-  /// No description provided for @monitorEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'No signals yet.'**
-  String get monitorEmpty;
 
   /// No description provided for @rawInput.
   ///
@@ -519,24 +399,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version {version}'**
   String versionLabel(String version);
-
-  /// No description provided for @driveLive.
-  ///
-  /// In en, this message translates to:
-  /// **'Live inputs'**
-  String get driveLive;
-
-  /// No description provided for @keyboardTipTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Keyboard'**
-  String get keyboardTipTitle;
-
-  /// No description provided for @safetyNote.
-  ///
-  /// In en, this message translates to:
-  /// **'Inputs only count while this window is in front. If you switch apps the car stops.'**
-  String get safetyNote;
 
   /// No description provided for @noCarShort.
   ///
