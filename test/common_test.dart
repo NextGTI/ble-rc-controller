@@ -802,9 +802,7 @@ void main() {
       expect(find.byTooltip('Remove A'), findsOneWidget);
     });
 
-    testWidgets('the remove button names the input it removes', (
-      tester,
-    ) async {
+    testWidgets('the remove button names the input it removes', (tester) async {
       final handle = tester.ensureSemantics();
       await pumpWithDriver(
         tester,
