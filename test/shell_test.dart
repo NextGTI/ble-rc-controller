@@ -8,6 +8,7 @@ import 'package:ble_rc_controller/ui/cockpit/cockpit.dart';
 import 'package:ble_rc_controller/ui/cockpit/cockpit_header.dart';
 import 'package:ble_rc_controller/ui/cockpit/state_cells.dart';
 import 'package:ble_rc_controller/ui/common/ambient.dart';
+import 'package:ble_rc_controller/ui/common/glass.dart';
 import 'package:ble_rc_controller/ui/garage/car_list.dart';
 import 'package:ble_rc_controller/ui/garage/garage_column.dart';
 import 'package:ble_rc_controller/ui/settings/bindings_page.dart';
@@ -17,6 +18,7 @@ import 'package:ble_rc_controller/ui/strings.dart';
 import 'package:ble_rc_controller/ui/theme/tokens.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gamepads/gamepads.dart';
@@ -691,6 +693,87 @@ void main() {
       );
     });
   }
+
+  group('Shell, the blur is shared by screen, not by app', () {
+    // Surfaces that overlap must not share a snapshot of the backdrop, so the
+    // cockpit, the garage column, a sheet and each page have their own key.
+    BackdropKey? keyOf(WidgetTester t, Finder root, {bool offstage = false}) {
+      final keys = t
+          .elementList(
+            find.descendant(
+              of: root,
+              matching: find.byType(BackdropFilter),
+              skipOffstage: !offstage,
+            ),
+          )
+          .map((e) => (e.renderObject! as RenderBackdropFilter).backdropKey)
+          .toSet();
+      expect(keys, hasLength(1), reason: 'one key for the whole screen');
+      expect(keys.single, isNotNull);
+      return keys.single;
+    }
+
+    _shellTest(
+      'the cockpit and the garage column have a key each',
+      (t, rig) async {
+        await _mount(t, rig, size: _desktop);
+        await t.pumpAndSettle();
+        final cockpit = keyOf(t, find.byType(Cockpit));
+        final rows = backdropKeysUnder(
+          t,
+          find.descendant(
+            of: find.byType(GarageColumn),
+            matching: find.byType(Glass),
+          ),
+        );
+        expect(rows.toSet(), hasLength(1));
+        expect(rows.first, isNotNull);
+        expect(rows.first, isNot(cockpit));
+      },
+      prefs: _noArrows,
+      platform: TargetPlatform.macOS,
+    );
+
+    _shellTest('the sheet of cars has a key of its own', (t, rig) async {
+      await _mount(t, rig);
+      await t.pumpAndSettle();
+      final cockpit = keyOf(t, find.byType(Cockpit));
+      await t.tap(_headerName());
+      await t.pumpAndSettle();
+      final sheet = keyOf(t, find.byType(CarList));
+      expect(sheet, isNot(cockpit));
+    });
+
+    _shellTest('a settings screen on a phone has one', (t, rig) async {
+      await _mount(t, rig);
+      await t.tap(_gear);
+      await t.pumpAndSettle();
+      final settings = keyOf(t, find.byType(SettingsPage));
+
+      await t.tap(find.text('Botões e teclas'));
+      await t.pumpAndSettle();
+      expect(keyOf(t, find.byType(BindingsPage)), isNot(settings));
+    });
+
+    _shellTest('each page of the drawer has its own, also while they fade', (
+      t,
+      rig,
+    ) async {
+      await _mount(t, rig, size: _desktop);
+      await t.tap(_gear);
+      await t.pumpAndSettle();
+      final settings = keyOf(t, find.byType(SettingsPage));
+
+      await t.tap(find.text('Botões e teclas'));
+      await t.pump(const Duration(milliseconds: 60));
+      // Mid-fade the two pages overlap.
+      expect(find.byType(SettingsPage), findsOneWidget);
+      expect(find.byType(BindingsPage), findsOneWidget);
+      final bindings = keyOf(t, find.byType(BindingsPage));
+      expect(bindings, isNot(settings));
+      await t.pumpAndSettle();
+    }, prefs: _noArrows);
+  });
 
   group('Shell, a capture left open', () {
     // "+ Adicionar" of the action [a] on the page of buttons and keys.

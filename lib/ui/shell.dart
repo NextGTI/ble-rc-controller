@@ -105,8 +105,14 @@ void openSettings(BuildContext context) {
 /// A screen of the phone, tablet and landscape layouts: [page] over the
 /// ambient light (the pages paint no background of their own).
 Route<void> _screenRoute(Widget page) => MaterialPageRoute<void>(
-  builder: (_) =>
-      Stack(fit: StackFit.expand, children: [const AmbientBackdrop(), page]),
+  // Its own group: the screen covers the cockpit, and its glass blurs this
+  // screen's light, not the cockpit's.
+  builder: (_) => GlassGroup(
+    child: Stack(
+      fit: StackFit.expand,
+      children: [const AmbientBackdrop(), page],
+    ),
+  ),
 );
 
 /// Width of the panel of the settings on the desktop.
@@ -159,7 +165,9 @@ class _SettingsDrawerState extends State<_SettingsDrawer> {
   Route<void> _pageRoute(Widget page) {
     final time = widget.reduceMotion ? Duration.zero : AppMotion.state;
     return PageRouteBuilder<void>(
-      pageBuilder: (_, _, _) => page,
+      // A group for each page: the old one fades out while the new one fades
+      // in, and glass that overlaps glass must not share a blur.
+      pageBuilder: (_, _, _) => GlassGroup(child: page),
       transitionDuration: time,
       reverseTransitionDuration: time,
       transitionsBuilder: (_, animation, secondary, child) => FadeTransition(

@@ -150,7 +150,8 @@ class _Surface extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              child,
+              // The rows and the switch blur the same backdrop, once.
+              GlassGroup(child: child),
               Positioned(
                 top: 1,
                 left: radius * 0.5,

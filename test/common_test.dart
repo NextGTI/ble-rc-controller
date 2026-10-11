@@ -148,6 +148,104 @@ void main() {
       expect(blur.filter, ui.ImageFilter.blur(sigmaX: 14, sigmaY: 14));
     });
 
+    group('shares the blur', () {
+      /// Three glass surfaces side by side.
+      Widget row() => const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Glass(child: Text('a')),
+          Glass(child: Text('b')),
+          Glass(child: Text('c')),
+        ],
+      );
+
+      testWidgets('under a BackdropGroup they all use its one key', (
+        tester,
+      ) async {
+        await pumpWithDriver(
+          tester,
+          await _driver(),
+          BackdropGroup(child: row()),
+        );
+        final keys = backdropKeysUnder(tester, find.byType(Row).last);
+        expect(keys, hasLength(3));
+        expect(keys.first, isNotNull);
+        expect(keys.toSet(), hasLength(1), reason: 'one blur for the three');
+      });
+
+      testWidgets('without a group each one works alone', (tester) async {
+        await pumpWithDriver(tester, await _driver(), row());
+        final keys = backdropKeysUnder(tester, find.byType(Row).last);
+        expect(keys, [null, null, null]);
+      });
+
+      testWidgets('the blur and the clip are the same in both cases', (
+        tester,
+      ) async {
+        for (final grouped in [true, false]) {
+          await pumpWithDriver(
+            tester,
+            await _driver(),
+            grouped
+                ? BackdropGroup(child: const Glass(child: Text('x')))
+                : const Glass(child: Text('x')),
+          );
+          final blur = tester.widget<BackdropFilter>(
+            find.descendant(
+              of: find.byType(Glass),
+              matching: find.byType(BackdropFilter),
+            ),
+          );
+          expect(blur.filter, ui.ImageFilter.blur(sigmaX: 14, sigmaY: 14));
+          expect(blur.blendMode, BlendMode.srcOver);
+          expect(
+            find.descendant(
+              of: find.byType(Glass),
+              matching: find.byType(ClipRRect),
+            ),
+            findsOneWidget,
+          );
+        }
+      });
+
+      testWidgets('GlassGroup keeps its key across rebuilds, and two groups '
+          'have two keys', (tester) async {
+        final rebuild = ValueNotifier<int>(0);
+        addTearDown(rebuild.dispose);
+        await pumpWithDriver(
+          tester,
+          await _driver(),
+          ValueListenableBuilder<int>(
+            valueListenable: rebuild,
+            builder: (_, n, _) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GlassGroup(
+                  child: Glass(key: const ValueKey('one'), child: Text('$n')),
+                ),
+                GlassGroup(
+                  child: Glass(key: const ValueKey('two'), child: Text('$n')),
+                ),
+              ],
+            ),
+          ),
+        );
+        BackdropKey? keyOf(String k) =>
+            backdropKeysUnder(tester, find.byKey(ValueKey(k))).single;
+        final (one, two) = (keyOf('one'), keyOf('two'));
+        expect(one, isNotNull);
+        expect(two, isNotNull);
+        expect(one, isNot(two), reason: 'groups that overlap must not share');
+
+        // A rebuild must not mint a new key: that would invalidate the shared
+        // layer on every frame of the driving.
+        rebuild.value++;
+        await tester.pump();
+        expect(keyOf('one'), one);
+        expect(keyOf('two'), two);
+      });
+    });
+
     testWidgets('idle: glass fill and glass edge, no amber', (tester) async {
       await pumpWithDriver(
         tester,

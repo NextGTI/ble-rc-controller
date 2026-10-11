@@ -512,6 +512,18 @@ void main() {
       );
     });
 
+    _rigTest('the rows and the switch share one blur', (t, rig) async {
+      await pumpWithDriver(t, rig.driver, _opener());
+      await _openSheet(t);
+
+      final inside =
+          backdropKeysUnder(t, find.byType(CarList)) +
+          backdropKeysUnder(t, find.byType(AutoConnectToggle));
+      expect(inside, hasLength(3), reason: 'two cars and the switch');
+      expect(inside.first, isNotNull);
+      expect(inside.toSet(), hasLength(1));
+    });
+
     _rigTest('turning the switch off turns auto-connect off', (t, rig) async {
       await pumpWithDriver(t, rig.driver, _opener());
       await _openSheet(t);
@@ -685,6 +697,39 @@ void main() {
       await t.tap(find.byType(AmberSwitch));
       await t.pump(const Duration(milliseconds: 300));
       expect(rig.driver.autoConnect, isFalse);
+    });
+
+    _rigTest('the rows and the switch share one blur', (t, rig) async {
+      await pumpWithDriver(
+        t,
+        rig.driver,
+        const GarageColumn(),
+        size: const Size(1180, 760),
+        reduceMotion: true,
+      );
+      rig.plugIn('DualShock 4');
+      await t.pump(const Duration(milliseconds: 100));
+      final rows = backdropKeysUnder(
+        t,
+        find.descendant(
+          of: find.byType(GarageColumn),
+          matching: find.byType(Glass),
+        ),
+      );
+      // Two cars, a controller and the switch.
+      expect(rows, hasLength(4));
+      expect(rows.first, isNotNull);
+      expect(rows.toSet(), hasLength(1));
+      // The column's own blur is the plain one: the rows are on top of it.
+      final own = t.widget<BackdropFilter>(
+        find
+            .descendant(
+              of: find.byType(GarageColumn),
+              matching: find.byType(BackdropFilter),
+            )
+            .first,
+      );
+      expect(own.backdropGroupKey, isNull);
     });
 
     group('the system bars and cutouts', () {

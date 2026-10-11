@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/driver.dart';
 import '../common/ambient.dart';
+import '../common/glass.dart';
 import '../strings.dart';
 import '../theme/tokens.dart';
 import 'cockpit_header.dart';
@@ -94,42 +95,48 @@ class _CockpitState extends State<Cockpit> {
       ),
     );
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        AmbientBackdrop(sweep: connected),
-        // Between the light and the content, so the glass blurs it. It takes
-        // its place in the list when there is no car too, so the content does
-        // not change place in the tree.
-        if (connected)
-          ParticleField(
-            key: _field,
-            command: () => driver.command,
-            carCenter: () {
-              final frame = _frameInField();
-              return frame == null
-                  ? Offset.zero
-                  : Instrument.carCenterIn(frame);
-            },
-            hero: () => _frameInField() ?? Rect.zero,
-            beam: light
-                ? () {
-                    final frame = _frameInField();
-                    return frame == null ? Rect.zero : Instrument.beamIn(frame);
-                  }
-                : null,
-            count: kind == LayoutKind.desktop ? 150 : 95,
-          )
-        else
-          const SizedBox.shrink(),
-        SafeArea(
-          minimum: metrics.minimum,
-          child: Material(
-            type: MaterialType.transparency,
-            child: _content(panel, driver, kind, metrics, header),
+    // The cells and arrows (and the glass of the state screens) blur the same
+    // backdrop: once for all of them, not once each on every frame.
+    return GlassGroup(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          AmbientBackdrop(sweep: connected),
+          // Between the light and the content, so the glass blurs it. It takes
+          // its place in the list when there is no car too, so the content does
+          // not change place in the tree.
+          if (connected)
+            ParticleField(
+              key: _field,
+              command: () => driver.command,
+              carCenter: () {
+                final frame = _frameInField();
+                return frame == null
+                    ? Offset.zero
+                    : Instrument.carCenterIn(frame);
+              },
+              hero: () => _frameInField() ?? Rect.zero,
+              beam: light
+                  ? () {
+                      final frame = _frameInField();
+                      return frame == null
+                          ? Rect.zero
+                          : Instrument.beamIn(frame);
+                    }
+                  : null,
+              count: kind == LayoutKind.desktop ? 150 : 95,
+            )
+          else
+            const SizedBox.shrink(),
+          SafeArea(
+            minimum: metrics.minimum,
+            child: Material(
+              type: MaterialType.transparency,
+              child: _content(panel, driver, kind, metrics, header),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -437,6 +437,59 @@ void main() {
     );
   });
 
+  group('Cockpit, the blur is shared', () {
+    // The cells and the arrows blur one backdrop, not one each: the dust
+    // repaints on every frame, and eight blurs would be redone every time.
+    _cockpitTest('the four cells and the four arrows use one key', (
+      t,
+      rig,
+    ) async {
+      await _mount(t, rig);
+      await t.pumpAndSettle();
+      final keys = backdropKeysUnder(t, find.byType(Cockpit));
+      expect(keys, hasLength(8));
+      expect(keys.first, isNotNull);
+      expect(keys.toSet(), hasLength(1));
+    });
+
+    _cockpitTest(
+      'the same on a desktop window, without the arrows',
+      (t, rig) async {
+        await _mount(t, rig, size: const Size(1180, 760));
+        await t.pumpAndSettle();
+        final keys = backdropKeysUnder(t, find.byType(Cockpit));
+        expect(keys, hasLength(4));
+        expect(keys.toSet(), hasLength(1));
+        expect(keys.first, isNotNull);
+      },
+      prefs: _noArrows,
+      platform: TargetPlatform.macOS,
+    );
+
+    _cockpitTest('the key survives the rebuilds of driving', (t, rig) async {
+      await _mount(t, rig);
+      await t.pumpAndSettle();
+      final before = backdropKeysUnder(t, find.byType(Cockpit)).first;
+      await _hold(t, rig, CarAction.forward);
+      await _hold(t, rig, CarAction.left);
+      await t.pump(const Duration(milliseconds: 100));
+      expect(backdropKeysUnder(t, find.byType(Cockpit)).first, before);
+    });
+
+    _cockpitTest('the glass of a state screen is in the group too', (
+      t,
+      rig,
+    ) async {
+      await _mount(t, rig);
+      await t.pump(const Duration(milliseconds: 300));
+      expect(rig.driver.link, LinkState.idle);
+      final keys = backdropKeysUnder(t, find.byType(Cockpit));
+      expect(keys, isNotEmpty);
+      expect(keys, everyElement(isNotNull));
+      expect(keys.toSet(), hasLength(1));
+    }, connect: false);
+  });
+
   group('Cockpit, by layout', () {
     // The StateCells and the row of arrows of each layout: how many columns,
     // whether the cells are buttons, and how wide the arrows are.

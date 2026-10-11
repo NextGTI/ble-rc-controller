@@ -7,6 +7,7 @@ import 'package:ble_rc_controller/ui/strings.dart';
 import 'package:ble_rc_controller/ui/theme/theme.dart';
 import 'package:ble_rc_controller/ui/theme/tokens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -96,3 +97,13 @@ Future<Driver> newDriver({Map<String, Object> prefs = const {}}) async {
   addTearDown(driver.dispose);
   return driver;
 }
+
+/// The backdrop key of every `BackdropFilter` under [root], in tree order: null
+/// for a filter that works alone, the key of the group for one that shares its
+/// blur with the others of that group.
+List<BackdropKey?> backdropKeysUnder(WidgetTester t, Finder root) => [
+  for (final e in t.elementList(
+    find.descendant(of: root, matching: find.byType(BackdropFilter)),
+  ))
+    (e.renderObject! as RenderBackdropFilter).backdropKey,
+];

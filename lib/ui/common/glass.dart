@@ -19,6 +19,8 @@ import '../theme/tokens.dart';
 ///
 /// With [onTap] the surface is a button; its target is never smaller than
 /// 48 by 48.
+///
+/// Surfaces under a [GlassGroup] share one blur of the backdrop.
 class Glass extends StatelessWidget {
   const Glass({
     super.key,
@@ -148,7 +150,9 @@ class Glass extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: shape,
-      child: BackdropFilter(
+      // `grouped` joins the nearest [GlassGroup] (one blur for all of them);
+      // with none above it is the plain filter, so a lone surface is alone.
+      child: BackdropFilter.grouped(
         filter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: TweenAnimationBuilder<double>(
           tween: Tween<double>(end: active ? 1 : 0),
@@ -212,4 +216,33 @@ class Glass extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Makes every [Glass] below it share one blur of what is behind (a
+/// [BackdropGroup]). The engine then blurs the backdrop once and cuts each
+/// surface out of the result, instead of once per surface: the cockpit has four
+/// cells and four arrows, and it repaints on every frame while the dust moves.
+///
+/// Put one around a screen, a sheet or a panel whose glass surfaces do not
+/// overlap each other. Surfaces that overlap (a sheet over the cockpit, two
+/// pages cross-fading) must be in groups of their own: a shared blur is one
+/// snapshot, and a surface that sits over another one would not blur it.
+///
+/// The key is made once and kept, so a rebuild of the parent does not mint a
+/// new one and throw the shared layer away.
+class GlassGroup extends StatefulWidget {
+  const GlassGroup({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  State<GlassGroup> createState() => _GlassGroupState();
+}
+
+class _GlassGroupState extends State<GlassGroup> {
+  final BackdropKey _key = BackdropKey();
+
+  @override
+  Widget build(BuildContext context) =>
+      BackdropGroup(backdropKey: _key, child: widget.child);
 }

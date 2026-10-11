@@ -57,47 +57,51 @@ class GarageColumn extends StatelessWidget {
             // The fill runs to the edges of the window; what is on it keeps
             // clear of the status bar, the navigation bar and a camera cutout
             // on the left. Its right side faces the cockpit, not an edge.
-            child: SafeArea(
-              right: false,
-              child: Padding(
-                padding: const EdgeInsets.all(14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _Heading(
-                              title: l.carsNearby,
-                              trailing: searching
-                                  ? RingSpinner(label: l.statusSearching)
-                                  : null,
-                            ),
-                            const CarList(),
-                            _Heading(title: l.controllersTitle, top: 22),
-                            if (controllers.isEmpty)
-                              _ControllerRow(name: l.noControllerShort)
-                            else
-                              for (var i = 0; i < controllers.length; i++)
-                                Padding(
-                                  key: ValueKey(controllers[i].id),
-                                  padding: EdgeInsets.only(top: i == 0 ? 0 : 4),
-                                  child: _ControllerRow(
-                                    name: controllers[i].name,
-                                    status: _taught(driver, controllers[i])
-                                        ? l.taught
-                                        : l.recognized,
+            child: GlassGroup(
+              child: SafeArea(
+                right: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _Heading(
+                                title: l.carsNearby,
+                                trailing: searching
+                                    ? RingSpinner(label: l.statusSearching)
+                                    : null,
+                              ),
+                              const CarList(),
+                              _Heading(title: l.controllersTitle, top: 22),
+                              if (controllers.isEmpty)
+                                _ControllerRow(name: l.noControllerShort)
+                              else
+                                for (var i = 0; i < controllers.length; i++)
+                                  Padding(
+                                    key: ValueKey(controllers[i].id),
+                                    padding: EdgeInsets.only(
+                                      top: i == 0 ? 0 : 4,
+                                    ),
+                                    child: _ControllerRow(
+                                      name: controllers[i].name,
+                                      status: _taught(driver, controllers[i])
+                                          ? l.taught
+                                          : l.recognized,
+                                    ),
                                   ),
-                                ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    const AutoConnectToggle(),
-                  ],
+                      const SizedBox(height: 10),
+                      const AutoConnectToggle(),
+                    ],
+                  ),
                 ),
               ),
             ),
