@@ -215,8 +215,9 @@ enum _Role { wheel, body, glass, roof, centre, light, tail }
 /// stroke of the approved sketch and has no token.
 const Color _glassLine = Color(0xFF8A919C);
 
-/// Alpha of the headlight beam where it leaves the car, falling to 0.
-const double _beamAlpha = 0.5;
+/// Alpha of the headlight beam where it leaves the car, falling to 0 (30%, as
+/// in the approved design).
+const double _beamAlpha = 0.30;
 
 /// A stroke of the decal, in the 100 by 200 space.
 class _Part {
