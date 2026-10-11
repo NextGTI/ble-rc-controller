@@ -106,9 +106,13 @@ flutter:
         - asset: assets/fonts/Saira-Variable.ttf
 
 flutter_launcher_icons:
+  # Drawn by tool/icon.html (see the commands at its top).
   image_path: "assets/icon/icon.png"
   min_sdk_android: 21
   android: "launcher_icon"
+  adaptive_icon_background: "assets/icon/icon_background.png"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  adaptive_icon_monochrome: "assets/icon/icon_monochrome.png"
   macos:
     generate: true
     image_path: "assets/icon/icon.png"

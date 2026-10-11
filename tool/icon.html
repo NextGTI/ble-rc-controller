@@ -1,0 +1,106 @@
+<!doctype html>
+<!--
+  The app icon: the car seen from above, drawn with lines, under the steering
+  gauge with its amber needle (the cockpit of spec 4.1 and 4.2).
+
+  Render each layer at 1024 px with headless Chrome (it writes the file and
+  then lingers, hence the timeout), then run flutter_launcher_icons
+  (configured in pubspec.yaml):
+
+    C="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    for m in squircle background foreground monochrome; do
+      timeout 15 "$C" --headless=new --hide-scrollbars --window-size=1024,1024 \
+        --force-device-scale-factor=1 --default-background-color=00000000 \
+        --user-data-dir="/tmp/icon-$m" \
+        --screenshot="assets/icon/icon_$m.png" "file://$PWD/tool/icon.html?m=$m"
+    done
+    mv assets/icon/icon_squircle.png assets/icon/icon.png
+    dart run flutter_launcher_icons
+
+  Layers (?m=):
+    squircle    macOS, Windows and older Android: the rounded square on the
+                Apple grid (824 wide, 100 margin), with a soft shadow.
+    background  Android adaptive background: the dark backdrop, full bleed.
+    foreground  Android adaptive foreground: the drawing alone, sized for
+                the 16% inset flutter_launcher_icons adds.
+    monochrome  Android 13 themed icon: the foreground in plain white.
+-->
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}svg{display:block}</style>
+</head><body>
+<svg id="s" width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"></svg>
+<script>
+const M = new URLSearchParams(location.search).get('m') || 'squircle';
+const mono = M === 'monochrome';
+
+// The decal's shapes, in its 100 by 200 box (lib/ui/cockpit/car_decal.dart).
+const BODY = 'M50 3 C38 3 29 6 24 12 C19 18 17 24 15 30 C12 38 11 46 13 54 C15 60 18 64 19 70 C20 84 20 100 19 116 C18 124 14 132 12 142 C10 152 11 162 14 172 C16 182 22 190 32 194 C40 197 60 197 68 194 C78 190 84 182 86 172 C89 162 90 152 88 142 C86 132 82 124 81 116 C80 100 80 84 81 70 C82 64 85 60 87 54 C89 46 88 38 85 30 C83 24 81 18 76 12 C71 6 62 3 50 3 Z';
+const WINDSHIELD = 'M30 66 C34 60 66 60 70 66 L68 82 C60 78 40 78 32 82 Z';
+const ROOF = 'M32 84 C40 80 60 80 68 84 L67 118 C60 121 40 121 33 118 Z';
+const REAR = 'M33 120 C40 123 60 123 67 120 L66 132 C60 135 40 135 34 132 Z';
+const WHEELS = [[4, 29, 13, 27], [83, 29, 13, 27], [3, 138, 14, 30], [83, 138, 14, 30]];
+
+// Spec 3.1.
+const BG = '#0A0C0F', DECAL = '#C9CFD8', TEXT3 = '#7D8591', TRACE = '#5E6570', AMBER = '#FFB547';
+const ink = (c) => (mono ? '#FFFFFF' : c);
+
+function car(x, y, s, sw) {
+  const u = sw / s;
+  let g = `<g transform="translate(${x} ${y}) scale(${s})" fill="none" stroke-linejoin="round" stroke-linecap="round">`;
+  if (!mono) g += `<path d="${BODY}" fill="rgba(255,255,255,.035)" stroke="none"/>`;
+  for (const [a, b, c, d] of WHEELS) {
+    g += `<rect x="${a}" y="${b}" width="${c}" height="${d}" rx="3.5" stroke="${ink(TRACE)}" stroke-width="${u * 0.8}"/>`;
+  }
+  g += `<path d="${BODY}" stroke="${ink(DECAL)}" stroke-width="${u}"/>`;
+  g += `<path d="${WINDSHIELD}" stroke="${ink(DECAL)}" stroke-width="${u * 0.75}" opacity="${mono ? 1 : 0.85}"/>`;
+  g += `<path d="${ROOF}" stroke="${ink(DECAL)}" stroke-width="${u * 0.6}" opacity="${mono ? 1 : 0.5}"/>`;
+  g += `<path d="${REAR}" stroke="${ink(DECAL)}" stroke-width="${u * 0.6}" opacity="${mono ? 1 : 0.6}"/>`;
+  return g + '</g>';
+}
+
+// The gauge (marks every 5 degrees from -40 to 40, longer every 20) and the
+// car under it. It spans about x 281..743 and y 254..840.
+function drawing() {
+  const cx = 512, cy = 650, R = 372;
+  let s = '';
+  for (let d = -40; d <= 40; d += 5) {
+    if (d === 0) continue; // the needle stands there
+    const long = d % 20 === 0, len = long ? 46 : 26, a = ((d - 90) * Math.PI) / 180;
+    s += `<line x1="${cx + R * Math.cos(a)}" y1="${cy + R * Math.sin(a)}" x2="${cx + (R - len) * Math.cos(a)}" y2="${cy + (R - len) * Math.sin(a)}" stroke="${ink(long ? TEXT3 : TRACE)}" stroke-width="${long ? 11 : 8}" stroke-linecap="round"/>`;
+  }
+  const needle = `x1="512" y1="${cy - R - 26}" x2="512" y2="${cy - R + 58}" stroke-linecap="round"`;
+  if (!mono) s += `<line ${needle} stroke="${AMBER}" stroke-width="30" filter="url(#glow)" opacity=".9"/>`;
+  s += `<line ${needle} stroke="${ink(AMBER)}" stroke-width="18"/>`;
+  return s + car(512 - 2.3 * 50, 392, 2.3, 16);
+}
+
+const backdrop = '<rect width="1024" height="1024" fill="url(#ambient)"/><rect width="1024" height="1024" fill="url(#warm)"/>';
+let body = `<defs>
+  <radialGradient id="ambient" cx="50%" cy="18%" r="85%">
+    <stop offset="0" stop-color="#1B1F25"/><stop offset=".55" stop-color="#0F1216"/><stop offset="1" stop-color="${BG}"/>
+  </radialGradient>
+  <radialGradient id="warm" cx="50%" cy="27%" r="38%">
+    <stop offset="0" stop-color="${AMBER}" stop-opacity=".16"/><stop offset="1" stop-color="${AMBER}" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".12" stop-color="#fff" stop-opacity=".04"/><stop offset="1" stop-color="#fff" stop-opacity=".02"/>
+  </linearGradient>
+  <filter id="glow" x="-200%" y="-50%" width="500%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+  <clipPath id="square"><rect x="100" y="100" width="824" height="824" rx="186"/></clipPath>
+</defs>`;
+
+if (M === 'squircle') {
+  body += `<rect x="100" y="112" width="824" height="824" rx="186" fill="#000" opacity=".35" filter="url(#glow)"/>`;
+  body += `<g clip-path="url(#square)">${backdrop}${drawing()}</g>`;
+  body += `<rect x="101" y="101" width="822" height="822" rx="185" fill="none" stroke="url(#edge)" stroke-width="3"/>`;
+} else if (M === 'background') {
+  body += backdrop;
+} else {
+  // Centre the drawing (its middle is at y 547). flutter_launcher_icons insets
+  // this layer by 16% on each side, so the 66 of 108 safe circle is 90% of
+  // this image: the drawing fills most of it.
+  body += `<g transform="translate(512 512) scale(1.15) translate(-512 -547)">${drawing()}</g>`;
+}
+document.getElementById('s').innerHTML = body;
+</script>
+</body></html>

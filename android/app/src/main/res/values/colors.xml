@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The app's background (spec 3.1), so the window never flashes white
+         before Flutter draws its first frame. -->
+    <color name="app_background">#0A0C0F</color>
+</resources>
