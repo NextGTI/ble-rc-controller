@@ -1019,21 +1019,34 @@ void main() {
       );
     }, connect: false);
 
-    for (final size in [const Size(600, 960), const Size(800, 360)]) {
-      _cockpitTest('${size.width.toInt()}x${size.height.toInt()}: the list is '
-          'centred', (t, rig) async {
-        await _mount(t, rig, size: size);
-        await t.pump(const Duration(milliseconds: 300));
-        expect(t.takeException(), isNull);
-        expect(find.byType(CarList), findsOneWidget);
-        expect(
-          t.getCenter(find.byType(CarList)).dx,
-          closeTo(size.width / 2, 0.5),
-        );
-      }, connect: false);
-    }
+    _cockpitTest('a tablet centres the list under the car', (t, rig) async {
+      await _mount(t, rig, size: const Size(600, 960));
+      await t.pump(const Duration(milliseconds: 300));
+      expect(t.takeException(), isNull);
+      expect(find.byType(CarList), findsOneWidget);
+      expect(t.getCenter(find.byType(CarList)).dx, closeTo(300, 0.5));
+    }, connect: false);
 
-    _cockpitTest('a desktop window leaves the centre empty', (t, rig) async {
+    _cockpitTest('landscape puts the list at the right of the car', (
+      t,
+      rig,
+    ) async {
+      await _mount(t, rig, size: const Size(800, 360));
+      await t.pump(const Duration(milliseconds: 300));
+      expect(t.takeException(), isNull);
+      final list = t.getRect(find.byType(CarList));
+      expect(list.left, greaterThan(400));
+      expect(list.right, lessThanOrEqualTo(800));
+      final ghost = find.byWidgetPredicate(
+        (w) => w is CarDecal && w.variant == DecalVariant.ghost,
+      );
+      expect(t.getRect(ghost).right, lessThan(list.left));
+    }, connect: false);
+
+    _cockpitTest('a desktop window leaves the list to the garage column', (
+      t,
+      rig,
+    ) async {
       await _mount(t, rig, size: const Size(1180, 760));
       await t.pump(const Duration(milliseconds: 300));
       expect(t.takeException(), isNull);

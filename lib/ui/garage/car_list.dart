@@ -55,9 +55,7 @@ class CarList extends StatelessWidget {
   Widget build(BuildContext context) {
     final driver = DriverScope.of(context);
     final l = AppLocalizations.of(context);
-    final failed = driver.message == MessageKind.connectFailed
-        ? driver.failedCar
-        : null;
+    final failed = ConnectFailedNotice.carOf(driver);
     final cars = _shown(driver);
 
     Widget row(FoundCar car) {
@@ -95,14 +93,7 @@ class CarList extends StatelessWidget {
         if (failed != null)
           Padding(
             padding: const EdgeInsets.only(bottom: gap * 2),
-            child: Notice(
-              title: l.connectFailedTitle(failed.model),
-              body: l.connectFailedBody,
-              primaryLabel: l.retry,
-              onPrimary: () => driver.connect(failed.id),
-              secondaryLabel: l.close,
-              onSecondary: driver.dismissMessage,
-            ),
+            child: ConnectFailedNotice(car: failed),
           ),
         for (var i = 0; i < cars.length; i++)
           // Keyed by car, so a row keeps its fade when the order changes.
@@ -112,6 +103,36 @@ class CarList extends StatelessWidget {
             child: row(cars[i]),
           ),
       ],
+    );
+  }
+}
+
+/// The notice of a connection that failed (spec 5.2): which car it was, the
+/// likeliest cause, and "Try again" (connects to [car] again) and "Close".
+///
+/// The list of cars shows it above the rows; a screen with no list to put it
+/// on shows it by itself. It reads the driver.
+class ConnectFailedNotice extends StatelessWidget {
+  const ConnectFailedNotice({super.key, required this.car});
+
+  final FoundCar car;
+
+  /// The car whose connection failed while that is what the driver has to
+  /// say, or null.
+  static FoundCar? carOf(Driver driver) =>
+      driver.message == MessageKind.connectFailed ? driver.failedCar : null;
+
+  @override
+  Widget build(BuildContext context) {
+    final driver = DriverScope.of(context);
+    final l = AppLocalizations.of(context);
+    return Notice(
+      title: l.connectFailedTitle(car.model),
+      body: l.connectFailedBody,
+      primaryLabel: l.retry,
+      onPrimary: () => driver.connect(car.id),
+      secondaryLabel: l.close,
+      onSecondary: driver.dismissMessage,
     );
   }
 }

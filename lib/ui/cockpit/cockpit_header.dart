@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/car_transport.dart';
 import '../../core/driver.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../common/glass.dart';
@@ -8,23 +7,24 @@ import '../common/metal_text.dart';
 import '../common/ring_spinner.dart';
 import '../strings.dart';
 import '../theme/tokens.dart';
-
-/// What the line under the car's name says (spec 5.2).
-enum _Status { bluetoothOff, connecting, connected, reconnecting, searching }
+import 'cockpit_states.dart';
 
 /// The top of the cockpit (spec 5.2): on the left the name of the car in metal
 /// text and, under it, what the app is doing; on the right the battery, while
-/// a car is connected, and the gear that opens the settings.
+/// a car is connected (and Bluetooth is up), and the gear that opens the
+/// settings.
 ///
 /// The name is the model of the car that is connected or being connected, the
 /// lost one while the app waits to reconnect to it, and "No car" otherwise.
-/// The line under it follows one order, which the screens of the other states
-/// follow too:
-/// 1. Bluetooth not ready: "Bluetooth is off", with an unlit dot;
+/// The line under it is the state `panelStateOf` gives, the one the cockpit
+/// chooses its screen by, so the two always agree:
+/// 1. Bluetooth not ready: its title ("Bluetooth is off", "Bluetooth is
+///    blocked" or "Bluetooth LE is unavailable"), with an unlit dot;
 /// 2. connecting: "Connecting", with a turning ring;
 /// 3. connected: "Connected", with a lit amber dot;
 /// 4. waiting to reconnect: "Reconnecting", with a turning ring;
-/// 5. otherwise "Searching", with a turning ring.
+/// 5. otherwise "Searching", with a turning ring. This includes the instant
+///    at start-up before Bluetooth has said anything.
 ///
 /// With [onCarTap] the name and the line under it are a button (the phone and
 /// the tablet open the sheet of cars from it); without, they are plain text.
@@ -38,17 +38,15 @@ class CockpitHeader extends StatelessWidget {
   final VoidCallback onSettings;
   final VoidCallback? onCarTap;
 
-  static _Status _statusOf(Driver d) {
-    if (d.bluetooth != BluetoothState.ready) return _Status.bluetoothOff;
-    switch (d.link) {
-      case LinkState.connecting:
-        return _Status.connecting;
-      case LinkState.connected:
-        return _Status.connected;
-      case LinkState.idle:
-        return d.reconnecting ? _Status.reconnecting : _Status.searching;
-    }
-  }
+  /// The words under the name for [state] (the ring or the dot is the block's).
+  static String _statusOf(Driver d, PanelState state, AppLocalizations l) =>
+      switch (state) {
+        PanelState.bluetooth => bluetoothTitle(l, bluetoothBlockOf(d)!),
+        PanelState.connecting => l.statusConnecting,
+        PanelState.connected => l.connectedLabel,
+        PanelState.lost => l.statusReconnecting,
+        PanelState.searching => l.statusSearching,
+      };
 
   static String _nameOf(Driver d, AppLocalizations l) {
     final car = d.link == LinkState.idle ? d.lostCar : d.connectedCar;
@@ -60,7 +58,8 @@ class CockpitHeader extends StatelessWidget {
     final driver = DriverScope.of(context);
     final l = AppLocalizations.of(context);
     final desktop = layoutFor(MediaQuery.sizeOf(context)) == LayoutKind.desktop;
-    final battery = driver.link == LinkState.connected ? driver.battery : null;
+    final state = panelStateOf(driver);
+    final battery = state == PanelState.connected ? driver.battery : null;
     final gap = desktop ? 22.0 : 10.0;
 
     return Row(
@@ -71,7 +70,16 @@ class CockpitHeader extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: _CarBlock(
               name: _nameOf(driver, l),
-              status: _statusOf(driver),
+              status: _statusOf(driver, state, l),
+              // A ring while the app is at work, a lit dot when connected, an
+              // unlit one when Bluetooth is the problem.
+              working:
+                  state == PanelState.connecting ||
+                  state == PanelState.lost ||
+                  state == PanelState.searching,
+              lit: state == PanelState.connected,
+              // The car that was lost is the name of a car that is not there.
+              dimName: state == PanelState.lost,
               nameSize: desktop ? 56 : 42,
               statusSize: desktop ? 12.5 : 12,
               onTap: onCarTap,
@@ -94,52 +102,43 @@ class _CarBlock extends StatelessWidget {
   const _CarBlock({
     required this.name,
     required this.status,
+    required this.working,
+    required this.lit,
+    required this.dimName,
     required this.nameSize,
     required this.statusSize,
     required this.onTap,
   });
 
   final String name;
-  final _Status status;
+  final String status;
+
+  /// Whether the app is at work (a ring) and whether the dot is lit.
+  final bool working;
+  final bool lit;
+
+  /// Whether the name is shown faded (the car is gone, for now).
+  final bool dimName;
   final double nameSize;
   final double statusSize;
   final VoidCallback? onTap;
 
-  String _text(AppLocalizations l) {
-    switch (status) {
-      case _Status.bluetoothOff:
-        return l.btOffTitle;
-      case _Status.connecting:
-        return l.statusConnecting;
-      case _Status.connected:
-        return l.connectedLabel;
-      case _Status.reconnecting:
-        return l.statusReconnecting;
-      case _Status.searching:
-        return l.statusSearching;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final text = _text(l);
-    final working =
-        status == _Status.connecting ||
-        status == _Status.reconnecting ||
-        status == _Status.searching;
-
     Widget block = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        MetalText(
-          name,
-          // Saira is tall for its size (1.57 em a line): a line of 1.1 keeps
-          // the accents of the capitals inside the box the metal gradient is
-          // laid on, and the name close to the line under it.
-          style: AppType.numeric(size: nameSize)
-              .copyWith(height: 1.1, letterSpacing: 0.2),
+        Opacity(
+          opacity: dimName ? 0.6 : 1,
+          child: MetalText(
+            name,
+            // Saira is tall for its size (1.57 em a line): a line of 1.1 keeps
+            // the accents of the capitals inside the box the metal gradient is
+            // laid on, and the name close to the line under it.
+            style: AppType.numeric(size: nameSize)
+                .copyWith(height: 1.1, letterSpacing: 0.2),
+          ),
         ),
         const SizedBox(height: 4),
         Row(
@@ -149,15 +148,13 @@ class _CarBlock extends StatelessWidget {
               width: 10,
               child: Center(
                 // The words beside the ring say what it says.
-                child: working
-                    ? const RingSpinner()
-                    : _Dot(lit: status == _Status.connected),
+                child: working ? const RingSpinner() : _Dot(lit: lit),
               ),
             ),
             const SizedBox(width: 8),
             Flexible(
               child: Text(
-                text,
+                status,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppType.body(size: statusSize)

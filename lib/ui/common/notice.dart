@@ -6,12 +6,13 @@ import 'glass.dart';
 /// An amber card with a title, an explanation and up to two text actions
 /// (spec 4.8). It sits at the top of a screen to say what needs attention.
 ///
-/// An action shows only when its label is given.
+/// The explanation and an action show only when given: a notice whose title
+/// says it all ("The car disconnected.") has no [body].
 class Notice extends StatelessWidget {
   const Notice({
     super.key,
     required this.title,
-    required this.body,
+    this.body,
     this.primaryLabel,
     this.onPrimary,
     this.secondaryLabel,
@@ -19,7 +20,7 @@ class Notice extends StatelessWidget {
   });
 
   final String title;
-  final String body;
+  final String? body;
   final String? primaryLabel;
   final VoidCallback? onPrimary;
   final String? secondaryLabel;
@@ -44,12 +45,14 @@ class Notice extends StatelessWidget {
                 title,
                 style: AppType.body(size: 15).copyWith(color: AppColors.amber),
               ),
-              const SizedBox(height: 4),
-              Text(
-                body,
-                style: AppType.body(size: 13.5)
-                    .copyWith(color: AppColors.text2),
-              ),
+              if (body != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  body!,
+                  style: AppType.body(size: 13.5)
+                      .copyWith(color: AppColors.text2),
+                ),
+              ],
               if (hasActions)
                 Padding(
                   padding: const EdgeInsets.only(top: 4),

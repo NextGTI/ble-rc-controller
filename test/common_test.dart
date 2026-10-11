@@ -639,6 +639,29 @@ void main() {
       expect(find.text('Aviso'), findsOneWidget);
     });
 
+    testWidgets('the body is optional: a title and an action are a notice', (
+      tester,
+    ) async {
+      var closed = 0;
+      await pumpWithDriver(
+        tester,
+        await _driver(),
+        Notice(
+          title: 'O carro desconectou.',
+          secondaryLabel: 'Fechar',
+          onSecondary: () => closed++,
+        ),
+      );
+      expect(find.text('O carro desconectou.'), findsOneWidget);
+      // The title and the label of the action, and no empty line between.
+      expect(
+        find.descendant(of: find.byType(Notice), matching: find.byType(Text)),
+        findsNWidgets(2),
+      );
+      await tester.tap(find.text('Fechar'));
+      expect(closed, 1);
+    });
+
     testWidgets('it is the active (amber) glass', (tester) async {
       await pumpWithDriver(
         tester,

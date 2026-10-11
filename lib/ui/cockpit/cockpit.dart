@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../core/driver.dart';
 import '../common/ambient.dart';
-import '../garage/car_list.dart';
 import '../strings.dart';
 import '../theme/tokens.dart';
 import 'cockpit_header.dart';
+import 'cockpit_metrics.dart';
+import 'cockpit_states.dart';
 import 'instrument.dart';
 import 'key_legend.dart';
 import 'particles.dart';
@@ -32,9 +33,11 @@ import 'touch_pads.dart';
 /// instrument shrinks. The cells are buttons everywhere but on the desktop,
 /// where they are only with the on-screen controls on.
 ///
-/// Without a car connected the cockpit shows the header and, except on the
-/// desktop where the garage column lists the cars, the list of cars in the
-/// middle; the screens for each of those states come later.
+/// Without a car connected the middle of the cockpit is one of the screens of
+/// `cockpit_states.dart`, chosen by `panelStateOf` in the order of spec 5.2:
+/// Bluetooth not ready, connecting, connected (the instrument above), waiting
+/// to reconnect, and searching. The header names the same state, because it asks the same
+/// function.
 ///
 /// [onSettings] opens the settings. [onCarTap] is for the layouts without a
 /// garage column: it makes the name in the header open the sheet of cars.
@@ -48,65 +51,6 @@ class Cockpit extends StatefulWidget {
 
   @override
   State<Cockpit> createState() => _CockpitState();
-}
-
-/// What is different in each layout.
-class _Metrics {
-  const _Metrics({
-    required this.header,
-    required this.body,
-    required this.minimum,
-    this.maxInstrument = double.infinity,
-    this.maxPads = double.infinity,
-  });
-
-  /// Space at the sides of the header, and of the cells and arrows.
-  final EdgeInsets header;
-  final EdgeInsets body;
-
-  /// Least space kept at the top and bottom of the window, where the system
-  /// bars do not already leave it.
-  final EdgeInsets minimum;
-
-  /// Largest side of the instrument, and widest the row of arrows gets.
-  final double maxInstrument;
-  final double maxPads;
-
-  static const _phone = _Metrics(
-    header: EdgeInsets.symmetric(horizontal: 24),
-    body: EdgeInsets.symmetric(horizontal: 18),
-    minimum: EdgeInsets.only(top: 24, bottom: 20),
-  );
-
-  static const _tablet = _Metrics(
-    header: EdgeInsets.symmetric(horizontal: 32),
-    body: EdgeInsets.symmetric(horizontal: 32),
-    minimum: EdgeInsets.only(top: 24, bottom: 20),
-    maxInstrument: 480,
-    maxPads: 480,
-  );
-
-  static const _landscape = _Metrics(
-    header: EdgeInsets.symmetric(horizontal: 24),
-    body: EdgeInsets.symmetric(horizontal: 24),
-    minimum: EdgeInsets.only(top: 24, bottom: 20),
-  );
-
-  // The approved desktop design: 36 on the left, 28 on the right.
-  static const _desktop = _Metrics(
-    header: EdgeInsets.fromLTRB(36, 0, 28, 0),
-    body: EdgeInsets.fromLTRB(36, 0, 28, 0),
-    minimum: EdgeInsets.only(top: 28, bottom: 28),
-    maxInstrument: 440,
-    maxPads: 480,
-  );
-
-  static _Metrics of(LayoutKind kind) => switch (kind) {
-    LayoutKind.phone => _phone,
-    LayoutKind.tablet => _tablet,
-    LayoutKind.landscape => _landscape,
-    LayoutKind.desktop => _desktop,
-  };
 }
 
 class _CockpitState extends State<Cockpit> {
@@ -132,8 +76,9 @@ class _CockpitState extends State<Cockpit> {
   Widget build(BuildContext context) {
     final driver = DriverScope.of(context);
     final kind = layoutFor(MediaQuery.sizeOf(context));
-    final metrics = _Metrics.of(kind);
-    final connected = driver.link == LinkState.connected;
+    final metrics = CockpitMetrics.of(kind);
+    final panel = panelStateOf(driver);
+    final connected = panel == PanelState.connected;
     final light = driver.command.light;
 
     final header = Padding(
@@ -176,9 +121,7 @@ class _CockpitState extends State<Cockpit> {
           minimum: metrics.minimum,
           child: Material(
             type: MaterialType.transparency,
-            child: connected
-                ? _connected(driver, kind, metrics, header)
-                : _waiting(kind, metrics, header),
+            child: _content(panel, driver, kind, metrics, header),
           ),
         ),
       ],
@@ -188,7 +131,7 @@ class _CockpitState extends State<Cockpit> {
   Widget _connected(
     Driver driver,
     LayoutKind kind,
-    _Metrics metrics,
+    CockpitMetrics metrics,
     Widget header,
   ) {
     final desktop = kind == LayoutKind.desktop;
@@ -283,26 +226,32 @@ class _CockpitState extends State<Cockpit> {
     );
   }
 
-  /// Everything but a connected car, until the screens for those states
-  /// exist: the header and the cars, which the desktop already shows in the
-  /// garage column.
-  Widget _waiting(LayoutKind kind, _Metrics metrics, Widget header) {
+  /// What fills the cockpit for [panel]: the connected cockpit, or the header
+  /// over the screen of the state.
+  Widget _content(
+    PanelState panel,
+    Driver driver,
+    LayoutKind kind,
+    CockpitMetrics metrics,
+    Widget header,
+  ) {
+    final Widget view;
+    switch (panel) {
+      case PanelState.connected:
+        return _connected(driver, kind, metrics, header);
+      case PanelState.bluetooth:
+        view = BluetoothView(bluetoothBlockOf(driver)!);
+      case PanelState.connecting:
+        view = const ConnectingView();
+      case PanelState.lost:
+        view = const LostView();
+      case PanelState.searching:
+        view = const SearchingView();
+    }
     return Column(
       children: [
         header,
-        Expanded(
-          child: kind == LayoutKind.desktop
-              ? const SizedBox.shrink()
-              : Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 480),
-                    child: SingleChildScrollView(
-                      padding: metrics.body.copyWith(top: 12, bottom: 12),
-                      child: const CarList(),
-                    ),
-                  ),
-                ),
-        ),
+        Expanded(child: view),
       ],
     );
   }
