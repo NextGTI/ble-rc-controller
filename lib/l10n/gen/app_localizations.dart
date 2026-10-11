@@ -754,6 +754,18 @@ abstract class AppLocalizations {
   /// **'{deg}° left'**
   String steerLeft(int deg);
 
+  /// No description provided for @gaugeLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'left'**
+  String get gaugeLeft;
+
+  /// No description provided for @gaugeRight.
+  ///
+  /// In en, this message translates to:
+  /// **'right'**
+  String get gaugeRight;
+
   /// No description provided for @scaleForward.
   ///
   /// In en, this message translates to:

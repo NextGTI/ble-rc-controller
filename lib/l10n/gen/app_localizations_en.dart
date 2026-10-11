@@ -370,6 +370,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get gaugeLeft => 'left';
+
+  @override
+  String get gaugeRight => 'right';
+
+  @override
   String get scaleForward => 'forward';
 
   @override

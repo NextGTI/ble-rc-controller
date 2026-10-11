@@ -146,6 +146,8 @@ T.update({
  "noControllerShort": ("No controller", "Ningún mando", "Nenhum controle", []),
  "steerRight": ("{deg}° right", "{deg}° derecha", "{deg}° direita", ["deg"]),
  "steerLeft": ("{deg}° left", "{deg}° izquierda", "{deg}° esquerda", ["deg"]),
+ "gaugeLeft": ("left", "izquierda", "esquerda", []),
+ "gaugeRight": ("right", "derecha", "direita", []),
  "scaleForward": ("forward", "adelante", "frente", []),
  "scaleReverse": ("reverse", "marcha atrás", "ré", []),
  "scaleTurbo": ("turbo", "turbo", "turbo", []),

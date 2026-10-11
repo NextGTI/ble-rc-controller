@@ -182,6 +182,8 @@
       }
     }
   },
+  "gaugeLeft": "left",
+  "gaugeRight": "right",
   "scaleForward": "forward",
   "scaleReverse": "reverse",
   "scaleTurbo": "turbo",

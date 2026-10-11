@@ -372,6 +372,12 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get gaugeLeft => 'esquerda';
+
+  @override
+  String get gaugeRight => 'direita';
+
+  @override
   String get scaleForward => 'frente';
 
   @override
