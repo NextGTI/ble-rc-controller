@@ -133,6 +133,10 @@ class _Pad extends StatelessWidget {
 
   static const double _radius = 16;
 
+  /// The fade to amber and back: the 150 ms of the approved design, quicker
+  /// than a cell's, so a press answers at once.
+  static const Duration _fade = Duration(milliseconds: 150);
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -144,27 +148,39 @@ class _Pad extends StatelessWidget {
         dimension: side,
         child: HoldRegion(
           action: action,
+          // The 1 px drop is at once; the colour, the halo and the glass fade
+          // together (same time, same curve).
           builder: (context, held) => Transform.translate(
             offset: Offset(0, held ? 1 : 0),
-            child: CustomPaint(
-              painter: held ? const _Halo(_radius) : null,
-              child: Glass(
-                active: held,
-                radius: _radius,
-                padding: EdgeInsets.zero,
-                child: Center(
-                  child: Icon(
-                    icon,
-                    size: 24,
-                    color: held ? AppColors.amber : AppColors.text2,
-                    shadows: held
-                        ? [
-                            Shadow(
-                              color: AppColors.amber.withValues(alpha: 0.35),
-                              blurRadius: 8,
-                            ),
-                          ]
-                        : null,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(end: held ? 1 : 0),
+              duration: Glass.timeOf(context, _fade),
+              curve: Glass.curve,
+              builder: (context, t, _) => CustomPaint(
+                painter: t > 0 ? _Halo(_radius, t) : null,
+                child: Glass(
+                  active: held,
+                  duration: _fade,
+                  radius: _radius,
+                  padding: EdgeInsets.zero,
+                  child: Center(
+                    child: Icon(
+                      icon,
+                      size: 24,
+                      color: t >= 1
+                          ? AppColors.amber
+                          : Color.lerp(AppColors.text2, AppColors.amber, t),
+                      shadows: t > 0
+                          ? [
+                              Shadow(
+                                color: AppColors.amber.withValues(
+                                  alpha: 0.35 * t,
+                                ),
+                                blurRadius: 8,
+                              ),
+                            ]
+                          : null,
+                    ),
                   ),
                 ),
               ),
@@ -176,13 +192,16 @@ class _Pad extends StatelessWidget {
   }
 }
 
-/// The amber glow around a pressed arrow: drawn outside its outline only (a
+/// The amber glow around a pressed arrow, [strength] of the way in: drawn outside its outline only (a
 /// blur that is clipped from the inside, like a CSS outer shadow), so it does
 /// not tint the glass.
 class _Halo extends CustomPainter {
-  const _Halo(this.radius);
+  const _Halo(this.radius, this.strength);
 
   final double radius;
+
+  /// 0 (none) to 1 (the full glow).
+  final double strength;
 
   /// Gaussian sigma of the glow: half the 24 px blur of the approved design.
   static const double _sigma = 12;
@@ -192,11 +211,12 @@ class _Halo extends CustomPainter {
     canvas.drawRRect(
       RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(radius)),
       Paint()
-        ..color = AppColors.amber.withValues(alpha: 0.25)
+        ..color = AppColors.amber.withValues(alpha: 0.25 * strength)
         ..maskFilter = const MaskFilter.blur(BlurStyle.outer, _sigma),
     );
   }
 
   @override
-  bool shouldRepaint(_Halo old) => old.radius != radius;
+  bool shouldRepaint(_Halo old) =>
+      old.radius != radius || old.strength != strength;
 }

@@ -221,14 +221,19 @@ class _Cell extends StatelessWidget {
     // The halo of an active glass is for the value; the small texts keep none.
     final small = AppType.body(size: 11)
         .copyWith(color: AppColors.text3, shadows: const []);
-    final valueStyle = AppType.body(size: 15)
-        .copyWith(color: active ? null : AppColors.text2);
-
-    final text = Text(
-      value,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: valueStyle,
+    // The value is grey, and amber when active. Its colour fades with the
+    // glass (same time, same curve), from the grey and not from the default
+    // text colour; the halo comes from the glass.
+    final text = TweenAnimationBuilder<Color?>(
+      tween: ColorTween(end: active ? AppColors.amber : AppColors.text2),
+      duration: Glass.timeOf(context),
+      curve: Glass.curve,
+      builder: (context, color, _) => Text(
+        value,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppType.body(size: 15).copyWith(color: color),
+      ),
     );
 
     final glass = Glass(

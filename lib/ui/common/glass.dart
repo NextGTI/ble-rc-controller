@@ -11,6 +11,12 @@ import '../theme/tokens.dart';
 /// gradient (10% down to 3%) and the text and icons inside turn amber with a
 /// soft halo.
 ///
+/// Changing [active] is a fade of [duration] (`AppMotion.state` unless told
+/// otherwise, with a deceleration): the fill, the outline, the colour of the
+/// text and icons and their halo all move together. With the system's "reduce
+/// motion" on it is a direct change. The widget tree has the same shape in
+/// both states, so what is inside keeps its state.
+///
 /// With [onTap] the surface is a button; its target is never smaller than
 /// 48 by 48.
 class Glass extends StatelessWidget {
@@ -21,6 +27,7 @@ class Glass extends StatelessWidget {
     this.radius = 16,
     this.padding = const EdgeInsets.all(12),
     this.onTap,
+    this.duration,
   });
 
   final Widget child;
@@ -28,6 +35,23 @@ class Glass extends StatelessWidget {
   final double radius;
   final EdgeInsets padding;
   final VoidCallback? onTap;
+
+  /// How long the fade between idle and active takes. Null is
+  /// `AppMotion.state`; a surface that answers a touch (the arrow pads) asks
+  /// for less. Zero with "reduce motion", whatever this is.
+  final Duration? duration;
+
+  /// The deceleration of the fade. Things that fade along with the glass
+  /// (a halo, a value's colour) use the same one to stay in step.
+  static const Curve curve = Curves.easeOut;
+
+  /// The time a fade takes under [context]: [duration] (`AppMotion.state`
+  /// when null), or zero with the system's "reduce motion". Things that fade
+  /// along with a glass use it to stay in step.
+  static Duration timeOf(BuildContext context, [Duration? duration]) =>
+      (MediaQuery.maybeDisableAnimationsOf(context) ?? false)
+      ? Duration.zero
+      : (duration ?? AppMotion.state);
 
   /// Blur of what is behind the glass, in logical pixels.
   static const double blur = 14;
@@ -38,102 +62,152 @@ class Glass extends StatelessWidget {
   /// White at 6.5%: the line of light on the top edge (spec: 6 to 7%).
   static const Color _lightLine = Color.fromRGBO(255, 255, 255, 0.065);
 
+  /// White at 4% (idle) and the two ends of the amber fill (active).
+  static final Color _amberTop = AppColors.amber.withValues(alpha: 0.10);
+  static final Color _amberBottom = AppColors.amber.withValues(alpha: 0.03);
+  static final Color _amberEdge = AppColors.amber.withValues(alpha: 0.35);
+
+  /// The fill and outline at [t], 0 (idle) to 1 (active).
+  ///
+  /// At the ends the two plain looks: the glass colour, or the amber gradient
+  /// with no colour under it (a colour and a gradient share one paint, so a
+  /// colour under the gradient would multiply it by 4%). In between, both
+  /// ends are gradients, so they blend without ever being painted together.
+  BoxDecoration _decoration(double t, BorderRadius shape) {
+    if (t <= 0) {
+      return BoxDecoration(
+        color: AppColors.glass,
+        border: Border.all(color: AppColors.glassEdge),
+        borderRadius: shape,
+      );
+    }
+    final LinearGradient gradient;
+    final Color edge;
+    if (t >= 1) {
+      gradient = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [_amberTop, _amberBottom],
+      );
+      edge = _amberEdge;
+    } else {
+      gradient = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color.lerp(AppColors.glass, _amberTop, t)!,
+          Color.lerp(AppColors.glass, _amberBottom, t)!,
+        ],
+      );
+      edge = Color.lerp(AppColors.glassEdge, _amberEdge, t)!;
+    }
+    return BoxDecoration(
+      gradient: gradient,
+      border: Border.all(color: edge),
+      borderRadius: shape,
+    );
+  }
+
+  /// [child] with the text and icons coloured amber, with a halo, [t] of the
+  /// way (0 changes nothing; 1 is the active look).
+  Widget _tint(BuildContext context, double t, Widget child) {
+    TextStyle text = const TextStyle();
+    IconThemeData icons = const IconThemeData();
+    if (t > 0) {
+      final textColor = t >= 1
+          ? AppColors.amber
+          : Color.lerp(
+              DefaultTextStyle.of(context).style.color,
+              AppColors.amber,
+              t,
+            );
+      final iconColor = t >= 1
+          ? AppColors.amber
+          : Color.lerp(IconTheme.of(context).color, AppColors.amber, t);
+      text = TextStyle(
+        color: textColor,
+        shadows: [
+          Shadow(
+            color: AppColors.amber.withValues(alpha: 0.35 * t),
+            blurRadius: 8,
+          ),
+        ],
+      );
+      icons = IconThemeData(color: iconColor);
+    }
+    return DefaultTextStyle.merge(
+      style: text,
+      child: IconTheme.merge(data: icons, child: child),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final shape = BorderRadius.circular(radius);
-
-    Widget content = Padding(padding: padding, child: child);
-    if (active) {
-      content = DefaultTextStyle.merge(
-        style: TextStyle(
-          color: AppColors.amber,
-          shadows: [
-            Shadow(
-              color: AppColors.amber.withValues(alpha: 0.35),
-              blurRadius: 8,
-            ),
-          ],
-        ),
-        child: IconTheme.merge(
-          data: const IconThemeData(color: AppColors.amber),
-          child: content,
-        ),
-      );
-    }
-    if (onTap != null) {
-      content = Semantics(
-        button: true,
-        child: Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: shape,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: minTarget,
-                minHeight: minTarget,
-              ),
-              child: content,
-            ),
-          ),
-        ),
-      );
-    }
+    final time = timeOf(context, duration);
 
     return ClipRRect(
       borderRadius: shape,
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            // Colour and gradient share one paint, so a colour under the amber
-            // gradient would multiply it by 4%. When active, the gradient is
-            // the whole fill.
-            color: active ? null : AppColors.glass,
-            gradient: active
-                ? LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppColors.amber.withValues(alpha: 0.10),
-                      AppColors.amber.withValues(alpha: 0.03),
-                    ],
-                  )
-                : null,
-            border: Border.all(
-              color: active
-                  ? AppColors.amber.withValues(alpha: 0.35)
-                  : AppColors.glassEdge,
-            ),
-            borderRadius: shape,
-          ),
-          child: Stack(
-            children: [
-              content,
-              // Just under the outline, fading out before the rounded corners.
-              Positioned(
-                top: 1,
-                left: radius * 0.5,
-                right: radius * 0.5,
-                height: 1,
-                child: const IgnorePointer(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromRGBO(255, 255, 255, 0),
-                          _lightLine,
-                          _lightLine,
-                          Color.fromRGBO(255, 255, 255, 0),
-                        ],
-                        stops: [0, 0.2, 0.8, 1],
+        child: TweenAnimationBuilder<double>(
+          tween: Tween<double>(end: active ? 1 : 0),
+          duration: time,
+          curve: curve,
+          child: Padding(padding: padding, child: child),
+          builder: (context, t, padded) {
+            Widget content = _tint(context, t, padded!);
+            if (onTap != null) {
+              content = Semantics(
+                button: true,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    onTap: onTap,
+                    borderRadius: shape,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: minTarget,
+                        minHeight: minTarget,
                       ),
+                      child: content,
                     ),
                   ),
                 ),
+              );
+            }
+            return DecoratedBox(
+              decoration: _decoration(t, shape),
+              child: Stack(
+                children: [
+                  content,
+                  // Just under the outline, fading out before the rounded
+                  // corners.
+                  Positioned(
+                    top: 1,
+                    left: radius * 0.5,
+                    right: radius * 0.5,
+                    height: 1,
+                    child: const IgnorePointer(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(255, 255, 255, 0),
+                              _lightLine,
+                              _lightLine,
+                              Color.fromRGBO(255, 255, 255, 0),
+                            ],
+                            stops: [0, 0.2, 0.8, 1],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

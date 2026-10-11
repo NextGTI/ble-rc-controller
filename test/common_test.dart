@@ -242,6 +242,251 @@ void main() {
       }
     });
 
+    group('state change', () {
+      // A 100 by 100 glass over black, so the pixels are the fill alone.
+      Future<void> pumpGlass(
+        WidgetTester t,
+        Driver d,
+        GlobalKey key, {
+        required bool active,
+        Duration? duration,
+        bool reduceMotion = false,
+      }) => pumpWithDriver(
+        t,
+        d,
+        RepaintBoundary(
+          key: key,
+          child: ColoredBox(
+            color: Colors.black,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Glass(
+                active: active,
+                duration: duration,
+                padding: EdgeInsets.zero,
+                child: const SizedBox.expand(
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text('x'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        reduceMotion: reduceMotion,
+      );
+
+      Future<void> elapse(WidgetTester t, int ms) =>
+          t.pump(Duration(milliseconds: ms));
+
+      /// Where the glass is between idle (0) and active (1), from its fill.
+      double progress(WidgetTester t) {
+        final d = _surface(t);
+        final top = d.gradient == null
+            ? d.color!.a
+            : (d.gradient! as LinearGradient).colors.first.a;
+        return (top - 0.04) / (0.10 - 0.04);
+      }
+
+      testWidgets('idle to active: halfway at 100 ms, done by 250 ms', (
+        tester,
+      ) async {
+        final d = await _driver();
+        final key = GlobalKey();
+        await pumpGlass(tester, d, key, active: false);
+        final base = _textColor(tester, 'x')!;
+        expect(progress(tester), closeTo(0, 0.001));
+
+        await pumpGlass(tester, d, key, active: true);
+        await elapse(tester, 100);
+        final mid = _surface(tester);
+        expect(
+          mid.color,
+          isNull,
+          reason: 'a colour under the gradient dims it',
+        );
+        expect(mid.gradient, isA<LinearGradient>());
+        expect(progress(tester), inExclusiveRange(0.1, 0.95));
+        final edge = (mid.border! as Border).top.color;
+        expect(edge.a, inExclusiveRange(0.09, 0.34));
+        final text = _textColor(tester, 'x')!;
+        expect(text, isNot(AppColors.amber));
+        expect(text, isNot(base));
+        expect(text.b, inExclusiveRange(AppColors.amber.b, base.b));
+        final halo =
+            (tester.renderObject<RenderParagraph>(find.text('x')).text
+                    as TextSpan)
+                .style
+                ?.shadows;
+        expect(halo, isNotEmpty, reason: 'the halo comes in with the text');
+        expect(halo!.first.color.a, inExclusiveRange(0.0, 0.35));
+
+        await elapse(tester, 150);
+        final end = _surface(tester);
+        expect(end.color, isNull);
+        expect(progress(tester), closeTo(1, 0.001));
+        expect((end.border! as Border).top.color.a, closeTo(0.35, 0.005));
+        expect(_textColor(tester, 'x'), AppColors.amber);
+        // Nothing keeps running after it is done.
+        expect(tester.binding.transientCallbackCount, 0);
+      });
+
+      testWidgets('it decelerates: more than half is done at half the time', (
+        tester,
+      ) async {
+        final d = await _driver();
+        final key = GlobalKey();
+        await pumpGlass(tester, d, key, active: false);
+        await pumpGlass(tester, d, key, active: true);
+        await elapse(tester, 110); // half of 220 ms
+        expect(progress(tester), greaterThan(0.6));
+        expect(progress(tester), lessThan(0.95));
+      });
+
+      testWidgets('active to idle: fades back to the plain glass', (
+        tester,
+      ) async {
+        final d = await _driver();
+        final key = GlobalKey();
+        await pumpGlass(tester, d, key, active: true);
+        final lit = _textColor(tester, 'x');
+        expect(lit, AppColors.amber);
+
+        await pumpGlass(tester, d, key, active: false);
+        await elapse(tester, 100);
+        final mid = _surface(tester);
+        expect(mid.color, isNull);
+        expect(progress(tester), inExclusiveRange(0.05, 0.9));
+        expect(_textColor(tester, 'x'), isNot(AppColors.amber));
+
+        await elapse(tester, 150);
+        final end = _surface(tester);
+        expect(end.color, AppColors.glass);
+        expect(end.gradient, isNull);
+        expect((end.border! as Border).top.color, AppColors.glassEdge);
+        expect(_textColor(tester, 'x'), isNot(AppColors.amber));
+        final shadows =
+            (tester.renderObject<RenderParagraph>(find.text('x')).text
+                    as TextSpan)
+                .style
+                ?.shadows;
+        expect(shadows, anyOf(isNull, isEmpty), reason: 'no halo when idle');
+      });
+
+      testWidgets('turning back halfway goes from where it is, not from 0', (
+        tester,
+      ) async {
+        final d = await _driver();
+        final key = GlobalKey();
+        await pumpGlass(tester, d, key, active: false);
+        await pumpGlass(tester, d, key, active: true);
+        await elapse(tester, 60);
+        final before = progress(tester);
+        expect(before, inExclusiveRange(0.05, 0.9));
+
+        await pumpGlass(tester, d, key, active: false);
+        final after = progress(tester);
+        expect(after, closeTo(before, 0.05), reason: 'no jump');
+      });
+
+      testWidgets('what is drawn while it changes is never dimmer than the '
+          'start', (tester) async {
+        final d = await _driver();
+        final key = GlobalKey();
+        await pumpGlass(tester, d, key, active: false);
+        final idle = (await _pixel(tester, key, 50, 10))[0]; // red, 4% white
+        await pumpGlass(tester, d, key, active: true);
+        for (var i = 0; i < 6; i++) {
+          await elapse(tester, 40);
+          final red = (await _pixel(tester, key, 50, 10))[0];
+          expect(
+            red,
+            greaterThanOrEqualTo(idle - 1),
+            reason: 'at ${i * 40} ms',
+          );
+        }
+        final end = await _pixel(tester, key, 50, 10);
+        expect(end[0], inInclusiveRange(20, 28));
+        expect(end[0], greaterThan(end[1]));
+      });
+
+      testWidgets('duration sets the time it takes', (tester) async {
+        final d = await _driver();
+        final key = GlobalKey();
+        const quick = Duration(milliseconds: 100);
+        await pumpGlass(tester, d, key, active: false, duration: quick);
+        await pumpGlass(tester, d, key, active: true, duration: quick);
+        await elapse(tester, 50);
+        expect(progress(tester), inExclusiveRange(0.3, 0.97));
+        await elapse(tester, 70);
+        expect(progress(tester), closeTo(1, 0.001), reason: 'done at 120 ms');
+        expect(_textColor(tester, 'x'), AppColors.amber);
+
+        // The default is 220 ms, so the same 120 ms is not enough.
+        final key2 = GlobalKey();
+        await pumpGlass(tester, d, key2, active: false);
+        await pumpGlass(tester, d, key2, active: true);
+        await elapse(tester, 120);
+        expect(progress(tester), lessThan(0.99));
+      });
+
+      testWidgets('with reduce motion it changes at once, both ways', (
+        tester,
+      ) async {
+        final d = await _driver();
+        final key = GlobalKey();
+        await pumpGlass(tester, d, key, active: false, reduceMotion: true);
+        await pumpGlass(tester, d, key, active: true, reduceMotion: true);
+        await tester.pump();
+        expect(progress(tester), closeTo(1, 0.001));
+        expect(_textColor(tester, 'x'), AppColors.amber);
+        expect(tester.binding.transientCallbackCount, 0);
+
+        await pumpGlass(tester, d, key, active: false, reduceMotion: true);
+        await tester.pump();
+        expect(_surface(tester).color, AppColors.glass);
+        expect(_textColor(tester, 'x'), isNot(AppColors.amber));
+      });
+
+      testWidgets('the tree keeps its shape when active flips, so what is '
+          'inside keeps its state', (tester) async {
+        final d = await _driver();
+        Widget glass(bool active) =>
+            Glass(active: active, child: const _Probe());
+        await pumpWithDriver(tester, d, glass(false));
+        final state = tester.state<_ProbeState>(find.byType(_Probe));
+        await pumpWithDriver(tester, d, glass(true));
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(tester.state<_ProbeState>(find.byType(_Probe)), same(state));
+        await pumpWithDriver(tester, d, glass(false));
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(tester.state<_ProbeState>(find.byType(_Probe)), same(state));
+      });
+
+      testWidgets('a tappable glass still fires and keeps its 48 by 48 while '
+          'it fades', (tester) async {
+        final d = await _driver();
+        var taps = 0;
+        Widget glass(bool active) => Glass(
+          active: active,
+          padding: EdgeInsets.zero,
+          onTap: () => taps++,
+          child: const SizedBox(width: 10, height: 10),
+        );
+        await pumpWithDriver(tester, d, glass(false));
+        await pumpWithDriver(tester, d, glass(true));
+        await tester.pump(const Duration(milliseconds: 100));
+        final size = tester.getSize(find.byType(Glass));
+        expect(size.width, greaterThanOrEqualTo(48));
+        expect(size.height, greaterThanOrEqualTo(48));
+        await tester.tap(find.byType(Glass));
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(taps, 1);
+      });
+    });
+
     testWidgets('the radius and padding are the ones given', (tester) async {
       await pumpWithDriver(
         tester,
@@ -951,4 +1196,17 @@ void main() {
       expect(taps, 1);
     });
   });
+}
+
+/// A stateful widget whose state a test can hold on to.
+class _Probe extends StatefulWidget {
+  const _Probe();
+
+  @override
+  State<_Probe> createState() => _ProbeState();
+}
+
+class _ProbeState extends State<_Probe> {
+  @override
+  Widget build(BuildContext context) => const SizedBox(width: 10, height: 10);
 }

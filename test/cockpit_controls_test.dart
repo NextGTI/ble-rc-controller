@@ -14,6 +14,7 @@ import 'package:ble_rc_controller/ui/common/glass.dart';
 import 'package:ble_rc_controller/ui/strings.dart';
 import 'package:ble_rc_controller/ui/theme/tokens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gamepads/gamepads.dart';
@@ -93,9 +94,44 @@ List<Glass> _glasses(WidgetTester t) =>
 Future<AppLocalizations> _l10n(String code) =>
     AppLocalizations.delegate.load(Locale(code));
 
-/// The colour the text [s] is drawn with, from the nearest default style.
+/// The RGBA of the pixel ([x], [y]) that the repaint boundary [key] draws. The
+/// harness has a pixel ratio of 1, so a logical pixel is one pixel.
+Future<List<int>> _pixel(WidgetTester t, GlobalKey key, int x, int y) async {
+  final px = await t.runAsync(() async {
+    final boundary =
+        key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+    final image = await boundary.toImage();
+    final bytes = (await image.toByteData())!; // raw RGBA
+    final at = (y * image.width + x) * 4;
+    image.dispose();
+    return [for (var i = 0; i < 4; i++) bytes.getUint8(at + i)];
+  });
+  return px!;
+}
+
+/// The opacity of the top of the fill of the [index]th glass: 4% when idle, 10%
+/// when active, and in between while it changes.
+double _fillTop(WidgetTester t, int index) {
+  final d = t
+      .widgetList<DecoratedBox>(
+        find.descendant(
+          of: find.byType(Glass).at(index),
+          matching: find.byType(DecoratedBox),
+        ),
+      )
+      .map((b) => b.decoration)
+      .whereType<BoxDecoration>()
+      .firstWhere((d) => d.border != null);
+  return d.gradient == null
+      ? d.color!.a
+      : (d.gradient! as LinearGradient).colors.first.a;
+}
+
+/// The colour the text [s] is painted with, after every style is merged.
 Color? _textColor(WidgetTester t, String s) =>
-    DefaultTextStyle.of(t.element(find.text(s))).style.color;
+    (t.renderObject<RenderParagraph>(find.text(s)).text as TextSpan)
+        .style
+        ?.color;
 
 void main() {
   group('padGlyph', () {
@@ -564,6 +600,62 @@ void main() {
       await _finish(t, rig);
     });
 
+    testWidgets('a cell fades to amber: halfway at 100 ms, done by 250 ms', (
+      t,
+    ) async {
+      final rig = await _connected(t);
+      await pumpWithDriver(t, rig.driver, const StateCells(tappable: true));
+      expect(_fillTop(t, 1), closeTo(0.04, 0.001), reason: 'idle glass');
+
+      await t.tap(find.text('Turbo'));
+      await t.pump(); // the frame that starts the fade
+      expect(rig.driver.command.turbo, isTrue);
+      expect(
+        _textColor(t, 'Ativo'),
+        AppColors.text2,
+        reason: 'the value starts from its idle colour, not from white',
+      );
+      await t.pump(const Duration(milliseconds: 100));
+      final mid = _fillTop(t, 1);
+      expect(mid, inExclusiveRange(0.05, 0.095), reason: 'in the middle');
+      expect(
+        _textColor(t, 'Ativo')!.b,
+        inExclusiveRange(AppColors.amber.b, AppColors.text2.b),
+        reason: 'between the idle grey and amber',
+      );
+      expect(_fillTop(t, 0), closeTo(0.04, 0.001), reason: 'Light is unmoved');
+
+      await t.pump(const Duration(milliseconds: 150));
+      expect(_fillTop(t, 1), closeTo(0.10, 0.001));
+      expect(_textColor(t, 'Ativo'), AppColors.amber);
+      expect(t.binding.transientCallbackCount, 0);
+
+      // And back to plain glass when it is switched off.
+      await t.tap(find.text('Turbo'));
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 100));
+      expect(_fillTop(t, 1), inExclusiveRange(0.045, 0.095));
+      await t.pump(const Duration(milliseconds: 150));
+      expect(_fillTop(t, 1), closeTo(0.04, 0.001));
+      await _finish(t, rig);
+    });
+
+    testWidgets('with reduce motion a cell lights up at once', (t) async {
+      final rig = await _connected(t);
+      await pumpWithDriver(
+        t,
+        rig.driver,
+        const StateCells(tappable: true),
+        reduceMotion: true,
+      );
+      await t.tap(find.text('Turbo'));
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 1));
+      expect(_fillTop(t, 1), closeTo(0.10, 0.001));
+      expect(_textColor(t, 'Ativo'), AppColors.amber);
+      await _finish(t, rig);
+    });
+
     testWidgets('the tappable cells are named buttons, with their state', (
       t,
     ) async {
@@ -780,6 +872,96 @@ void main() {
       await t.pump(const Duration(milliseconds: 40));
       expect(t.takeException(), isNull);
       expect(rig.driver.command.forward, isFalse);
+      await g.up();
+      await _finish(t, rig);
+    });
+
+    testWidgets('fade to amber in 150 ms, quicker than the cells', (t) async {
+      final rig = await _connected(t);
+      await pumpWithDriver(t, rig.driver, const TouchPads());
+      expect(_fillTop(t, 3), closeTo(0.04, 0.001));
+
+      final g = await t.startGesture(t.getCenter(up));
+      await t.pump(); // the frame that starts the fade
+      await t.pump(const Duration(milliseconds: 60));
+      expect(_fillTop(t, 3), inExclusiveRange(0.05, 0.095), reason: 'at 60 ms');
+      await t.pump(const Duration(milliseconds: 100));
+      expect(_fillTop(t, 3), closeTo(0.10, 0.001), reason: 'done by 160 ms');
+      expect(_fillTop(t, 0), closeTo(0.04, 0.001), reason: 'others unmoved');
+
+      await g.up();
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 60));
+      expect(_fillTop(t, 3), inExclusiveRange(0.045, 0.095));
+      await t.pump(const Duration(milliseconds: 100));
+      expect(_fillTop(t, 3), closeTo(0.04, 0.001));
+      await _finish(t, rig);
+    });
+
+    testWidgets('the icon and the halo fade in with the glass, in 150 ms', (
+      t,
+    ) async {
+      final rig = await _connected(t);
+      final key = GlobalKey();
+      await pumpWithDriver(
+        t,
+        rig.driver,
+        RepaintBoundary(
+          key: key,
+          child: const ColoredBox(
+            color: Colors.black,
+            child: Padding(padding: EdgeInsets.all(30), child: TouchPads()),
+          ),
+        ),
+      );
+      final pad = find.byType(Glass).last;
+      final origin = t.getTopLeft(find.byKey(key));
+      final rect = t.getRect(pad);
+      // Just under the pad, where only the halo can be.
+      final x = (rect.center.dx - origin.dx).round();
+      final y = (rect.bottom - origin.dy).round() + 4;
+      final icon = find.byIcon(Icons.arrow_upward_rounded);
+      double iconBlue() => t.widget<Icon>(icon).color!.b;
+      expect(t.widget<Icon>(icon).color, AppColors.text2);
+      expect((await _pixel(t, key, x, y))[0], 0, reason: 'no halo at rest');
+
+      final g = await t.startGesture(t.getCenter(icon));
+      await t.pump(); // the frame that starts the fade
+      await t.pump(const Duration(milliseconds: 60));
+      expect(
+        iconBlue(),
+        inExclusiveRange(AppColors.amber.b, AppColors.text2.b),
+      );
+      final mid = (await _pixel(t, key, x, y))[0];
+      expect(mid, greaterThan(0), reason: 'the halo is coming in');
+
+      await t.pump(const Duration(milliseconds: 100));
+      expect(t.widget<Icon>(icon).color, AppColors.amber);
+      final full = (await _pixel(t, key, x, y))[0];
+      expect(full, greaterThan(mid), reason: 'and done by 160 ms');
+      expect(t.widget<Icon>(icon).shadows, isNotEmpty);
+
+      await g.up();
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 160));
+      expect(t.widget<Icon>(icon).color, AppColors.text2);
+      expect((await _pixel(t, key, x, y))[0], 0, reason: 'halo gone again');
+      expect(t.widget<Icon>(icon).shadows, isNull);
+      await _finish(t, rig);
+    });
+
+    testWidgets('light up at once with reduce motion', (t) async {
+      final rig = await _connected(t);
+      await pumpWithDriver(
+        t,
+        rig.driver,
+        const TouchPads(),
+        reduceMotion: true,
+      );
+      final g = await t.startGesture(t.getCenter(up));
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 1));
+      expect(_fillTop(t, 3), closeTo(0.10, 0.001));
       await g.up();
       await _finish(t, rig);
     });
