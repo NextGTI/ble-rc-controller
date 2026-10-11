@@ -47,6 +47,21 @@ BoxDecoration _surface(WidgetTester t) => t
     .whereType<BoxDecoration>()
     .firstWhere((d) => d.border != null);
 
+/// The RGBA of the pixel ([x], [y]) that the repaint boundary [key] draws.
+/// The harness runs at a pixel ratio of 1, so a logical pixel is one pixel.
+Future<List<int>> _pixel(WidgetTester t, GlobalKey key, int x, int y) async {
+  final px = await t.runAsync(() async {
+    final boundary =
+        key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+    final image = await boundary.toImage();
+    final bytes = (await image.toByteData())!; // raw RGBA
+    final at = (y * image.width + x) * 4;
+    image.dispose();
+    return [for (var i = 0; i < 4; i++) bytes.getUint8(at + i)];
+  });
+  return px!;
+}
+
 /// The colour the text [s] is actually painted with.
 Color? _textColor(WidgetTester t, String s) =>
     (t.renderObject<RenderParagraph>(find.text(s)).text as TextSpan)
@@ -157,6 +172,9 @@ void main() {
       final edge = (d.border! as Border).top.color;
       expect(edge.a, closeTo(0.35, 0.005));
       expect(edge.toARGB32() & 0xFFFFFF, AppColors.amber.toARGB32() & 0xFFFFFF);
+      // The gradient is the whole fill: a colour here would be painted with it
+      // and dim it to a few tenths of a percent.
+      expect(d.color, isNull);
       final fill = (d.gradient! as LinearGradient).colors;
       expect(fill.first.a, closeTo(0.10, 0.005));
       expect(fill.last.a, closeTo(0.03, 0.005));
@@ -167,6 +185,61 @@ void main() {
               .style
               ?.shadows;
       expect(shadows, isNotEmpty);
+    });
+
+    testWidgets('active: what is drawn is the amber fill, 10% at the top down '
+        'to 3% at the bottom', (tester) async {
+      final key = GlobalKey();
+      await pumpWithDriver(
+        tester,
+        await _driver(),
+        RepaintBoundary(
+          key: key,
+          child: const ColoredBox(
+            color: Colors.black,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Glass(
+                active: true,
+                padding: EdgeInsets.zero,
+                child: SizedBox.expand(),
+              ),
+            ),
+          ),
+        ),
+      );
+      // Amber (255, 181, 71) over black: 10% is about 25 of red, 3% about 8.
+      final top = await _pixel(tester, key, 50, 10);
+      expect(top[0], inInclusiveRange(20, 28), reason: 'red near the top');
+      expect(top[0], greaterThan(top[1]), reason: 'amber, not white');
+      expect(top[1], greaterThan(top[2]), reason: 'amber, not white');
+      final bottom = await _pixel(tester, key, 50, 92);
+      expect(bottom[0], inInclusiveRange(5, 13), reason: 'red near the bottom');
+      expect(top[0], greaterThan(bottom[0]));
+    });
+
+    testWidgets('idle: what is drawn is white at 4%', (tester) async {
+      final key = GlobalKey();
+      await pumpWithDriver(
+        tester,
+        await _driver(),
+        RepaintBoundary(
+          key: key,
+          child: const ColoredBox(
+            color: Colors.black,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Glass(padding: EdgeInsets.zero, child: SizedBox.expand()),
+            ),
+          ),
+        ),
+      );
+      final px = await _pixel(tester, key, 50, 50);
+      for (final c in px.take(3)) {
+        expect(c, inInclusiveRange(8, 12)); // 4% of 255 is about 10
+      }
     });
 
     testWidgets('the radius and padding are the ones given', (tester) async {
@@ -663,9 +736,7 @@ void main() {
       );
     });
 
-    testWidgets('a switch row keeps both the row and the switch tappable', (
-      tester,
-    ) async {
+    testWidgets('tapping the switch in a row toggles it', (tester) async {
       final seen = <bool>[];
       await pumpWithDriver(
         tester,
@@ -683,6 +754,66 @@ void main() {
       await tester.tap(find.byType(AmberSwitch));
       await tester.pump();
       expect(seen, [true]);
+    });
+
+    testWidgets('a switch row is one control for screen readers: named by its '
+        'title, with the on/off state and the tap', (tester) async {
+      final handle = tester.ensureSemantics();
+      await pumpWithDriver(
+        tester,
+        await _driver(),
+        SettingsGroup(
+          title: 'Geral',
+          rows: [
+            SettingsRow(
+              title: 'Teclado',
+              subtitle: 'Dirige com as setas',
+              trailing: AmberSwitch(value: true, onChanged: (_) {}),
+            ),
+          ],
+        ),
+      );
+      expect(
+        tester.getSemantics(find.byType(SettingsRow)),
+        isSemantics(
+          label: 'Teclado\nDirige com as setas',
+          hasToggledState: true,
+          isToggled: true,
+          hasTapAction: true,
+        ),
+      );
+      // One tappable node, and it is the named one: no unnamed switch left over.
+      final tappable = find.semantics.byAction(SemanticsAction.tap).evaluate();
+      expect(tappable, hasLength(1));
+      expect(tappable.single.label, 'Teclado\nDirige com as setas');
+      handle.dispose();
+    });
+
+    testWidgets('a value row reads its value with its title', (tester) async {
+      final handle = tester.ensureSemantics();
+      await pumpWithDriver(
+        tester,
+        await _driver(),
+        SettingsGroup(
+          title: 'Geral',
+          rows: [
+            SettingsRow(
+              title: 'Zona morta',
+              trailing: const Text('12%'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      );
+      expect(
+        tester.getSemantics(find.byType(SettingsRow)),
+        isSemantics(
+          label: 'Zona morta\n12%',
+          isButton: true,
+          hasTapAction: true,
+        ),
+      );
+      handle.dispose();
     });
 
     testWidgets('a long title and subtitle wrap without overflow in a narrow '

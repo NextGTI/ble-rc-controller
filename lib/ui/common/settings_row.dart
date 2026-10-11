@@ -56,6 +56,8 @@ class SettingsGroup extends StatelessWidget {
 /// whatever [trailing] is (a value, an `AmberSwitch`, a "›").
 ///
 /// With [onTap] the whole row is a button. A row is never shorter than 56.
+/// For screen readers the row is a single control: title, subtitle and
+/// [trailing] are merged, so an `AmberSwitch` is named by the title.
 class SettingsRow extends StatelessWidget {
   const SettingsRow({
     super.key,
@@ -115,13 +117,19 @@ class SettingsRow extends StatelessWidget {
         ),
       ),
     );
-    if (onTap == null) return content;
-    return Semantics(
-      button: true,
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(onTap: onTap, child: content),
-      ),
+    // One node for the whole row, as a `SwitchListTile` does: the title names
+    // the control on the right (a switch has no name of its own) and a value is
+    // read with its title.
+    return MergeSemantics(
+      child: onTap == null
+          ? content
+          : Semantics(
+              button: true,
+              child: Material(
+                type: MaterialType.transparency,
+                child: InkWell(onTap: onTap, child: content),
+              ),
+            ),
     );
   }
 }

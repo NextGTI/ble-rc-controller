@@ -6,6 +6,10 @@ import '../theme/tokens.dart';
 ///
 /// The track is 44 by 26 but the target is 48 by 48. With the system "reduce
 /// motion" on, the change is instant.
+///
+/// It has no name of its own for screen readers. Put it in a `SettingsRow`
+/// (which merges its title in), or wrap it together with its label in a
+/// `MergeSemantics`.
 class AmberSwitch extends StatelessWidget {
   const AmberSwitch({super.key, required this.value, required this.onChanged});
 

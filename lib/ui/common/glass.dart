@@ -86,7 +86,10 @@ class Glass extends StatelessWidget {
         filter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.glass,
+            // Colour and gradient share one paint, so a colour under the amber
+            // gradient would multiply it by 4%. When active, the gradient is
+            // the whole fill.
+            color: active ? null : AppColors.glass,
             gradient: active
                 ? LinearGradient(
                     begin: Alignment.topCenter,
