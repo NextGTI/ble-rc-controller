@@ -324,6 +324,25 @@ class ParticlePainter extends CustomPainter {
       old.beam != beam;
 }
 
+/// How many particles the dust has over an [area] (spec 4.7, "about 95 on a
+/// phone and 150 on a desktop, adjusted by the area").
+///
+/// A straight line through the two sizes the spec names: 95 for a phone of
+/// 390 by 844 and 150 for a desktop window of 1180 by 760, held between 60
+/// and 170 so a tiny window still has dust (the line starts at about 63) and a
+/// huge one does not drown the frame. The area is the cockpit's own, so the cockpit beside the garage
+/// column (900 wide in a window of 1180) has fewer than a window of its own.
+///
+/// It goes in steps of five: a window being dragged would otherwise restart
+/// the dust at nearly every pixel.
+int particleCountFor(Size area) {
+  const phone = 390.0 * 844.0;
+  const desktop = 1180.0 * 760.0;
+  final t = (area.width * area.height - phone) / (desktop - phone);
+  final count = 95 + (150 - 95) * t;
+  return ((count / 5).round() * 5).clamp(60, 170);
+}
+
 /// The air and dust behind the cockpit (spec 4.7): fine particles that float
 /// at rest, run down with the car going forward, up in reverse, lean away from
 /// a turn, stretch into warm streaks at turbo, wind around the car in the
@@ -336,7 +355,7 @@ class ParticlePainter extends CustomPainter {
 /// to 18% below it, see [zoneFactor]) and [beam], when there is one, the box of
 /// the headlight cone: its base edge on the lights, its top edge where the beam
 /// ends. [count] is the number of particles (about 95 on a phone and 150 on a
-/// desktop; the caller adjusts it to the area).
+/// desktop; the caller adjusts it to the area with [particleCountFor]).
 ///
 /// It makes no ticker, and draws the particles once and still, when
 /// `EffectsScope.particlesOf` is false or the system asks to reduce motion

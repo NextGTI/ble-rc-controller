@@ -161,6 +161,79 @@ void main() {
     });
   });
 
+  group('particleCountFor', () {
+    test(
+      'is 95 for a phone and 150 for a desktop window, as the spec says',
+      () {
+        expect(particleCountFor(const Size(390, 844)), 95);
+        expect(particleCountFor(const Size(1180, 760)), 150);
+      },
+    );
+
+    test('grows with the area and falls with it', () {
+      final counts = [
+        for (final size in const [
+          Size(320, 568),
+          Size(568, 320),
+          Size(390, 844),
+          Size(800, 360),
+          Size(600, 960),
+          Size(900, 760),
+          Size(1180, 760),
+          Size(1440, 900),
+        ])
+          (size.width * size.height, particleCountFor(size)),
+      ]..sort((a, b) => a.$1.compareTo(b.$1));
+      for (var i = 1; i < counts.length; i++) {
+        expect(
+          counts[i].$2,
+          greaterThanOrEqualTo(counts[i - 1].$2),
+          reason: '${counts[i - 1]} then ${counts[i]}',
+        );
+      }
+      // The column-less cockpit of a desktop window (900 of the 1180) has
+      // less room than the window and gets fewer than 150, but more than a
+      // phone.
+      expect(particleCountFor(const Size(900, 760)), inInclusiveRange(96, 149));
+    });
+
+    test('depends on the area, not on the shape', () {
+      expect(
+        particleCountFor(const Size(500, 600)),
+        particleCountFor(const Size(600, 500)),
+      );
+      expect(
+        particleCountFor(const Size(844, 390)),
+        particleCountFor(const Size(390, 844)),
+      );
+    });
+
+    test('is held between 60 and 170', () {
+      // The line itself starts at 63 for no area at all, so a tiny window
+      // still has dust; the top is where the clamp bites.
+      expect(particleCountFor(Size.zero), inInclusiveRange(60, 65));
+      expect(particleCountFor(const Size(200, 200)), inInclusiveRange(60, 70));
+      expect(particleCountFor(const Size(2560, 1440)), 170);
+      expect(particleCountFor(const Size(7680, 4320)), 170);
+      for (var w = 0.0; w < 9000; w += 113) {
+        for (var h = 0.0; h < 5000; h += 211) {
+          expect(
+            particleCountFor(Size(w, h)),
+            inInclusiveRange(60, 170),
+            reason: '$w x $h',
+          );
+        }
+      }
+    });
+
+    test('moves in steps of five, so a window being dragged does not '
+        'restart the dust at every pixel', () {
+      for (var w = 300.0; w <= 1500; w += 7) {
+        expect(particleCountFor(Size(w, 800)) % 5, 0, reason: '$w');
+      }
+    });
+  });
+
   group('zoneFactor', () {
     test('quiet behind the header and the controls', () {
       expect(zoneFactor(10, heroTop: 100, heroBottom: 400), 0.55);

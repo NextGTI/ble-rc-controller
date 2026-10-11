@@ -6,6 +6,7 @@ import 'package:ble_rc_controller/core/driver.dart';
 import 'package:ble_rc_controller/core/protocol.dart';
 import 'package:ble_rc_controller/ui/cockpit/cockpit.dart';
 import 'package:ble_rc_controller/ui/cockpit/cockpit_header.dart';
+import 'package:ble_rc_controller/ui/cockpit/particles.dart';
 import 'package:ble_rc_controller/ui/cockpit/state_cells.dart';
 import 'package:ble_rc_controller/ui/common/ambient.dart';
 import 'package:ble_rc_controller/ui/common/glass.dart';
@@ -213,6 +214,19 @@ void main() {
         expect(t.getRect(_gear).right, lessThanOrEqualTo(1280));
       },
     );
+
+    _shellTest('the dust is counted by the room beside the column', (
+      t,
+      rig,
+    ) async {
+      await _mount(t, rig, size: _desktop);
+      await t.pumpAndSettle();
+      final field = t.widget<ParticleField>(find.byType(ParticleField));
+      // The cockpit is 900 wide, not 1180.
+      expect(t.getSize(find.byType(Cockpit)), const Size(900, 760));
+      expect(field.count, particleCountFor(const Size(900, 760)));
+      expect(field.count, lessThan(150));
+    }, prefs: _noArrows);
 
     _shellTest('a failed reconnect shows its notice once, in the column', (
       t,

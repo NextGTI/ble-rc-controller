@@ -679,20 +679,54 @@ void main() {
   });
 
   group('Cockpit, the dust', () {
-    _cockpitTest('95 particles on a phone, 150 on a desktop', (t, rig) async {
-      await _mount(t, rig, size: const Size(390, 844));
-      await t.pumpAndSettle();
-      expect(t.widget<ParticleField>(find.byType(ParticleField)).count, 95);
-      await _mount(t, rig, size: const Size(600, 960));
-      await t.pumpAndSettle();
-      expect(t.widget<ParticleField>(find.byType(ParticleField)).count, 95);
-      await _mount(t, rig, size: const Size(800, 360));
-      await t.pumpAndSettle();
-      expect(t.widget<ParticleField>(find.byType(ParticleField)).count, 95);
-      await _mount(t, rig, size: const Size(1180, 760));
-      await t.pumpAndSettle();
-      expect(t.widget<ParticleField>(find.byType(ParticleField)).count, 150);
+    _cockpitTest('the count follows the area: 95 on a phone, 150 on a desktop '
+        'window', (t, rig) async {
+      for (final (size, expected) in [
+        (const Size(390, 844), 95),
+        (const Size(1180, 760), 150),
+        // In between, by area: a tablet and a phone turned sideways.
+        (const Size(600, 960), particleCountFor(const Size(600, 960))),
+        (const Size(800, 360), particleCountFor(const Size(800, 360))),
+        (const Size(568, 320), particleCountFor(const Size(568, 320))),
+      ]) {
+        await _mount(t, rig, size: size);
+        await t.pumpAndSettle();
+        expect(
+          t.widget<ParticleField>(find.byType(ParticleField)).count,
+          expected,
+          reason: '$size',
+        );
+      }
+      expect(particleCountFor(const Size(600, 960)), greaterThan(95));
+      expect(particleCountFor(const Size(568, 320)), lessThan(95));
     });
+
+    _cockpitTest('the count is that of the cockpit, not of the window', (
+      t,
+      rig,
+    ) async {
+      // 280 of the 1180 are the garage column's: the cockpit has 900.
+      await pumpWithDriver(
+        t,
+        rig.driver,
+        Row(
+          children: [
+            const SizedBox(width: 280, height: 760),
+            SizedBox(
+              width: 900,
+              height: 760,
+              child: Cockpit(onSettings: () {}),
+            ),
+          ],
+        ),
+        size: const Size(1180, 760),
+      );
+      await t.pumpAndSettle();
+      final count = t.widget<ParticleField>(find.byType(ParticleField)).count;
+      expect(count, particleCountFor(const Size(900, 760)));
+      expect(count, lessThan(150));
+      expect(count, greaterThan(95));
+    }, prefs: _noArrows);
 
     _cockpitTest('the field fills the cockpit, between the backdrop and the '
         'content', (t, rig) async {

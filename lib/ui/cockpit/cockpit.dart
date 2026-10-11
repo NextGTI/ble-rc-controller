@@ -80,6 +80,14 @@ class _CockpitState extends State<Cockpit> {
 
   @override
   Widget build(BuildContext context) {
+    // The dust is counted by the room the cockpit has: beside the garage
+    // column of a desktop that is less than the window.
+    return LayoutBuilder(
+      builder: (context, box) => _cockpit(context, box.biggest),
+    );
+  }
+
+  Widget _cockpit(BuildContext context, Size area) {
     final driver = DriverScope.of(context);
     final kind = layoutFor(MediaQuery.sizeOf(context));
     final metrics = CockpitMetrics.of(kind);
@@ -124,7 +132,7 @@ class _CockpitState extends State<Cockpit> {
                           : Instrument.beamIn(frame);
                     }
                   : null,
-              count: kind == LayoutKind.desktop ? 150 : 95,
+              count: particleCountFor(area),
             )
           else
             const SizedBox.shrink(),
