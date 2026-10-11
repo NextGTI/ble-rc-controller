@@ -68,8 +68,8 @@ class _BindingsPageState extends State<BindingsPage> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    // The desktop clicks; every other layout touches.
-    final desktop = layoutFor(MediaQuery.sizeOf(context)) == LayoutKind.desktop;
+    // A computer clicks; a phone or a tablet touches, whatever its width.
+    final clicks = isDesktopPlatform;
     return PopScope(
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) _endCapture();
@@ -81,7 +81,7 @@ class _BindingsPageState extends State<BindingsPage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
             child: Text(
-              desktop ? l.bindingsLeadClick : l.bindingsLeadTouch,
+              clicks ? l.bindingsLeadClick : l.bindingsLeadTouch,
               style: AppType.body(size: 13.5)
                   .copyWith(color: AppColors.text2, height: 1.5),
             ),

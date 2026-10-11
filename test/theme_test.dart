@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:ble_rc_controller/main.dart' show registerFontLicense;
 import 'package:ble_rc_controller/ui/theme/theme.dart';
@@ -84,12 +83,52 @@ void main() {
     expect(layoutFor(const Size(599, 960)), LayoutKind.phone);
     expect(layoutFor(const Size(899, 960)), LayoutKind.tablet);
     expect(layoutFor(const Size(900, 960)), LayoutKind.desktop);
-    // Landscape needs a width of at least 600 and a height under 500.
+    // Landscape: wider than tall and under 500 high.
     expect(layoutFor(const Size(600, 499)), LayoutKind.landscape);
     expect(layoutFor(const Size(600, 500)), LayoutKind.tablet);
-    expect(layoutFor(const Size(599, 360)), LayoutKind.phone);
-    // Desktop wins over landscape.
-    expect(layoutFor(const Size(1200, 400)), LayoutKind.desktop);
+    expect(layoutFor(const Size(500, 499)), LayoutKind.landscape);
+    // Not wider than tall: a short portrait or a square stays a phone.
+    expect(layoutFor(const Size(499, 499)), LayoutKind.phone);
+    expect(layoutFor(const Size(320, 480)), LayoutKind.phone);
+  });
+
+  test('a phone turned sideways is landscape, whatever its width', () {
+    // The ruling of spec 6: "landscape with a height under 500" comes first.
+    // A big phone is 915 wide, a small one 568; neither is a desktop window
+    // or a portrait phone.
+    expect(layoutFor(const Size(915, 412)), LayoutKind.landscape);
+    expect(layoutFor(const Size(844, 390)), LayoutKind.landscape);
+    expect(layoutFor(const Size(568, 320)), LayoutKind.landscape);
+    expect(layoutFor(const Size(599, 360)), LayoutKind.landscape);
+    expect(layoutFor(const Size(800, 360)), LayoutKind.landscape);
+    expect(layoutFor(const Size(1200, 400)), LayoutKind.landscape);
+  });
+
+  test('a tall or large window is not landscape', () {
+    expect(layoutFor(const Size(1280, 800)), LayoutKind.desktop);
+    expect(layoutFor(const Size(800, 1280)), LayoutKind.tablet);
+    expect(layoutFor(const Size(412, 915)), LayoutKind.phone);
+    expect(layoutFor(const Size(1180, 760)), LayoutKind.desktop);
+    expect(layoutFor(const Size(900, 500)), LayoutKind.desktop);
+  });
+
+  test('desktop platforms are macOS, Windows and Linux', () {
+    expect(isDesktopPlatform, isFalse, reason: 'flutter_test says Android');
+    for (final (platform, desktop) in [
+      (TargetPlatform.macOS, true),
+      (TargetPlatform.windows, true),
+      (TargetPlatform.linux, true),
+      (TargetPlatform.android, false),
+      (TargetPlatform.iOS, false),
+      (TargetPlatform.fuchsia, false),
+    ]) {
+      debugDefaultTargetPlatformOverride = platform;
+      try {
+        expect(isDesktopPlatform, desktop, reason: platform.name);
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    }
   });
 
   test('theme is dark with the amber accent', () {

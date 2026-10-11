@@ -14,6 +14,7 @@ import 'package:ble_rc_controller/ui/settings/settings_page.dart';
 import 'package:ble_rc_controller/ui/shell.dart';
 import 'package:ble_rc_controller/ui/strings.dart';
 import 'package:ble_rc_controller/ui/theme/tokens.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -78,25 +79,26 @@ Future<_Rig> _rig(
 }
 
 /// A widget test with a [_Rig] that is taken down, widgets first, at the end.
+///
+/// flutter_test reports Android; a test of the computer passes [platform].
 void _shellTest(
   String name,
   Future<void> Function(WidgetTester t, _Rig rig) body, {
   Map<String, Object> prefs = const {},
   bool connect = true,
   bool keyboard = false,
+  TargetPlatform? platform,
 }) {
   testWidgets(name, (t) async {
-    final rig = await _rig(
-      t,
-      prefs: prefs,
-      connect: connect,
-      keyboard: keyboard,
-    );
+    debugDefaultTargetPlatformOverride = platform;
+    _Rig? rig;
     try {
+      rig = await _rig(t, prefs: prefs, connect: connect, keyboard: keyboard);
       await body(t, rig);
     } finally {
       await t.pumpWidget(const SizedBox());
-      rig.driver.dispose();
+      rig?.driver.dispose();
+      debugDefaultTargetPlatformOverride = null;
     }
   });
 }
@@ -147,23 +149,28 @@ void main() {
   });
 
   group('Shell on a desktop window', () {
-    _shellTest('puts the garage column beside the cockpit', (t, rig) async {
-      await _mount(t, rig, size: _desktop);
-      await t.pumpAndSettle();
+    _shellTest(
+      'puts the garage column beside the cockpit',
+      (t, rig) async {
+        await _mount(t, rig, size: _desktop);
+        await t.pumpAndSettle();
 
-      expect(t.takeException(), isNull);
-      expect(find.text('Carros por perto'), findsOneWidget);
-      expect(find.text('Espaço'), findsOneWidget);
-      final column = t.getRect(find.byType(GarageColumn));
-      final cockpit = t.getRect(find.byType(Cockpit));
-      expect(column.left, 0);
-      expect(column.width, 280);
-      expect(column.height, _desktop.height);
-      expect(cockpit.left, column.right);
-      expect(cockpit.right, _desktop.width);
-      // The garage is the column, so the name is not a button.
-      expect(t.widget<Cockpit>(find.byType(Cockpit)).onCarTap, isNull);
-    }, prefs: _noArrows);
+        expect(t.takeException(), isNull);
+        expect(find.text('Carros por perto'), findsOneWidget);
+        expect(find.text('Espaço'), findsOneWidget);
+        final column = t.getRect(find.byType(GarageColumn));
+        final cockpit = t.getRect(find.byType(Cockpit));
+        expect(column.left, 0);
+        expect(column.width, 280);
+        expect(column.height, _desktop.height);
+        expect(cockpit.left, column.right);
+        expect(cockpit.right, _desktop.width);
+        // The garage is the column, so the name is not a button.
+        expect(t.widget<Cockpit>(find.byType(Cockpit)).onCarTap, isNull);
+      },
+      prefs: _noArrows,
+      platform: TargetPlatform.macOS,
+    );
 
     _shellTest('a failed reconnect shows its notice once, in the column', (
       t,
@@ -529,6 +536,9 @@ void main() {
     ('phone', _phone),
     ('tablet', _tablet),
     ('landscape', _landscape),
+    // A phone turned sideways is not a desktop window, however wide.
+    ('big phone sideways', Size(915, 412)),
+    ('small phone sideways', Size(568, 320)),
   ]) {
     group('Shell on a $name', () {
       _shellTest('is the cockpit alone, with the name as a button', (

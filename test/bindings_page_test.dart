@@ -8,6 +8,7 @@ import 'package:ble_rc_controller/ui/common/amber_switch.dart';
 import 'package:ble_rc_controller/ui/common/glass.dart';
 import 'package:ble_rc_controller/ui/common/input_tag.dart';
 import 'package:ble_rc_controller/ui/settings/bindings_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -109,23 +110,67 @@ void main() {
         });
       }
 
-      testWidgets('says "Clique" on a desktop window', (t) async {
-        final d = await newDriver();
-        await pumpWithDriver(
+      for (final platform in [
+        TargetPlatform.macOS,
+        TargetPlatform.windows,
+        TargetPlatform.linux,
+      ]) {
+        testWidgets('says "Clique" on a desktop window (${platform.name})', (
           t,
-          d,
-          const BindingsPage(),
-          size: const Size(1180, 760),
-        );
-        await t.pumpAndSettle();
-        expect(
-          find.text(
-            'Clique em Adicionar e aperte um botão do controle, mova o '
-            'analógico ou aperte uma tecla.',
-          ),
-          findsOneWidget,
-        );
-        expect(find.textContaining('Toque em Adicionar'), findsNothing);
+        ) async {
+          debugDefaultTargetPlatformOverride = platform;
+          try {
+            final d = await newDriver();
+            await pumpWithDriver(
+              t,
+              d,
+              const BindingsPage(),
+              size: const Size(1180, 760),
+            );
+            await t.pumpAndSettle();
+            expect(
+              find.text(
+                'Clique em Adicionar e aperte um botão do controle, mova o '
+                'analógico ou aperte uma tecla.',
+              ),
+              findsOneWidget,
+            );
+            expect(find.textContaining('Toque em Adicionar'), findsNothing);
+          } finally {
+            debugDefaultTargetPlatformOverride = null;
+          }
+        });
+      }
+
+      // The platform says it, not the width: an Android tablet turned sideways
+      // is 1280 wide and gets the desktop layout, but is touched.
+      for (final size in [const Size(1280, 800), const Size(1180, 760)]) {
+        testWidgets('says "Toque" on Android at ${size.width.toInt()} wide', (
+          t,
+        ) async {
+          final d = await newDriver();
+          await pumpWithDriver(t, d, const BindingsPage(), size: size);
+          await t.pumpAndSettle();
+          expect(find.textContaining('Toque em Adicionar'), findsOneWidget);
+          expect(find.textContaining('Clique em Adicionar'), findsNothing);
+        });
+      }
+
+      testWidgets('says "Toque" on iOS at desktop width', (t) async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+        try {
+          final d = await newDriver();
+          await pumpWithDriver(
+            t,
+            d,
+            const BindingsPage(),
+            size: const Size(1180, 760),
+          );
+          await t.pumpAndSettle();
+          expect(find.textContaining('Toque em Adicionar'), findsOneWidget);
+        } finally {
+          debugDefaultTargetPlatformOverride = null;
+        }
       });
 
       testWidgets('is in the language of the app', (t) async {

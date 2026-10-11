@@ -23,11 +23,16 @@ import 'touch_pads.dart';
 /// - phone: one column, the cells in a 2 by 2 grid, the arrows full width;
 /// - tablet: the same with a larger instrument, the cells in one row of four
 ///   and the arrows at most 480 wide, centred;
-/// - landscape (a screen at least 600 wide and under 500 high): the instrument
-///   on the left and, on the right, the cells (2 by 2) and the arrows;
-/// - desktop: the cells in one row of four, the arrows (only with the on-screen
-///   controls on) and the key legend (only with the keyboard on), under the
-///   instrument. The garage is the column beside it, not part of this widget.
+/// - landscape (wider than tall and under 500 high, a phone turned sideways of
+///   any width): the instrument on the left and, on the right, the cells (2 by
+///   2) and the arrows;
+/// - desktop (900 or more wide): the cells in one row of four, the arrows (only
+///   with the on-screen controls on) and the key legend under the instrument.
+///   The garage is the column beside it, not part of this widget.
+///
+/// The key legend belongs to the platform, not to the width: it is there on a
+/// computer with "Use the keyboard" on, and never on an Android tablet that
+/// has the desktop layout because it is wide.
 ///
 /// On a short screen the cells and the arrows keep their size and the
 /// instrument shrinks. The cells are buttons everywhere but on the desktop,
@@ -215,7 +220,9 @@ class _CockpitState extends State<Cockpit> {
                   ),
                 ),
               ],
-              if (desktop && driver.keyboardEnabled) ...[
+              // The legend is for a keyboard in the hands: a computer, not an
+              // Android tablet with the desktop layout.
+              if (isDesktopPlatform && driver.keyboardEnabled) ...[
                 const SizedBox(height: 16),
                 const KeyLegend(),
               ],

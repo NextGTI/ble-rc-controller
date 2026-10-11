@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
 /// Colours of the single dark theme (spec 3.1).
@@ -102,19 +103,39 @@ abstract final class Breakpoints {
   /// From this width on the screen is a desktop window.
   static const double desktop = 900;
 
-  /// Below this height a screen that is at least [tablet] wide is landscape.
+  /// Below this height a screen that is wider than it is tall is landscape.
   static const double landscapeMaxHeight = 500;
 }
 
 enum LayoutKind { phone, tablet, landscape, desktop }
 
 /// Which layout a screen of size [s] gets.
+///
+/// A screen wider than it is tall and under [Breakpoints.landscapeMaxHeight]
+/// high is landscape, whatever its width: a big phone turned sideways is 915
+/// wide and a small one 568, and both need the two columns, not the desktop's
+/// column of cars or the portrait stack. Anything else goes by width: desktop
+/// from 900, tablet from 600, phone below.
 LayoutKind layoutFor(Size s) {
-  if (s.width >= Breakpoints.desktop) return LayoutKind.desktop;
-  if (s.width >= Breakpoints.tablet) {
-    return s.height < Breakpoints.landscapeMaxHeight
-        ? LayoutKind.landscape
-        : LayoutKind.tablet;
+  if (s.height < Breakpoints.landscapeMaxHeight && s.width > s.height) {
+    return LayoutKind.landscape;
   }
+  if (s.width >= Breakpoints.desktop) return LayoutKind.desktop;
+  if (s.width >= Breakpoints.tablet) return LayoutKind.tablet;
   return LayoutKind.phone;
 }
+
+/// Whether the app runs on a computer (macOS, Windows or Linux), with a mouse
+/// and a keyboard, as opposed to a phone or a tablet.
+///
+/// It is the platform that says so, not the size of the window: an Android
+/// tablet turned sideways is 1280 wide and has the desktop layout, but is
+/// still touched, so it gets no legend of keys and "Tap", not "Click".
+bool get isDesktopPlatform => switch (defaultTargetPlatform) {
+  TargetPlatform.macOS ||
+  TargetPlatform.windows ||
+  TargetPlatform.linux => true,
+  TargetPlatform.android ||
+  TargetPlatform.iOS ||
+  TargetPlatform.fuchsia => false,
+};

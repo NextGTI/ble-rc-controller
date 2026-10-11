@@ -20,6 +20,7 @@ import 'package:ble_rc_controller/ui/common/metal_text.dart';
 import 'package:ble_rc_controller/ui/common/ring_spinner.dart';
 import 'package:ble_rc_controller/ui/garage/car_list.dart';
 import 'package:ble_rc_controller/ui/theme/tokens.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -46,6 +47,9 @@ const _sizes = [
   Size(600, 960),
   Size(800, 360),
   Size(1180, 760),
+  // Phones turned sideways: a big one (915 wide) and a small one (568 wide).
+  Size(915, 412),
+  Size(568, 320),
 ];
 
 const _locales = ['pt', 'en', 'es'];
@@ -112,20 +116,25 @@ void _cockpitTest(
   Map<String, Object> prefs = const {},
   List<FoundCar> cars = const [_sf25],
   bool connect = true,
+  TargetPlatform? platform,
 }) {
   testWidgets(name, (t) async {
-    final rig = await _rig(
-      t,
-      transport: transport?.call(),
-      prefs: prefs,
-      cars: cars,
-      connect: connect,
-    );
+    // flutter_test reports Android; a test of the computer says macOS.
+    debugDefaultTargetPlatformOverride = platform;
+    _Rig? rig;
     try {
+      rig = await _rig(
+        t,
+        transport: transport?.call(),
+        prefs: prefs,
+        cars: cars,
+        connect: connect,
+      );
       await body(t, rig);
     } finally {
       await t.pumpWidget(const SizedBox());
-      rig.driver.dispose();
+      rig?.driver.dispose();
+      debugDefaultTargetPlatformOverride = null;
     }
   });
 }
@@ -138,14 +147,26 @@ Future<void> _mount(
   bool reduceMotion = false,
   VoidCallback? onSettings,
   VoidCallback? onCarTap,
-}) => pumpWithDriver(
-  t,
-  rig.driver,
-  Cockpit(onSettings: onSettings ?? () {}, onCarTap: onCarTap),
-  size: size,
-  locale: locale,
-  reduceMotion: reduceMotion,
-);
+  double textScale = 1,
+}) {
+  final cockpit = Cockpit(onSettings: onSettings ?? () {}, onCarTap: onCarTap);
+  return pumpWithDriver(
+    t,
+    rig.driver,
+    textScale == 1
+        ? cockpit
+        : Builder(
+            builder: (context) => MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: TextScaler.linear(textScale)),
+              child: cockpit,
+            ),
+          ),
+    size: size,
+    locale: locale,
+    reduceMotion: reduceMotion,
+  );
+}
 
 Future<AppLocalizations> _l10n(String code) =>
     AppLocalizations.delegate.load(Locale(code));
@@ -215,6 +236,7 @@ void main() {
               }
             },
             prefs: desktop ? _noArrows : const {},
+            platform: desktop ? TargetPlatform.macOS : null,
           );
         }
       }
@@ -246,6 +268,7 @@ void main() {
           );
         },
         prefs: const {'onScreen': true},
+        platform: TargetPlatform.macOS,
       );
     }
 
@@ -304,6 +327,114 @@ void main() {
       expect(t.getSize(find.byType(StateCells)), tall.$2);
       expect(t.getSize(find.byType(TouchPads)), tall.$3);
     });
+  });
+
+  group('Cockpit, a phone turned sideways', () {
+    // A big phone is 915 wide and a small one 568: both are landscape, with
+    // the instrument on the left and the cells and arrows on the right. They
+    // used to get the desktop layout (a column of 280 and an instrument of
+    // 93) and the portrait stack (which overflowed).
+    for (final size in const [Size(915, 412), Size(568, 320)]) {
+      for (final scale in const [1.0, 1.3, 1.5]) {
+        for (final code in _locales) {
+          _cockpitTest(
+            '${size.width.toInt()}x${size.height.toInt()} at $scale times '
+            'the text in $code',
+            (t, rig) async {
+              expect(layoutFor(size), LayoutKind.landscape);
+              await _mount(t, rig, size: size, locale: code, textScale: scale);
+              await t.pumpAndSettle();
+
+              expect(t.takeException(), isNull);
+              expect(find.byType(Instrument), findsOneWidget);
+              expect(find.byType(StateCells), findsOneWidget);
+              expect(find.byType(TouchPads), findsOneWidget);
+              expect(find.byType(KeyLegend), findsNothing);
+              // The instrument is on the left, the rest on the right; the
+              // instrument does not shrink to a thumbnail.
+              final instrument = t.getRect(_frame());
+              final cells = t.getRect(find.byType(StateCells));
+              expect(instrument.right, lessThanOrEqualTo(cells.left));
+              expect(t.getSize(_frame()).width, greaterThanOrEqualTo(150));
+              expect(cells.right, lessThanOrEqualTo(size.width));
+            },
+          );
+        }
+      }
+    }
+
+    _cockpitTest('the arrows can be reached by scrolling at 1.5 times the '
+        'text on the small one', (t, rig) async {
+      await _mount(t, rig, size: const Size(568, 320), textScale: 1.5);
+      await t.pumpAndSettle();
+      await t.ensureVisible(find.byType(TouchPads));
+      await t.pumpAndSettle();
+      expect(t.takeException(), isNull);
+      final r = t.getRect(find.byType(TouchPads));
+      expect(r.bottom, lessThanOrEqualTo(320));
+      expect(r.top, greaterThanOrEqualTo(0));
+    });
+  });
+
+  group('Cockpit, the platform decides the legend', () {
+    _cockpitTest('an Android tablet turned sideways (1280x800): the arrows, '
+        'no legend', (t, rig) async {
+      expect(layoutFor(const Size(1280, 800)), LayoutKind.desktop);
+      await _mount(t, rig, size: const Size(1280, 800));
+      await t.pumpAndSettle();
+      expect(t.takeException(), isNull);
+      // On-screen controls default to on on Android.
+      expect(rig.driver.onScreenControls, isTrue);
+      expect(find.byType(TouchPads), findsOneWidget);
+      expect(find.byType(KeyLegend), findsNothing);
+      expect(
+        t.getRect(find.byType(TouchPads)).top,
+        greaterThan(t.getRect(find.byType(StateCells)).bottom),
+        reason: 'under the cells',
+      );
+    });
+
+    _cockpitTest('an Android tablet with the controls off: neither', (
+      t,
+      rig,
+    ) async {
+      await _mount(t, rig, size: const Size(1280, 800));
+      await t.pumpAndSettle();
+      expect(find.byType(TouchPads), findsNothing);
+      expect(find.byType(KeyLegend), findsNothing);
+    }, prefs: _noArrows);
+
+    for (final platform in [
+      TargetPlatform.macOS,
+      TargetPlatform.windows,
+      TargetPlatform.linux,
+    ]) {
+      _cockpitTest(
+        '${platform.name}: the legend, and the arrows only if '
+        'asked for',
+        (t, rig) async {
+          await _mount(t, rig, size: const Size(1180, 760));
+          await t.pumpAndSettle();
+          expect(t.takeException(), isNull);
+          expect(find.byType(KeyLegend), findsOneWidget);
+          expect(find.byType(TouchPads), findsNothing);
+        },
+        prefs: _noArrows,
+        platform: platform,
+      );
+    }
+
+    _cockpitTest(
+      'a computer with the keyboard off has no legend',
+      (t, rig) async {
+        rig.driver.keyboardEnabled = false;
+        await _mount(t, rig, size: const Size(1180, 760));
+        await t.pumpAndSettle();
+        expect(find.byType(KeyLegend), findsNothing);
+      },
+      prefs: _noArrows,
+      platform: TargetPlatform.macOS,
+    );
   });
 
   group('Cockpit, by layout', () {
@@ -445,17 +576,22 @@ void main() {
       }
     });
 
-    _cockpitTest('the legend is gone with the keyboard off', (t, rig) async {
-      rig.driver.keyboardEnabled = false;
-      await _mount(t, rig, size: const Size(1180, 760));
-      await t.pumpAndSettle();
-      expect(t.takeException(), isNull);
-      expect(find.byType(KeyLegend), findsNothing);
-      expect(find.byType(TouchPads), findsNothing);
-      expect(find.byType(StateCells), findsOneWidget);
-      // With nothing under them the cells sit at the bottom margin.
-      expect(t.getRect(find.byType(StateCells)).bottom, 760 - 28);
-    }, prefs: _noArrows);
+    _cockpitTest(
+      'the legend is gone with the keyboard off',
+      (t, rig) async {
+        rig.driver.keyboardEnabled = false;
+        await _mount(t, rig, size: const Size(1180, 760));
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
+        expect(find.byType(KeyLegend), findsNothing);
+        expect(find.byType(TouchPads), findsNothing);
+        expect(find.byType(StateCells), findsOneWidget);
+        // With nothing under them the cells sit at the bottom margin.
+        expect(t.getRect(find.byType(StateCells)).bottom, 760 - 28);
+      },
+      prefs: _noArrows,
+      platform: TargetPlatform.macOS,
+    );
   });
 
   group('Cockpit, the dust', () {

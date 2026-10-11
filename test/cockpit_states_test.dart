@@ -1189,6 +1189,9 @@ void main() {
       Size(390, 844),
       Size(600, 960),
       Size(800, 360),
+      // A phone turned sideways.
+      Size(915, 412),
+      Size(568, 320),
     ]) {
       for (final withCars in [true, false]) {
         _stateTest(
@@ -1218,7 +1221,13 @@ void main() {
   });
 
   group('Every state, on the smallest phone and in landscape', () {
-    const sizes = [Size(320, 568), Size(800, 360)];
+    const sizes = [
+      Size(320, 568),
+      Size(800, 360),
+      // A phone turned sideways, big and small.
+      Size(915, 412),
+      Size(568, 320),
+    ];
     const codes = ['pt', 'en', 'es'];
 
     for (final sc in _scenarios.where((s) => s.state != PanelState.connected)) {
