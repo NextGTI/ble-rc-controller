@@ -356,6 +356,20 @@ void main() {
         expect(_add(CarAction.turbo), findsOneWidget);
       });
 
+      testWidgets('ends when the page is taken off the screen', (t) async {
+        final d = await newDriver();
+        await _pump(t, d);
+        await t.pumpAndSettle();
+        await t.tap(_add(CarAction.forward));
+        await t.pumpAndSettle();
+        expect(d.capturing, CarAction.forward);
+
+        // Not popped: the host (the panel of the desktop) just goes away.
+        await t.pumpWidget(const SizedBox());
+        await t.pump();
+        expect(d.capturing, isNull);
+      });
+
       testWidgets('is in the language of the app', (t) async {
         final d = await newDriver();
         await _pump(t, d, locale: 'en');

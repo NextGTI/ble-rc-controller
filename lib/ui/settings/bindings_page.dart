@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../../core/driver.dart';
 import '../../core/protocol.dart';
 import '../../input/input_ref.dart';
 import '../../l10n/gen/app_localizations.dart';
@@ -24,33 +27,73 @@ import 'page_frame.dart';
 /// A controller input is written with the symbol the cells of the panel use
 /// (`padGlyph`), a key by its name, a signal the app does not know the way the
 /// cells write it.
-class BindingsPage extends StatelessWidget {
+///
+/// A wait for an input belongs to the page: while it lasts the driver takes
+/// every key and controller input for itself and sends the car neutral. So the
+/// page ends it on every way out (the back chevron, the system back, the panel
+/// of the desktop closed by its scrim), the way the teach wizard ends its
+/// session. Left open, the cockpit would stay dead and the next key pressed
+/// would be bound to the action.
+class BindingsPage extends StatefulWidget {
   const BindingsPage({super.key});
+
+  @override
+  State<BindingsPage> createState() => _BindingsPageState();
+}
+
+class _BindingsPageState extends State<BindingsPage> {
+  Driver? _driver;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _driver = DriverScope.of(context);
+  }
+
+  /// Ends the wait for an input, if there is one.
+  void _endCapture() {
+    final driver = _driver;
+    if (driver != null && driver.capturing != null) driver.cancelCapture();
+  }
+
+  @override
+  void dispose() {
+    // A page that is taken off the screen without being popped (the panel is
+    // closed from outside) ends the wait too. Not now: the tree is locked and
+    // the driver would tell it to rebuild.
+    if (_driver?.capturing != null) scheduleMicrotask(_endCapture);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     // The desktop clicks; every other layout touches.
     final desktop = layoutFor(MediaQuery.sizeOf(context)) == LayoutKind.desktop;
-    return SettingsFrame(
-      title: l.bindingsTitle,
-      footer: const _Footer(),
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-          child: Text(
-            desktop ? l.bindingsLeadClick : l.bindingsLeadTouch,
-            style: AppType.body(size: 13.5)
-                .copyWith(color: AppColors.text2, height: 1.5),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) _endCapture();
+      },
+      child: SettingsFrame(
+        title: l.bindingsTitle,
+        footer: const _Footer(),
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+            child: Text(
+              desktop ? l.bindingsLeadClick : l.bindingsLeadTouch,
+              style: AppType.body(size: 13.5)
+                  .copyWith(color: AppColors.text2, height: 1.5),
+            ),
           ),
-        ),
-        SettingsCard(
-          items: [
-            for (final a in CarAction.values)
-              _ActionBlock(key: ValueKey<CarAction>(a), action: a),
-          ],
-        ),
-      ],
+          SettingsCard(
+            items: [
+              for (final a in CarAction.values)
+                _ActionBlock(key: ValueKey<CarAction>(a), action: a),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

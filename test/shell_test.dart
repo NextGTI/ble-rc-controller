@@ -615,6 +615,117 @@ void main() {
     });
   }
 
+  group('Shell, a capture left open', () {
+    // "+ Adicionar" of the action [a] on the page of buttons and keys.
+    Finder add(CarAction a) => find.descendant(
+      of: find.byKey(ValueKey<CarAction>(a)),
+      matching: find.text('+ Adicionar'),
+    );
+
+    _shellTest(
+      'the system back on a phone ends it, and the cockpit drives again',
+      (t, rig) async {
+        await _mount(t, rig);
+        await t.pumpAndSettle();
+        await t.tap(_gear);
+        await t.pumpAndSettle();
+        await t.tap(find.text('Botões e teclas'));
+        await t.pumpAndSettle();
+        await t.tap(add(CarAction.forward));
+        await t.pumpAndSettle();
+        expect(rig.driver.capturing, CarAction.forward);
+
+        await t.binding.handlePopRoute();
+        await t.pumpAndSettle();
+        expect(find.byType(BindingsPage), findsNothing);
+        expect(rig.driver.capturing, isNull);
+
+        // Up arrow: the cockpit drives, and the key is not bound to anything.
+        final before = rig.driver.bindings[CarAction.forward]!.length;
+        await t.sendKeyDownEvent(LogicalKeyboardKey.arrowUp);
+        await t.pump(const Duration(milliseconds: 40));
+        expect(rig.driver.command.forward, isTrue);
+        await t.sendKeyUpEvent(LogicalKeyboardKey.arrowUp);
+        await t.pump(const Duration(milliseconds: 40));
+        expect(rig.driver.bindings[CarAction.forward]!.length, before);
+      },
+      keyboard: true,
+    );
+
+    _shellTest('the back chevron on a phone ends it', (t, rig) async {
+      await _mount(t, rig);
+      await t.tap(_gear);
+      await t.pumpAndSettle();
+      await t.tap(find.text('Botões e teclas'));
+      await t.pumpAndSettle();
+      await t.tap(add(CarAction.reverse));
+      await t.pumpAndSettle();
+      expect(rig.driver.capturing, CarAction.reverse);
+
+      await t.tap(_back);
+      await t.pumpAndSettle();
+      expect(rig.driver.capturing, isNull);
+    });
+
+    _shellTest('the scrim of the desktop drawer ends it', (t, rig) async {
+      await _mount(t, rig, size: _desktop);
+      await t.tap(_gear);
+      await t.pumpAndSettle();
+      await t.tap(find.text('Botões e teclas'));
+      await t.pumpAndSettle();
+      await t.tap(add(CarAction.forward));
+      await t.pumpAndSettle();
+      expect(rig.driver.capturing, CarAction.forward);
+
+      await t.tapAt(const Offset(500, 400));
+      await t.pumpAndSettle();
+      expect(find.byType(BindingsPage), findsNothing);
+      expect(rig.driver.capturing, isNull);
+    }, prefs: _noArrows);
+
+    _shellTest(
+      'Esc on the desktop drawer ends it, and the next Esc closes',
+      (t, rig) async {
+        await _mount(t, rig, size: _desktop);
+        await t.tap(_gear);
+        await t.pumpAndSettle();
+        await t.tap(find.text('Botões e teclas'));
+        await t.pumpAndSettle();
+        await t.tap(add(CarAction.forward));
+        await t.pumpAndSettle();
+        expect(rig.driver.capturing, CarAction.forward);
+
+        await t.sendKeyEvent(LogicalKeyboardKey.escape);
+        await t.pumpAndSettle();
+        expect(rig.driver.capturing, isNull);
+        expect(find.byType(BindingsPage), findsOneWidget);
+
+        await t.sendKeyEvent(LogicalKeyboardKey.escape);
+        await t.pumpAndSettle();
+        expect(find.byType(BindingsPage), findsNothing);
+        expect(rig.driver.capturing, isNull);
+      },
+      prefs: _noArrows,
+      keyboard: true,
+    );
+
+    _shellTest('the system back in the desktop drawer ends it', (t, rig) async {
+      await _mount(t, rig, size: _desktop);
+      await t.tap(_gear);
+      await t.pumpAndSettle();
+      await t.tap(find.text('Botões e teclas'));
+      await t.pumpAndSettle();
+      await t.tap(add(CarAction.reverse));
+      await t.pumpAndSettle();
+      expect(rig.driver.capturing, CarAction.reverse);
+
+      await t.binding.handlePopRoute();
+      await t.pumpAndSettle();
+      expect(find.byType(BindingsPage), findsNothing);
+      expect(rig.driver.capturing, isNull);
+    }, prefs: _noArrows);
+  });
+
   group('Shell, the sheet of cars', () {
     _shellTest('the name of the car opens it', (t, rig) async {
       await _mount(t, rig);
