@@ -26,6 +26,12 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 - Seguridad: el coche se detiene al desconectar, cambiar de app o perder el mando.
 - Disponible en **English, Español y Português**.
 
+<p align="center">
+  <img src="docs/images/phone-dashboard.png" width="240" alt="Panel en el móvil: coche conectado, luces encendidas, girando a la derecha">
+  <img src="docs/images/phone-cars.png" width="240" alt="Hoja de coches: el coche conectado con su batería y otro coche cerca">
+  <img src="docs/images/phone-settings.png" width="240" alt="Ajustes: botones y teclas, mandos, botones en pantalla, zona muerta, idioma">
+</p>
+
 ## Plataformas
 
 | Plataforma | Estado |

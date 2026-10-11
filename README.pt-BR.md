@@ -26,6 +26,12 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 - Segurança: o carro para quando você desconecta, troca de app ou perde o controle.
 - Disponível em **English, Español e Português**.
 
+<p align="center">
+  <img src="docs/images/phone-dashboard.png" width="240" alt="Painel no celular: carro conectado, faróis acesos, virando à direita">
+  <img src="docs/images/phone-cars.png" width="240" alt="Folha de carros: o carro conectado com a bateria e outro carro por perto">
+  <img src="docs/images/phone-settings.png" width="240" alt="Ajustes: botões e teclas, controles, botões na tela, zona morta, idioma">
+</p>
+
 ## Plataformas
 
 | Plataforma | Situação |

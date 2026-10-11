@@ -26,6 +26,12 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 - Safety: the car stops when you disconnect, switch apps, or lose the controller.
 - Available in **English, Español and Português**.
 
+<p align="center">
+  <img src="docs/images/phone-dashboard.png" width="240" alt="Phone dashboard: the car connected, lights on, steering right">
+  <img src="docs/images/phone-cars.png" width="240" alt="Car sheet: the connected car with its battery, and another car nearby">
+  <img src="docs/images/phone-settings.png" width="240" alt="Settings: buttons and keys, controllers, on-screen buttons, dead zone, language">
+</p>
+
 ## Platforms
 
 | Platform | Status |
