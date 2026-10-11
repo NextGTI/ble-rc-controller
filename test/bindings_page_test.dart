@@ -311,6 +311,25 @@ void main() {
         expect(d.bindings[CarAction.reverse], isNotEmpty);
       });
 
+      testWidgets('each "×" says which input it removes', (t) async {
+        final d = await newDriver();
+        await _pump(t, d);
+        await t.pumpAndSettle();
+        // The tags of Frente: R2, ↑, W. A row of buttons that all say
+        // "Remover" cannot be told apart by ear.
+        for (final label in ['R2', '↑', 'W']) {
+          expect(
+            find.descendant(
+              of: _tag(CarAction.forward, label),
+              matching: find.byTooltip('Remover $label'),
+            ),
+            findsOneWidget,
+            reason: label,
+          );
+        }
+        expect(find.byTooltip('Remover'), findsNothing);
+      });
+
       testWidgets('only that action loses the input', (t) async {
         final d = await newDriver();
         final b = InputRef.pad(PadInput.b);

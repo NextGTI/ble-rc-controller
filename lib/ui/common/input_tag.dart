@@ -77,7 +77,9 @@ class InputTag extends StatelessWidget {
               if (onRemove != null)
                 IconButton(
                   onPressed: onRemove,
-                  tooltip: l.remove,
+                  // "Remove W", not just "Remove": a list of tags has a
+                  // button for each, and they must be told apart.
+                  tooltip: '${l.remove} $label',
                   icon: const Icon(Icons.close, size: 18),
                   style: IconButton.styleFrom(
                     foregroundColor: AppColors.text2,

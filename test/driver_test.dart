@@ -254,6 +254,37 @@ void main() {
     });
   }
 
+  test('a pulse presses an on-screen action for a moment and lets go', () async {
+    await setUp0(); await connectCar();
+    driver.pulse(CarAction.forward, hold: const Duration(milliseconds: 120));
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+    expect(driver.command.forward, isTrue);
+    expect(transport.writes.isNotEmpty, isTrue);
+    await Future<void>.delayed(const Duration(milliseconds: 160));
+    expect(driver.command.forward, isFalse);
+  });
+
+  test('a pulse does not let go of a hold that is not its own', () async {
+    await setUp0(); await connectCar();
+    driver.setVirtual(CarAction.left, true); // a finger on the arrow
+    driver.pulse(CarAction.left, hold: const Duration(milliseconds: 60));
+    await Future<void>.delayed(const Duration(milliseconds: 160));
+    expect(driver.command.left, isTrue, reason: 'still held by the finger');
+    driver.setVirtual(CarAction.left, false);
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+    expect(driver.command.left, isFalse);
+  });
+
+  test('clearInputs ends a pulse at once', () async {
+    await setUp0(); await connectCar();
+    driver.pulse(CarAction.reverse, hold: const Duration(seconds: 5));
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+    expect(driver.command.reverse, isTrue);
+    driver.clearInputs();
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+    expect(driver.command.reverse, isFalse);
+  });
+
   test('the controller turbo and 360° spin still only apply while held', () async {
     await setUp0();
     await connectCar();

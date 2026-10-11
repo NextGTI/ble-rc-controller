@@ -785,9 +785,9 @@ void main() {
       );
       expect(find.text('Gatilho direito'), findsOneWidget);
       expect(find.byIcon(Icons.close), findsOneWidget);
-      expect(find.byTooltip('Remover'), findsOneWidget);
+      expect(find.byTooltip('Remover Gatilho direito'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('Remover'));
+      await tester.tap(find.byTooltip('Remover Gatilho direito'));
       await tester.pump();
       expect(removed, 1);
     });
@@ -799,7 +799,32 @@ void main() {
         InputTag(label: 'A', kind: InputKind.pad, onRemove: () {}),
         locale: 'en',
       );
-      expect(find.byTooltip('Remove'), findsOneWidget);
+      expect(find.byTooltip('Remove A'), findsOneWidget);
+    });
+
+    testWidgets('the remove button names the input it removes', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await pumpWithDriver(
+        tester,
+        await _driver(),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InputTag(label: 'W', kind: InputKind.key, onRemove: () {}),
+            InputTag(label: 'R2', kind: InputKind.pad, onRemove: () {}),
+          ],
+        ),
+      );
+      // Two "Remover" buttons side by side say nothing without the name.
+      expect(
+        tester.getSemantics(find.byTooltip('Remover W')),
+        isSemantics(isButton: true, tooltip: 'Remover W', hasTapAction: true),
+      );
+      expect(find.byTooltip('Remover R2'), findsOneWidget);
+      expect(find.byTooltip('Remover'), findsNothing);
+      handle.dispose();
     });
 
     testWidgets('the remove button is at least 48 by 48', (tester) async {
@@ -808,7 +833,7 @@ void main() {
         await _driver(),
         InputTag(label: 'A', kind: InputKind.pad, onRemove: () {}),
       );
-      final size = tester.getSize(find.byTooltip('Remover'));
+      final size = tester.getSize(find.byTooltip('Remover A'));
       expect(size.width, greaterThanOrEqualTo(48));
       expect(size.height, greaterThanOrEqualTo(48));
     });
@@ -822,7 +847,7 @@ void main() {
         const InputTag(label: 'A', kind: InputKind.pad),
       );
       expect(find.byIcon(Icons.close), findsNothing);
-      expect(find.byTooltip('Remover'), findsNothing);
+      expect(find.byTooltip('Remover A'), findsNothing);
     });
 
     testWidgets('a controller icon for pad and raw, a keyboard icon for key', (

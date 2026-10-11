@@ -119,6 +119,9 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   final Set<int> _keysDown = {};
   final Set<CarAction> _virtual = {};
 
+  /// The pulses of [pulse] that have not let go yet.
+  final Map<CarAction, Timer> _pulses = {};
+
   /// On-screen buttons that stay on until tapped again (turbo and 360° spin).
   final Set<CarAction> _latched = {};
   final Map<String, double> _rawValues = {};
@@ -209,6 +212,9 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     if (enableKeyboard) HardwareKeyboard.instance.removeHandler(_onKey);
     _tickTimer?.cancel();
     _pruneTimer?.cancel();
+    for (final timer in _pulses.values) {
+      timer.cancel();
+    }
     _rawSub?.cancel();
     _connEvtSub?.cancel();
     _scanSub?.cancel();
@@ -231,6 +237,10 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     _keysDown.clear();
     _pad.clear();
     _rawValues.clear();
+    for (final timer in _pulses.values) {
+      timer.cancel();
+    }
+    _pulses.clear();
     _virtual.clear();
     _latched.clear();
     _prevHeld.clear();
@@ -767,6 +777,23 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   bool isLatched(CarAction action) => _latched.contains(action);
+
+  /// Presses an on-screen [action] and lets go after [hold]: what a tap from a
+  /// screen reader does on an arrow. It cannot hold one down, and a car that
+  /// is not let go of would run on. Nothing happens if the action is already
+  /// held (a finger on the arrow, or an earlier pulse), so a pulse never lets
+  /// go of a hold that is not its own.
+  void pulse(
+    CarAction action, {
+    Duration hold = const Duration(milliseconds: 200),
+  }) {
+    if (_virtual.contains(action)) return;
+    setVirtual(action, true);
+    _pulses[action] = Timer(hold, () {
+      _pulses.remove(action);
+      setVirtual(action, false);
+    });
+  }
 
   /// A tap on an on-screen button that switches on and stays on until tapped
   /// again. Controller and keyboard inputs still apply only while held.

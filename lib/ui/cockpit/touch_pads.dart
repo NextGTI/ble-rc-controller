@@ -135,9 +135,13 @@ class _Pad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final driver = DriverScope.of(context);
     return Semantics(
       button: true,
       label: l.action(action),
+      // A screen reader activates with a tap, not with a finger that stays
+      // down: the arrow is pressed for a moment and let go.
+      onTap: () => driver.pulse(action),
       excludeSemantics: true,
       child: HoldRegion(
         action: action,

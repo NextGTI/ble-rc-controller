@@ -1043,11 +1043,73 @@ void main() {
       for (final label in ['Esquerda', 'Direita', 'Ré', 'Frente']) {
         expect(
           t.getSemantics(find.bySemanticsLabel(label)),
-          isSemantics(isButton: true, label: label),
+          isSemantics(isButton: true, hasTapAction: true, label: label),
           reason: label,
         );
       }
       handle.dispose();
+      await _finish(t, rig);
+    });
+
+    testWidgets('a tap from a screen reader presses the arrow and lets go', (
+      t,
+    ) async {
+      final rig = await _connected(t);
+      final handle = t.ensureSemantics();
+      await pumpWithDriver(t, rig.driver, const TouchPads());
+      expect(rig.driver.command.forward, isFalse);
+      final writes = rig.transport.writes.length;
+
+      // The double tap of TalkBack and VoiceOver: no pointer, only the action.
+      t.semantics.tap(find.semantics.byLabel('Frente'));
+      await t.pump(const Duration(milliseconds: 60));
+      expect(rig.driver.command.forward, isTrue, reason: 'pressed');
+      expect(rig.driver.command.reverse, isFalse);
+      expect(rig.transport.writes.length, greaterThan(writes), reason: 'sent');
+
+      // It does not hold: a screen reader cannot, and the car must not run on.
+      await t.pump(const Duration(milliseconds: 400));
+      expect(rig.driver.command.forward, isFalse, reason: 'let go');
+      handle.dispose();
+      await _finish(t, rig);
+    });
+
+    testWidgets('each arrow does its own action from a screen reader', (
+      t,
+    ) async {
+      final rig = await _connected(t);
+      final handle = t.ensureSemantics();
+      await pumpWithDriver(t, rig.driver, const TouchPads());
+      for (final (label, read) in <(String, bool Function(CarCommand))>[
+        ('Esquerda', (c) => c.left),
+        ('Direita', (c) => c.right),
+        ('Ré', (c) => c.reverse),
+        ('Frente', (c) => c.forward),
+      ]) {
+        t.semantics.tap(find.semantics.byLabel(label));
+        await t.pump(const Duration(milliseconds: 60));
+        expect(read(rig.driver.command), isTrue, reason: label);
+        await t.pump(const Duration(milliseconds: 400));
+        expect(read(rig.driver.command), isFalse, reason: '$label let go');
+      }
+      handle.dispose();
+      await _finish(t, rig);
+    });
+
+    testWidgets('a finger that holds the arrow is not let go by the pulse', (
+      t,
+    ) async {
+      final rig = await _connected(t);
+      await pumpWithDriver(t, rig.driver, const TouchPads());
+      final hold = await t.startGesture(t.getCenter(up));
+      await t.pump(const Duration(milliseconds: 60));
+      expect(rig.driver.command.forward, isTrue);
+      rig.driver.pulse(CarAction.forward);
+      await t.pump(const Duration(milliseconds: 400));
+      expect(rig.driver.command.forward, isTrue, reason: 'still held');
+      await hold.up();
+      await t.pump(const Duration(milliseconds: 60));
+      expect(rig.driver.command.forward, isFalse);
       await _finish(t, rig);
     });
   });
