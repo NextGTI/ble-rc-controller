@@ -144,6 +144,8 @@ T.update({
  "spinOff": ("Stopped", "Parado", "Parado", []),
  "cellController": ("Controller", "Mando", "Controle", []),
  "noControllerShort": ("No controller", "Ningún mando", "Nenhum controle", []),
+ "keySpace": ("Space", "Espacio", "Espaço", []),
+ "legendSteer": ("Steer", "Dirección", "Direção", []),
  "steerRight": ("{deg}° right", "{deg}° derecha", "{deg}° direita", ["deg"]),
  "steerLeft": ("{deg}° left", "{deg}° izquierda", "{deg}° esquerda", ["deg"]),
  "gaugeLeft": ("left", "izquierda", "esquerda", []),

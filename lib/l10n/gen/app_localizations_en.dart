@@ -360,6 +360,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noControllerShort => 'No controller';
 
   @override
+  String get keySpace => 'Space';
+
+  @override
+  String get legendSteer => 'Steer';
+
+  @override
   String steerRight(int deg) {
     return '$deg° right';
   }

@@ -742,6 +742,18 @@ abstract class AppLocalizations {
   /// **'No controller'**
   String get noControllerShort;
 
+  /// No description provided for @keySpace.
+  ///
+  /// In en, this message translates to:
+  /// **'Space'**
+  String get keySpace;
+
+  /// No description provided for @legendSteer.
+  ///
+  /// In en, this message translates to:
+  /// **'Steer'**
+  String get legendSteer;
+
   /// No description provided for @steerRight.
   ///
   /// In en, this message translates to:

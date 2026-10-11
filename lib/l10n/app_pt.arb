@@ -166,6 +166,8 @@
   "spinOff": "Parado",
   "cellController": "Controle",
   "noControllerShort": "Nenhum controle",
+  "keySpace": "Espaço",
+  "legendSteer": "Direção",
   "steerRight": "{deg}° direita",
   "@steerRight": {
     "placeholders": {

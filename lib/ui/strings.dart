@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import '../core/driver.dart';
@@ -100,11 +101,18 @@ extension L10nText on AppLocalizations {
         final p = r.padInput;
         return p == null ? r.id : pad(p);
       case InputKind.key:
-        return r.keyText;
+        return keyName(r);
       case InputKind.raw:
         return rawInput('${r.rawKey} ${r.rawSign < 0 ? '−' : '+'}');
     }
   }
+
+  /// The label of a keyboard key on screen: [InputRef.keyText], with the one
+  /// key that is a word ("Space") in the app's language.
+  String keyName(InputRef r) =>
+      r.keyUsage == PhysicalKeyboardKey.space.usbHidUsage
+      ? keySpace
+      : r.keyText;
 
   String teach(String id) {
     switch (id) {

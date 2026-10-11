@@ -362,6 +362,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noControllerShort => 'Nenhum controle';
 
   @override
+  String get keySpace => 'Espaço';
+
+  @override
+  String get legendSteer => 'Direção';
+
+  @override
   String steerRight(int deg) {
     return '$deg° direita';
   }

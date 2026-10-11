@@ -166,6 +166,8 @@
   "spinOff": "Stopped",
   "cellController": "Controller",
   "noControllerShort": "No controller",
+  "keySpace": "Space",
+  "legendSteer": "Steer",
   "steerRight": "{deg}° right",
   "@steerRight": {
     "placeholders": {
