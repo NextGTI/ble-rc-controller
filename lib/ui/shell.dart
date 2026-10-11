@@ -41,8 +41,15 @@ class Shell extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const GarageColumn(),
+                  // The column is the one at the left edge of the window, so
+                  // it keeps clear of a camera cutout there; the cockpit,
+                  // 280 further in, must not leave the same room again.
                   Expanded(
-                    child: Cockpit(onSettings: () => openSettings(context)),
+                    child: MediaQuery.removePadding(
+                      context: context,
+                      removeLeft: true,
+                      child: Cockpit(onSettings: () => openSettings(context)),
+                    ),
                   ),
                 ],
               ),

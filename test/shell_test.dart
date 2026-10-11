@@ -6,6 +6,7 @@ import 'package:ble_rc_controller/core/driver.dart';
 import 'package:ble_rc_controller/core/protocol.dart';
 import 'package:ble_rc_controller/ui/cockpit/cockpit.dart';
 import 'package:ble_rc_controller/ui/cockpit/cockpit_header.dart';
+import 'package:ble_rc_controller/ui/cockpit/state_cells.dart';
 import 'package:ble_rc_controller/ui/common/ambient.dart';
 import 'package:ble_rc_controller/ui/garage/car_list.dart';
 import 'package:ble_rc_controller/ui/garage/garage_column.dart';
@@ -170,6 +171,45 @@ void main() {
       },
       prefs: _noArrows,
       platform: TargetPlatform.macOS,
+    );
+
+    _shellTest(
+      'a tablet turned sideways: the column and the cockpit keep clear of '
+      'the bars and the cutout',
+      (t, rig) async {
+        // 24 of status bar, 48 of navigation bar (Android 15 edge to edge)
+        // and a camera cutout of 30 on the left.
+        const size = Size(1280, 800);
+        const bars = FakeViewPadding(top: 24, bottom: 48, left: 30);
+        await _mount(t, rig, size: size);
+        t.view.viewPadding = bars;
+        t.view.padding = bars;
+        addTearDown(t.view.resetViewPadding);
+        addTearDown(t.view.resetPadding);
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
+
+        // The column: its fill to the edges, its content inside the bars.
+        final column = t.getRect(find.byType(GarageColumn));
+        expect(column, const Rect.fromLTWH(0, 0, 280, 800));
+        final heading = t.getRect(find.text('Carros por perto'));
+        expect(heading.top, greaterThanOrEqualTo(24));
+        expect(heading.left, greaterThanOrEqualTo(30));
+        final toggle = t.getRect(find.byType(AutoConnectToggle));
+        expect(toggle.bottom, lessThanOrEqualTo(800 - 48));
+        expect(toggle.left, greaterThanOrEqualTo(30));
+
+        // The cockpit: inside the bars too, and no second room for the cutout
+        // at its left edge, which is 280 from the window's.
+        final name = t.getRect(_headerName());
+        expect(name.top, greaterThanOrEqualTo(24));
+        expect(name.left, 280 + 36, reason: 'the cutout is not over it');
+        expect(
+          t.getRect(find.byType(StateCells)).bottom,
+          lessThanOrEqualTo(800 - 48),
+        );
+        expect(t.getRect(_gear).right, lessThanOrEqualTo(1280));
+      },
     );
 
     _shellTest('a failed reconnect shows its notice once, in the column', (

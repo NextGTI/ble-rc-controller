@@ -23,7 +23,8 @@ import 'car_list.dart';
 /// section says so.
 ///
 /// The cars and controllers scroll when the window is short; the switch stays
-/// in place. The column fills the height it is given, so put it in a row of
+/// in place. The fill of the column runs to the edges of the window, and what
+/// is on it keeps clear of the system bars and of a cutout on the left. The column fills the height it is given, so put it in a row of
 /// fixed height. It needs a `DriverScope` above it.
 class GarageColumn extends StatelessWidget {
   const GarageColumn({super.key});
@@ -53,45 +54,51 @@ class GarageColumn extends StatelessWidget {
               color: _fill,
               border: Border(right: BorderSide(color: AppColors.glassEdge)),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _Heading(
-                            title: l.carsNearby,
-                            trailing: searching
-                                ? RingSpinner(label: l.statusSearching)
-                                : null,
-                          ),
-                          const CarList(),
-                          _Heading(title: l.controllersTitle, top: 22),
-                          if (controllers.isEmpty)
-                            _ControllerRow(name: l.noControllerShort)
-                          else
-                            for (var i = 0; i < controllers.length; i++)
-                              Padding(
-                                key: ValueKey(controllers[i].id),
-                                padding: EdgeInsets.only(top: i == 0 ? 0 : 4),
-                                child: _ControllerRow(
-                                  name: controllers[i].name,
-                                  status: _taught(driver, controllers[i])
-                                      ? l.taught
-                                      : l.recognized,
+            // The fill runs to the edges of the window; what is on it keeps
+            // clear of the status bar, the navigation bar and a camera cutout
+            // on the left. Its right side faces the cockpit, not an edge.
+            child: SafeArea(
+              right: false,
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _Heading(
+                              title: l.carsNearby,
+                              trailing: searching
+                                  ? RingSpinner(label: l.statusSearching)
+                                  : null,
+                            ),
+                            const CarList(),
+                            _Heading(title: l.controllersTitle, top: 22),
+                            if (controllers.isEmpty)
+                              _ControllerRow(name: l.noControllerShort)
+                            else
+                              for (var i = 0; i < controllers.length; i++)
+                                Padding(
+                                  key: ValueKey(controllers[i].id),
+                                  padding: EdgeInsets.only(top: i == 0 ? 0 : 4),
+                                  child: _ControllerRow(
+                                    name: controllers[i].name,
+                                    status: _taught(driver, controllers[i])
+                                        ? l.taught
+                                        : l.recognized,
+                                  ),
                                 ),
-                              ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  const AutoConnectToggle(),
-                ],
+                    const SizedBox(height: 10),
+                    const AutoConnectToggle(),
+                  ],
+                ),
               ),
             ),
           ),

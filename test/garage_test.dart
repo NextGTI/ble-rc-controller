@@ -687,6 +687,98 @@ void main() {
       expect(rig.driver.autoConnect, isFalse);
     });
 
+    group('the system bars and cutouts', () {
+      // A tablet turned sideways with a status bar of 24, a navigation bar of
+      // 48 (Android 15 edge to edge) and a camera cutout of 30 on the left.
+      const size = Size(1280, 800);
+      const bars = FakeViewPadding(top: 24, bottom: 48, left: 30);
+
+      void useBars(WidgetTester t) {
+        t.view.viewPadding = bars;
+        t.view.padding = bars;
+        addTearDown(t.view.resetViewPadding);
+        addTearDown(t.view.resetPadding);
+      }
+
+      /// The column at the left edge of the window, as the shell puts it.
+      const atTheEdge = SizedBox(
+        width: 1280,
+        height: 800,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [GarageColumn(), Spacer()],
+        ),
+      );
+
+      _rigTest('the header, the cars and the switch keep inside them', (
+        t,
+        rig,
+      ) async {
+        await pumpWithDriver(
+          t,
+          rig.driver,
+          atTheEdge,
+          size: size,
+          reduceMotion: true,
+        );
+        useBars(t);
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
+
+        // Not under the status bar.
+        expect(
+          t.getRect(find.text('Carros por perto')).top,
+          greaterThanOrEqualTo(24),
+        );
+        // Not under the navigation bar.
+        final toggle = find.byType(AutoConnectToggle);
+        expect(t.getRect(toggle).bottom, lessThanOrEqualTo(size.height - 48));
+        expect(find.text('Reconectar ao último carro'), findsOneWidget);
+        // Not under the camera: neither the headings nor the rows.
+        for (final finder in [
+          find.text('Carros por perto'),
+          find.text('Controles'),
+          find.byType(CarList),
+          toggle,
+        ]) {
+          expect(t.getRect(finder).left, greaterThanOrEqualTo(30));
+        }
+        // The column itself still runs to the edges.
+        final column = t.getRect(find.byType(GarageColumn));
+        expect(column.left, 0);
+        expect(column.top, 0);
+        expect(column.bottom, size.height);
+        expect(column.width, 280);
+        final glass = t.getRect(
+          find
+              .descendant(
+                of: find.byType(GarageColumn),
+                matching: find.byType(BackdropFilter),
+              )
+              .first,
+        );
+        expect(glass, column);
+      });
+
+      _rigTest('without bars the content sits where it always did', (
+        t,
+        rig,
+      ) async {
+        await pumpWithDriver(
+          t,
+          rig.driver,
+          atTheEdge,
+          size: size,
+          reduceMotion: true,
+        );
+        expect(t.getRect(find.text('Carros por perto')).left, 14 + 6);
+        expect(
+          t.getRect(find.byType(AutoConnectToggle)).bottom,
+          size.height - 14,
+        );
+      });
+    });
+
     _rigTest('lists each controller the app recognises', (t, rig) async {
       await pumpWithDriver(
         t,
