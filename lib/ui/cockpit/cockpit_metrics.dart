@@ -36,7 +36,9 @@ class CockpitMetrics {
     header: EdgeInsets.symmetric(horizontal: 32),
     body: EdgeInsets.symmetric(horizontal: 32),
     minimum: EdgeInsets.only(top: 24, bottom: 20),
-    maxInstrument: 480,
+    // A portrait tablet has height to spare: the instrument takes most of
+    // the width (on the Lenovo at 800 wide, 640 of the 736 available).
+    maxInstrument: 640,
     maxPads: 480,
   );
 

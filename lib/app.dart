@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/driver.dart';
@@ -32,8 +33,10 @@ class BleRcApp extends StatelessWidget {
           // One theme, dark (spec 3.1): no light theme and no darkTheme, so
           // the system's brightness changes nothing.
           theme: buildAppTheme(),
-          builder: (context, child) =>
-              DriverScope(driver: driver, child: child!),
+          builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+            value: appSystemBars,
+            child: DriverScope(driver: driver, child: child!),
+          ),
           home: const Shell(),
         );
       },

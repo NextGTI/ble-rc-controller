@@ -276,6 +276,16 @@ void main() {
       }
     });
 
+    _cockpitTest(
+      'on a portrait tablet the instrument takes most of the width',
+      (t, rig) async {
+        // The Lenovo tablet: 800 by 1280 logical pixels.
+        await _mount(t, rig, size: const Size(800, 1280));
+        await t.pumpAndSettle();
+        expect(t.getSize(_frame()).width, 640);
+      },
+    );
+
     _cockpitTest('the instrument shrinks and the controls keep their size', (
       t,
       rig,

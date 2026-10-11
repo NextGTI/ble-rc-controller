@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'tokens.dart';
 
@@ -44,3 +45,16 @@ TextTheme _textTheme() {
     labelSmall: AppType.body(size: 10.5),
   ).apply(bodyColor: AppColors.text, displayColor: AppColors.text);
 }
+
+/// The system bars over the app: light icons on the app's background, and no
+/// grey scrim behind the Android navigation buttons (spec 3.1: one dark
+/// theme, edge to edge).
+const SystemUiOverlayStyle appSystemBars = SystemUiOverlayStyle(
+  statusBarColor: Color(0x00000000),
+  statusBarIconBrightness: Brightness.light,
+  statusBarBrightness: Brightness.dark,
+  systemNavigationBarColor: AppColors.bg,
+  systemNavigationBarDividerColor: AppColors.bg,
+  systemNavigationBarIconBrightness: Brightness.light,
+  systemNavigationBarContrastEnforced: false,
+);

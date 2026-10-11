@@ -539,10 +539,13 @@ class _StateFrame extends StatelessWidget {
             ),
           );
         }
+        // A phone keeps the approved top alignment; a tablet or a desktop
+        // window has height to spare, so the screen sits in the middle.
         return _ColumnScroll(
           padding: inset,
           minHeight: room,
           maxWidth: 480,
+          centred: kind == LayoutKind.tablet || kind == LayoutKind.desktop,
           children: [...spaced, stage, const SizedBox(height: 10), ...details],
         );
       },
