@@ -4,10 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../l10n/gen/app_localizations.dart';
 import '../theme/tokens.dart';
-
-/// How far the car turns its wheels, in degrees: the car steers all or nothing
-/// (spec 4.2), so the needle has three positions, not a proportional angle.
-const int _turnDegrees = 18;
+import 'car_decal.dart' show steerDegrees;
 
 /// The marks of the arc, in degrees from the centre: -40 to 40 every 5.
 final List<int> steerTicks = List.unmodifiable([
@@ -18,7 +15,7 @@ final List<int> steerTicks = List.unmodifiable([
 bool isMajorTick(int degrees) => degrees % 20 == 0;
 
 /// Where the needle points for [steer] (-1, 0 or 1), in degrees.
-double needleDegrees(int steer) => steer * _turnDegrees.toDouble();
+double needleDegrees(int steer) => steer * steerDegrees.toDouble();
 
 /// Whether the mark at [tick] degrees lights up: only while steering, and only
 /// within 6 degrees of the [needle].
@@ -58,9 +55,9 @@ class SteeringGauge extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
     final readout = steer > 0
-        ? l.steerRight(_turnDegrees)
+        ? l.steerRight(steerDegrees)
         : steer < 0
-        ? l.steerLeft(_turnDegrees)
+        ? l.steerLeft(steerDegrees)
         : '0°';
     final labelStyle = AppType.body(size: 10).copyWith(color: AppColors.text3);
     return Semantics(

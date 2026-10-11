@@ -20,8 +20,13 @@ enum DecalVariant {
   icon,
 }
 
-/// Angle of the front wheels for [steer] (-1, 0 or 1): 18 degrees, in radians.
-double wheelAngle(int steer) => steer * 18 * math.pi / 180;
+/// How far the car turns its front wheels, in degrees. It steers all or
+/// nothing (spec 4.1), so this is the one angle the decal and the steering
+/// gauge show.
+const int steerDegrees = 18;
+
+/// Angle of the front wheels for [steer] (-1, 0 or 1), in radians.
+double wheelAngle(int steer) => steer * steerDegrees * math.pi / 180;
 
 /// The outline of the car body (spec 4.1), drawn in a space of 100 by 200 and
 /// scaled to [size].

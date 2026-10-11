@@ -984,16 +984,15 @@ void main() {
       await _finish(t, rig);
     });
 
-    testWidgets('are square, 52 at least, growing with the width up to 84', (
+    testWidgets('fill the row in four equal columns, 54 high, 10 apart', (
       t,
     ) async {
       final rig = await _connected(t);
       for (final (width, side) in [
-        (244.0, 52.0), // the smallest row that fits: 4 * 52 + 3 * 12
-        (320.0, 71.0), // (320 - 36) / 4
-        (354.0, 79.5), // a 390 phone minus its margins
-        (372.0, 84.0),
-        (600.0, 84.0),
+        (222.0, 48.0), // the smallest row that keeps a 48 wide target
+        (320.0, 72.5), // (320 - 3 * 10) / 4
+        (354.0, 81.0), // a 390 phone minus its margins
+        (480.0, 112.5), // the widest row the cockpit gives them
       ]) {
         await pumpWithDriver(
           t,
@@ -1002,11 +1001,22 @@ void main() {
           size: Size(width + 40, 400),
         );
         await t.pump();
-        for (var i = 0; i < 4; i++) {
-          final s = t.getSize(find.byType(Glass).at(i));
-          expect(s.width, closeTo(side, 0.01), reason: 'width $width');
-          expect(s.height, closeTo(side, 0.01), reason: 'width $width');
+        final rects = [
+          for (var i = 0; i < 4; i++) t.getRect(find.byType(Glass).at(i)),
+        ];
+        for (final r in rects) {
+          expect(r.width, closeTo(side, 0.01), reason: 'width $width');
+          expect(r.height, 54, reason: 'width $width');
         }
+        for (var i = 1; i < 4; i++) {
+          expect(
+            rects[i].left - rects[i - 1].right,
+            closeTo(10, 0.01),
+            reason: 'gap $i at width $width',
+          );
+        }
+        expect(rects.first.left, 20, reason: 'the row starts at its edge');
+        expect(rects.last.right, closeTo(20 + width, 0.01));
         expect(t.takeException(), isNull, reason: 'width $width');
       }
       await _finish(t, rig);

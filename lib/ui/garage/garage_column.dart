@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import '../../core/driver.dart';
 import '../../input/controller_profile.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../common/glass.dart';
+import '../common/ring_spinner.dart';
 import '../strings.dart';
 import '../theme/tokens.dart';
 import 'car_list.dart';
@@ -66,7 +66,7 @@ class GarageColumn extends StatelessWidget {
                           _Heading(
                             title: l.carsNearby,
                             trailing: searching
-                                ? _Searching(label: l.statusSearching)
+                                ? RingSpinner(label: l.statusSearching)
                                 : null,
                           ),
                           const CarList(),
@@ -137,86 +137,6 @@ class _Heading extends StatelessWidget {
       ),
     );
   }
-}
-
-/// The searching indicator: a ring of 10 with a quarter of it amber, turning
-/// once a second. With the system's "reduce motion" on it stands still.
-class _Searching extends StatefulWidget {
-  const _Searching({required this.label});
-
-  /// What a screen reader says for it.
-  final String label;
-
-  @override
-  State<_Searching> createState() => _SearchingState();
-}
-
-class _SearchingState extends State<_Searching>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _turn = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 1),
-  );
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _turn.value = 0;
-    } else if (!_turn.isAnimating) {
-      _turn.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _turn.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: widget.label,
-      child: ExcludeSemantics(
-        child: RotationTransition(
-          turns: _turn,
-          child: const SizedBox(
-            width: 10,
-            height: 10,
-            child: CustomPaint(painter: _RingPainter()),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RingPainter extends CustomPainter {
-  const _RingPainter();
-
-  static const double _stroke = 1.5;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = (Offset.zero & size).deflate(_stroke / 2);
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = _stroke
-      ..color = AppColors.traceWeak;
-    canvas.drawOval(rect, paint);
-    // A quarter centred on the top.
-    canvas.drawArc(
-      rect,
-      -math.pi * 3 / 4,
-      math.pi / 2,
-      false,
-      paint..color = AppColors.amber,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_RingPainter old) => false;
 }
 
 /// One controller: its name and, when [status] is given, whether the app

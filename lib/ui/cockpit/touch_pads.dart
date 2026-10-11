@@ -85,18 +85,15 @@ class _HoldRegionState extends State<HoldRegion> {
 /// down, up. Each one is on while it is pressed, through `Driver.setVirtual`.
 ///
 /// They are glass with a line of light. Pressed, one turns amber with a halo
-/// and sits 1 px lower. They are square, 52 at least, and grow with the width
-/// they are given (four sides and three gaps of 12) up to 84.
+/// and sits 1 px lower. The row follows the approved design: four equal
+/// columns that fill the width they are given, 10 apart and [height] high, so
+/// each one is a target of at least 48 as soon as the row is 222 wide. The
+/// screen decides how wide the row gets.
 class TouchPads extends StatelessWidget {
   const TouchPads({super.key});
 
-  static const double gap = 12;
-  static const double minSide = 52;
-  static const double maxSide = 84;
-
-  /// The side of one arrow in a row [width] wide.
-  static double sideFor(double width) =>
-      ((width - 3 * gap) / 4).clamp(minSide, maxSide);
+  static const double gap = 10;
+  static const double height = 54;
 
   static const _arrows = [
     (CarAction.left, Icons.arrow_back_rounded),
@@ -107,29 +104,27 @@ class TouchPads extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final side = sideFor(constraints.maxWidth);
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (var i = 0; i < _arrows.length; i++) ...[
-              if (i > 0) const SizedBox(width: gap),
-              _Pad(action: _arrows[i].$1, icon: _arrows[i].$2, side: side),
-            ],
+    return SizedBox(
+      height: height,
+      child: Row(
+        children: [
+          for (var i = 0; i < _arrows.length; i++) ...[
+            if (i > 0) const SizedBox(width: gap),
+            Expanded(
+              child: _Pad(action: _arrows[i].$1, icon: _arrows[i].$2),
+            ),
           ],
-        );
-      },
+        ],
+      ),
     );
   }
 }
 
 class _Pad extends StatelessWidget {
-  const _Pad({required this.action, required this.icon, required this.side});
+  const _Pad({required this.action, required this.icon});
 
   final CarAction action;
   final IconData icon;
-  final double side;
 
   static const double _radius = 16;
 
@@ -144,43 +139,40 @@ class _Pad extends StatelessWidget {
       button: true,
       label: l.action(action),
       excludeSemantics: true,
-      child: SizedBox.square(
-        dimension: side,
-        child: HoldRegion(
-          action: action,
-          // The 1 px drop is at once; the colour, the halo and the glass fade
-          // together (same time, same curve).
-          builder: (context, held) => Transform.translate(
-            offset: Offset(0, held ? 1 : 0),
-            child: TweenAnimationBuilder<double>(
-              tween: Tween<double>(end: held ? 1 : 0),
-              duration: Glass.timeOf(context, _fade),
-              curve: Glass.curve,
-              builder: (context, t, _) => CustomPaint(
-                painter: t > 0 ? _Halo(_radius, t) : null,
-                child: Glass(
-                  active: held,
-                  duration: _fade,
-                  radius: _radius,
-                  padding: EdgeInsets.zero,
-                  child: Center(
-                    child: Icon(
-                      icon,
-                      size: 24,
-                      color: t >= 1
-                          ? AppColors.amber
-                          : Color.lerp(AppColors.text2, AppColors.amber, t),
-                      shadows: t > 0
-                          ? [
-                              Shadow(
-                                color: AppColors.amber.withValues(
-                                  alpha: 0.35 * t,
-                                ),
-                                blurRadius: 8,
+      child: HoldRegion(
+        action: action,
+        // The 1 px drop is at once; the colour, the halo and the glass fade
+        // together (same time, same curve).
+        builder: (context, held) => Transform.translate(
+          offset: Offset(0, held ? 1 : 0),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween<double>(end: held ? 1 : 0),
+            duration: Glass.timeOf(context, _fade),
+            curve: Glass.curve,
+            builder: (context, t, _) => CustomPaint(
+              painter: t > 0 ? _Halo(_radius, t) : null,
+              child: Glass(
+                active: held,
+                duration: _fade,
+                radius: _radius,
+                padding: EdgeInsets.zero,
+                child: Center(
+                  child: Icon(
+                    icon,
+                    size: 24,
+                    color: t >= 1
+                        ? AppColors.amber
+                        : Color.lerp(AppColors.text2, AppColors.amber, t),
+                    shadows: t > 0
+                        ? [
+                            Shadow(
+                              color: AppColors.amber.withValues(
+                                alpha: 0.35 * t,
                               ),
-                            ]
-                          : null,
-                    ),
+                              blurRadius: 8,
+                            ),
+                          ]
+                        : null,
                   ),
                 ),
               ),
