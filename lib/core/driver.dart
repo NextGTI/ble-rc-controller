@@ -254,10 +254,18 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   /// Whether the system can be asked to turn Bluetooth on (Android only).
   bool get canEnableBluetooth => transport.canEnableBluetooth;
 
-  /// Asks the system to turn Bluetooth on. The availability stream reports
-  /// the result, so nothing else is needed here.
+  /// Asks the system to turn Bluetooth on, then reads Bluetooth again. The
+  /// availability stream is meant to report the result, but it does not always
+  /// fire (or fires before we listen), and the screen would stay on "Bluetooth
+  /// is off" with the adapter on. If the person said no, it reads "off" again
+  /// and nothing changes.
   Future<void> enableBluetooth() async {
-    await transport.enableBluetooth();
+    try {
+      await transport.enableBluetooth();
+    } catch (_) {
+      // Refused or not possible here: the reading below says where we stand.
+    }
+    _onAvailability(await transport.currentAvailability());
   }
 
   /// Asks for the Bluetooth permission again. If it is granted the denial

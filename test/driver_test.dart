@@ -740,4 +740,29 @@ void main() {
     await driver.enableBluetooth();
     expect(transport.enableCalls, 1);
   });
+
+  test('enableBluetooth reads Bluetooth again, even if the stream says nothing', () async {
+    await setUp0(const {}, null, FakeTransport()..state = BluetoothState.off);
+    expect(driver.bluetooth, BluetoothState.off);
+    // The system turns it on and the availability stream does not fire.
+    transport.stateAfterEnable = BluetoothState.ready;
+    await driver.enableBluetooth();
+    expect(driver.bluetooth, BluetoothState.ready);
+  });
+
+  test('enableBluetooth keeps "off" when the person says no', () async {
+    await setUp0(const {}, null, FakeTransport()..state = BluetoothState.off);
+    await driver.enableBluetooth();
+    expect(transport.enableCalls, 1);
+    expect(driver.bluetooth, BluetoothState.off);
+  });
+
+  test('enableBluetooth, once on, starts looking for cars', () async {
+    await setUp0(const {}, null, FakeTransport()..state = BluetoothState.off);
+    transport.stateAfterEnable = BluetoothState.ready;
+    await driver.enableBluetooth();
+    transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55));
+    await settle();
+    expect(driver.cars.single.model, 'SF-25');
+  });
 }

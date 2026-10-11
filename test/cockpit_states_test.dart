@@ -380,6 +380,34 @@ void main() {
       expect(rig.transport.enableCalls, 1);
     });
 
+    _stateTest('off: turning it on leaves the screen even if the system '
+        'does not say so', (t, rig) async {
+      await _mount(t, rig);
+      rig.transport.avail.add(BluetoothState.off);
+      await _settle(t);
+      expect(find.text('Ligar o Bluetooth'), findsOneWidget);
+
+      // The system turns it on and the availability stream stays quiet.
+      rig.transport.stateAfterEnable = BluetoothState.ready;
+      await t.tap(find.text('Ligar o Bluetooth'));
+      await _settle(t);
+      expect(rig.driver.bluetooth, BluetoothState.ready);
+      expect(find.text('Ligar o Bluetooth'), findsNothing);
+      expect(find.text('Bluetooth desligado'), findsNothing);
+      expect(panelStateOf(rig.driver), PanelState.searching);
+    });
+
+    _stateTest('off: when the person says no, it stays', (t, rig) async {
+      await _mount(t, rig);
+      rig.transport.avail.add(BluetoothState.off);
+      await _settle(t);
+      rig.transport.state = BluetoothState.off;
+      await t.tap(find.text('Ligar o Bluetooth'));
+      await _settle(t);
+      expect(find.text('Ligar o Bluetooth'), findsOneWidget);
+      expect(find.text('Bluetooth desligado'), findsNWidgets(2));
+    });
+
     _stateTest('off, where it cannot: the text only', (t, rig) async {
       await _mount(t, rig);
       rig.transport.avail.add(BluetoothState.off);

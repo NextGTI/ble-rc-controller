@@ -32,6 +32,12 @@ class FakeTransport implements CarTransport {
   /// How many times [enableBluetooth] was called.
   int enableCalls = 0;
 
+  /// What [currentAvailability] reports once [enableBluetooth] has been called,
+  /// without any event on [availability]: a system that turned Bluetooth on
+  /// and did not tell the stream. Null leaves the state as it is (the person
+  /// said no).
+  BluetoothState? stateAfterEnable;
+
   @override
   bool canEnableBluetooth = true;
 
@@ -54,6 +60,8 @@ class FakeTransport implements CarTransport {
   @override
   Future<bool> enableBluetooth() async {
     enableCalls++;
+    final after = stateAfterEnable;
+    if (after != null) state = after;
     return true;
   }
 
