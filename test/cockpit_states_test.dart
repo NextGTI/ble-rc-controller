@@ -549,6 +549,62 @@ void main() {
     }, prefs: const {'autoConnect': false});
   });
 
+  group('Connection lost, and the reconnect fails', () {
+    _stateTest('the screen says so, with Try again and Close', (t, rig) async {
+      await _mount(t, rig);
+      await _drop(t, rig);
+      expect(find.byType(Notice), findsNothing);
+
+      // What the automatic reconnect does when the car is back and fails.
+      rig.transport.failConnect = true;
+      await rig.driver.connect('car1');
+      await _settle(t);
+      expect(rig.driver.reconnecting, isTrue, reason: 'still waiting');
+      expect(rig.driver.message, MessageKind.connectFailed);
+      expect(find.byType(LostView), findsOneWidget);
+      expect(find.byType(Notice), findsOneWidget);
+      expect(find.text('Não foi possível conectar ao SF-25'), findsOneWidget);
+      expect(find.text('Tentar de novo'), findsOneWidget);
+      // The cells stay switched off under it.
+      expect(find.byKey(LostView.cellKey), findsNWidgets(4));
+
+      rig.transport.failConnect = false;
+      await t.tap(find.text('Tentar de novo'));
+      await _settle(t);
+      expect(rig.driver.link, LinkState.connected);
+      expect(find.byType(LostView), findsNothing);
+      expect(find.byType(Notice), findsNothing);
+    });
+
+    _stateTest('Close dismisses it and the wait goes on', (t, rig) async {
+      await _mount(t, rig);
+      await _drop(t, rig);
+      rig.transport.failConnect = true;
+      await rig.driver.connect('car1');
+      await _settle(t);
+      await t.tap(find.text('Fechar'));
+      await _settle(t);
+      expect(find.byType(Notice), findsNothing);
+      expect(find.byType(LostView), findsOneWidget);
+      expect(rig.driver.reconnecting, isTrue);
+    });
+
+    for (final size in [const Size(320, 568), const Size(800, 360)]) {
+      _stateTest('fits at ${size.width.toInt()}x${size.height.toInt()}', (
+        t,
+        rig,
+      ) async {
+        await _mount(t, rig, size: size, textScale: 1.3);
+        await _drop(t, rig);
+        rig.transport.failConnect = true;
+        await rig.driver.connect('car1');
+        await _settle(t);
+        expect(find.byType(Notice), findsOneWidget);
+        expect(t.takeException(), isNull);
+      });
+    }
+  });
+
   group('Connection failed', () {
     _stateTest('the notice over the list; Try again connects again', (
       t,

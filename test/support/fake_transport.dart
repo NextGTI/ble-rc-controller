@@ -14,6 +14,9 @@ class FakeTransport implements CarTransport {
   final connected = <String>[];
   bool failConnect = false;
 
+  /// How many times [connect] was called, whether it succeeded or not.
+  int connectCalls = 0;
+
   /// What [currentAvailability] reports.
   BluetoothState state = BluetoothState.ready;
 
@@ -59,6 +62,7 @@ class FakeTransport implements CarTransport {
   Future<void> stopScan() async {}
   @override
   Future<void> connect(String id) async {
+    connectCalls++;
     if (connectDelay > Duration.zero) await Future<void>.delayed(connectDelay);
     if (failConnect) throw StateError('nope');
     connected.add(id);

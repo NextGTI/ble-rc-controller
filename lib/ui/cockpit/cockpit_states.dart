@@ -261,6 +261,11 @@ class ConnectingView extends StatelessWidget {
 /// can drive a car that is not there. With auto-reconnect off there is no
 /// waiting, and the cockpit shows [SearchingView] with its notice instead.
 ///
+/// When the car is back and the reconnect fails, the wait goes on (the driver
+/// tries again on its own) but the screen says so: "Could not connect to X"
+/// with "Try again" and "Close", above the car. On the desktop the garage
+/// column carries that notice, so this screen does not repeat it.
+///
 /// It needs a `DriverScope`.
 class LostView extends StatelessWidget {
   const LostView({super.key});
@@ -274,10 +279,15 @@ class LostView extends StatelessWidget {
     final driver = DriverScope.of(context);
     final l = AppLocalizations.of(context);
     final kind = layoutFor(MediaQuery.sizeOf(context));
+    final failed = ConnectFailedNotice.carOf(driver);
     return _StateFrame(
       variant: DecalVariant.ghost,
       overlay: _LostTag(label: l.lostTag),
       decalShare: 0.26,
+      notices: [
+        if (failed != null && kind != LayoutKind.desktop)
+          ConnectFailedNotice(car: failed),
+      ],
       details: [
         _Message(body: l.lostBody),
         const SizedBox(height: 16),

@@ -38,6 +38,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     GamepadNormalizer? normalizer,
     this.enableKeyboard = true,
     this.carStaleAfter = const Duration(seconds: 6),
+    this.reconnectBackoff = const Duration(seconds: 3),
   })  : _prefs = prefs,
         _rawEvents = rawEvents,
         _connectionEvents = connectionEvents,
@@ -65,6 +66,11 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   /// A car not heard from for this long drops off the list.
   final Duration carStaleAfter;
 
+  /// While waiting for a lost car, the least time between a failed attempt to
+  /// reconnect and the next one. The car keeps advertising, so without it
+  /// every advert would start an attempt.
+  final Duration reconnectBackoff;
+
   // --- Bluetooth state ------------------------------------------------------
   BluetoothState _bluetooth = BluetoothState.unknown;
   final Map<String, FoundCar> _cars = {};
@@ -75,6 +81,10 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
   MessageKind? _message;
   FoundCar? _lostCar;
   FoundCar? _failedCar;
+
+  /// When the last attempt to connect failed, for [reconnectBackoff]. Cleared
+  /// by a connection.
+  DateTime? _lastFailedAt;
 
   /// The car of the current connection, kept apart from [_cars]: that list is
   /// pruned while idle, and a car connected after being pruned is not in it.
@@ -279,14 +289,31 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     final isNew = !_cars.containsKey(car.id);
     _cars[car.id] = car;
     _seen[car.id] = DateTime.now();
-    if (isNew) {
-      notifyListeners();
-      if (_autoConnect && !_autoConnectHeld && _link == LinkState.idle && car.id == _lastCarId) {
-        connect(car.id);
-      }
-    } else if (_link == LinkState.idle) {
-      // Signal strength changes: refresh occasionally via the prune timer.
+    if (isNew) notifyListeners();
+    if (_wantsAutoConnect(car, isNew: isNew)) connect(car.id);
+  }
+
+  /// Whether the advert of [car] should start a connection by itself.
+  ///
+  /// Two cases, both only while auto-reconnect is on, nothing was disconnected
+  /// on purpose and no attempt is going on (the link is idle):
+  /// - the car of the last connection shows up as a new one in the list;
+  /// - the app waits for it after a drop ([reconnecting]) and it is back. It
+  ///   is not new then if it came back before the list was pruned, or if an
+  ///   attempt already failed and it kept advertising, so a failed reconnect
+  ///   would never be tried again. A new attempt starts at the next advert
+  ///   once [reconnectBackoff] has passed since the last failure.
+  bool _wantsAutoConnect(FoundCar car, {required bool isNew}) {
+    if (!_autoConnect || _autoConnectHeld || _link != LinkState.idle) {
+      return false;
     }
+    final failedAt = _lastFailedAt;
+    if (failedAt != null &&
+        DateTime.now().difference(failedAt) < reconnectBackoff) {
+      return false;
+    }
+    if (_lostCar != null && _lostCar!.id == car.id) return true;
+    return isNew && car.id == _lastCarId;
   }
 
   void _prune() {
@@ -329,6 +356,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       _carId = null;
       _carSnapshot = null;
       _failedCar = car;
+      _lastFailedAt = DateTime.now();
       _message = MessageKind.connectFailed;
       notifyListeners();
       _startScan();
@@ -347,6 +375,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     }, onError: (_) {});
     _link = LinkState.connected;
     _autoConnectHeld = false;
+    _lastFailedAt = null;
     _lostCar = null;
     _lastCarId = id;
     await _prefs.setString('lastCar', id);

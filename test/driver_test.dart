@@ -33,6 +33,7 @@ void main() {
     Map<String, Object> prefs = const {},
     Duration? carStaleAfter,
     FakeTransport? fake,
+    Duration? reconnectBackoff,
   ]) async {
     SharedPreferences.setMockInitialValues(prefs);
     transport = fake ?? FakeTransport();
@@ -48,6 +49,7 @@ void main() {
       normalizer: GamepadNormalizer.forPlatform(GamepadPlatform.windows),
       enableKeyboard: false,
       carStaleAfter: carStaleAfter ?? const Duration(seconds: 6),
+      reconnectBackoff: reconnectBackoff ?? const Duration(seconds: 3),
     );
     await driver.start();
   }
@@ -455,6 +457,133 @@ void main() {
     expect(driver.lostCar, isNull);
     expect(driver.link, LinkState.connected);
   });
+  group('a reconnect that fails is tried again', () {
+    const backoff = Duration(milliseconds: 150);
+    const sf25 = FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55);
+    final pastBackoff = backoff + const Duration(milliseconds: 60);
+
+    /// Connects to car1 and drops the link, with the car still in the list.
+    Future<void> dropped() async {
+      await setUp0(const {}, null, null, backoff);
+      await connectCar();
+      transport.conn.add(false);
+      await settle();
+      expect(driver.reconnecting, isTrue);
+    }
+
+    test('the next advert after the backoff retries, and connects', () async {
+      await dropped();
+      expect(transport.connectCalls, 1);
+
+      // The car is back, but the attempt fails (GATT 133, a timeout).
+      transport.failConnect = true;
+      transport.scan.add(sf25);
+      await settle();
+      expect(transport.connectCalls, 2, reason: 'the first advert reconnects');
+      expect(driver.link, LinkState.idle);
+      expect(driver.message, MessageKind.connectFailed);
+      expect(driver.reconnecting, isTrue, reason: 'still waiting for the car');
+      expect(driver.failedCar!.id, 'car1');
+
+      // It keeps advertising, so it is never "new" again. Too soon after the
+      // failure, nothing happens...
+      transport.failConnect = false;
+      transport.scan.add(sf25);
+      await settle();
+      expect(transport.connectCalls, 2, reason: 'the backoff has not passed');
+      expect(driver.link, LinkState.idle);
+
+      // ...and the first advert after the backoff tries again.
+      await Future<void>.delayed(pastBackoff);
+      transport.scan.add(sf25);
+      await settle();
+      expect(transport.connectCalls, 3);
+      expect(driver.link, LinkState.connected);
+      expect(driver.reconnecting, isFalse);
+      expect(driver.message, isNull);
+    });
+
+    test('keeps trying while it keeps failing, one try per backoff', () async {
+      await dropped();
+      transport.failConnect = true;
+      for (var i = 0; i < 3; i++) {
+        transport.scan.add(sf25);
+        await settle();
+        transport.scan.add(sf25); // inside the backoff: ignored
+        await settle();
+        await Future<void>.delayed(pastBackoff);
+      }
+      expect(transport.connectCalls, 1 + 3);
+      expect(driver.reconnecting, isTrue);
+    });
+
+    test('adverts during an attempt do not start another', () async {
+      await dropped();
+      transport.connectDelay = const Duration(milliseconds: 300);
+      transport.scan.add(sf25);
+      await settle();
+      expect(driver.link, LinkState.connecting);
+      transport.scan.add(sf25);
+      await Future<void>.delayed(pastBackoff);
+      transport.scan.add(sf25);
+      await settle();
+      expect(transport.connectCalls, 2, reason: 'only the first');
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      expect(driver.link, LinkState.connected);
+    });
+
+    test(
+      'another car, or the same one after a deliberate stop, does not',
+      () async {
+        await dropped();
+        transport.failConnect = true;
+        transport.scan.add(
+          const FoundCar(id: 'car2', name: 'SL-296 GT3', rssi: -60),
+        );
+        await settle();
+        expect(transport.connectCalls, 1, reason: 'not the lost car');
+
+        transport.failConnect = false;
+        await driver.disconnect(); // the user stops the wait
+        await Future<void>.delayed(pastBackoff);
+        transport.scan.add(sf25);
+        await settle();
+        expect(transport.connectCalls, 1);
+        expect(driver.link, LinkState.idle);
+      },
+    );
+
+    test('with auto-reconnect off it does not retry', () async {
+      await dropped();
+      transport.failConnect = true;
+      driver.autoConnect = false;
+      transport.scan.add(sf25);
+      await settle();
+      expect(transport.connectCalls, 1);
+    });
+
+    test('a failure long ago does not hold back the next drop', () async {
+      await dropped();
+      transport.failConnect = true;
+      transport.scan.add(sf25);
+      await settle();
+      transport.failConnect = false;
+      await Future<void>.delayed(pastBackoff);
+      transport.scan.add(sf25);
+      await settle();
+      expect(driver.link, LinkState.connected);
+
+      // Dropped again right after the success: the first advert reconnects,
+      // the old failure does not count.
+      transport.conn.add(false);
+      await settle();
+      expect(driver.reconnecting, isTrue);
+      transport.scan.add(sf25);
+      await settle();
+      expect(driver.link, LinkState.connected);
+    });
+  });
+
   group('the list of cars is pruned while nothing is connected', () {
     const stale = Duration(milliseconds: 50);
     const pruneTick = Duration(milliseconds: 1300); // the prune timer runs every 1 s

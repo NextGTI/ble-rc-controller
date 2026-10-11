@@ -165,6 +165,33 @@ void main() {
       expect(t.widget<Cockpit>(find.byType(Cockpit)).onCarTap, isNull);
     }, prefs: _noArrows);
 
+    _shellTest('a failed reconnect shows its notice once, in the column', (
+      t,
+      rig,
+    ) async {
+      await _mount(t, rig, size: _desktop);
+      await t.pumpAndSettle();
+      rig.transport.conn.add(false);
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 300));
+      expect(rig.driver.reconnecting, isTrue);
+
+      rig.transport.failConnect = true;
+      await rig.driver.connect('car1');
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 300));
+
+      expect(rig.driver.reconnecting, isTrue);
+      expect(find.text('Não foi possível conectar ao SF-25'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(GarageColumn),
+          matching: find.text('Não foi possível conectar ao SF-25'),
+        ),
+        findsOneWidget,
+      );
+    }, prefs: _noArrows);
+
     _shellTest('the garage column has the light of the window behind it', (
       t,
       rig,
