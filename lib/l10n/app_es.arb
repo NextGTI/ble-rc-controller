@@ -205,6 +205,9 @@
       }
     }
   },
+  "aboutRepository": "Código fuente",
+  "aboutLicenseMit": "Licencia MIT",
+  "aboutLicenses": "Licencias de código abierto",
   "bindingsLeadTouch": "Toca Añadir y luego pulsa un botón del mando, mueve un stick o pulsa una tecla.",
   "bindingsLeadClick": "Haz clic en Añadir y luego pulsa un botón del mando, mueve un stick o pulsa una tecla.",
   "captureWaiting": "Pulsa lo que activará {action}",

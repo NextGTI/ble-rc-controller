@@ -163,6 +163,9 @@ T.update({
  "deadzoneHint": ("Ignores light touches on the stick", "Ignora toques leves en el stick", "Ignora toques leves no analógico", []),
  "aboutTitle": ("About", "Acerca de", "Sobre", []),
  "aboutHint": ("Version {version}, open source", "Versión {version}, código abierto", "Versão {version}, código aberto", ["version"]),
+ "aboutRepository": ("Source code", "Código fuente", "Código-fonte", []),
+ "aboutLicenseMit": ("MIT license", "Licencia MIT", "Licença MIT", []),
+ "aboutLicenses": ("Open-source licences", "Licencias de código abierto", "Licenças de código aberto", []),
  # Buttons and keys
  "bindingsLeadTouch": ("Tap Add, then press a controller button, move a stick or press a key.",
                        "Toca Añadir y luego pulsa un botón del mando, mueve un stick o pulsa una tecla.",

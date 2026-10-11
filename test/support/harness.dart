@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ble_rc_controller/core/driver.dart';
 import 'package:ble_rc_controller/l10n/gen/app_localizations.dart';
 import 'package:ble_rc_controller/ui/cockpit/particles.dart';
@@ -5,8 +7,13 @@ import 'package:ble_rc_controller/ui/strings.dart';
 import 'package:ble_rc_controller/ui/theme/theme.dart';
 import 'package:ble_rc_controller/ui/theme/tokens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gamepads/gamepads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'fake_transport.dart';
 
 /// Mounts [child] the way the app does, for the widget tests of every screen.
 ///
@@ -59,4 +66,33 @@ Future<void> pumpWithDriver(
       ),
     ),
   );
+}
+
+/// Teaches the test font the real Saira, so the widths and heights a screen
+/// works with are the ones the app has (without it every glyph is a square of
+/// Ahem). Call it from `setUpAll`.
+Future<void> loadSaira() async {
+  final bytes = File('assets/fonts/Saira-Variable.ttf').readAsBytesSync();
+  final loader = FontLoader('Saira')
+    ..addFont(Future.value(ByteData.sublistView(bytes)));
+  await loader.load();
+}
+
+/// A driver on a fake transport, with no controllers and no keyboard hook, for
+/// the tests of screens that only read it and call its methods. It is not
+/// started, so it owns no timer; [dispose] it with the test.
+///
+/// [prefs] are the stored settings it starts from.
+Future<Driver> newDriver({Map<String, Object> prefs = const {}}) async {
+  SharedPreferences.setMockInitialValues(prefs);
+  final driver = Driver(
+    transport: FakeTransport(),
+    prefs: await SharedPreferences.getInstance(),
+    rawEvents: const Stream<GamepadEvent>.empty(),
+    connectionEvents: const Stream<GamepadConnectionEvent>.empty(),
+    listGamepads: () async => [],
+    enableKeyboard: false,
+  );
+  addTearDown(driver.dispose);
+  return driver;
 }

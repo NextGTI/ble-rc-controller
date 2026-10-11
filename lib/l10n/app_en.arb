@@ -205,6 +205,9 @@
       }
     }
   },
+  "aboutRepository": "Source code",
+  "aboutLicenseMit": "MIT license",
+  "aboutLicenses": "Open-source licences",
   "bindingsLeadTouch": "Tap Add, then press a controller button, move a stick or press a key.",
   "bindingsLeadClick": "Click Add, then press a controller button, move a stick or press a key.",
   "captureWaiting": "Press whatever should trigger {action}",

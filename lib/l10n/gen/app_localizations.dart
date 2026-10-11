@@ -850,6 +850,24 @@ abstract class AppLocalizations {
   /// **'Version {version}, open source'**
   String aboutHint(String version);
 
+  /// No description provided for @aboutRepository.
+  ///
+  /// In en, this message translates to:
+  /// **'Source code'**
+  String get aboutRepository;
+
+  /// No description provided for @aboutLicenseMit.
+  ///
+  /// In en, this message translates to:
+  /// **'MIT license'**
+  String get aboutLicenseMit;
+
+  /// No description provided for @aboutLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licences'**
+  String get aboutLicenses;
+
   /// No description provided for @bindingsLeadTouch.
   ///
   /// In en, this message translates to:

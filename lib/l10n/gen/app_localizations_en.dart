@@ -420,6 +420,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get aboutRepository => 'Source code';
+
+  @override
+  String get aboutLicenseMit => 'MIT license';
+
+  @override
+  String get aboutLicenses => 'Open-source licences';
+
+  @override
   String get bindingsLeadTouch =>
       'Tap Add, then press a controller button, move a stick or press a key.';
 

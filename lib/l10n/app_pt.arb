@@ -205,6 +205,9 @@
       }
     }
   },
+  "aboutRepository": "Código-fonte",
+  "aboutLicenseMit": "Licença MIT",
+  "aboutLicenses": "Licenças de código aberto",
   "bindingsLeadTouch": "Toque em Adicionar e aperte um botão do controle, mova o analógico ou aperte uma tecla.",
   "bindingsLeadClick": "Clique em Adicionar e aperte um botão do controle, mova o analógico ou aperte uma tecla.",
   "captureWaiting": "Aperte o que vai acionar {action}",
