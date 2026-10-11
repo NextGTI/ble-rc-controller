@@ -36,9 +36,9 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 
 | Plataforma | Estado |
 |---|---|
-| macOS | 🟡 Compilada y abierta en la 1.1.0, pero esta versión no se ha probado conduciendo un coche. Las versiones anteriores se verificaron con un modelo de coche y un DualShock 4. |
+| macOS | ✅ Probado con los coches y un DualShock 4. |
 | Android | ✅ Verificado en una tableta (Android 16) con dos coches (SF-25, 296 GT3) y un DualShock 4. |
-| Windows | 🟡 Se compila en CI; aún sin probar en un PC real — se agradecen reportes. |
+| Windows | ✅ Probado en un PC con los coches y un DualShock 4. |
 | iOS | ❌ No compatible. |
 
 ## Descarga

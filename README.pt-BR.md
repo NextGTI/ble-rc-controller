@@ -36,9 +36,9 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 
 | Plataforma | Situação |
 |---|---|
-| macOS | 🟡 Compilado e aberto na 1.1.0, mas esta versão não foi testada pilotando um carrinho. As versões anteriores foram verificadas com um modelo de carrinho e um DualShock 4. |
+| macOS | ✅ Testado com os carrinhos e um DualShock 4. |
 | Android | ✅ Verificado em um tablet (Android 16) com dois carrinhos (SF-25, 296 GT3) e um DualShock 4. |
-| Windows | 🟡 Compila no CI; ainda sem teste em PC real — relatos são bem-vindos. |
+| Windows | ✅ Testado em um PC com os carrinhos e um DualShock 4. |
 | iOS | ❌ Não suportado. |
 
 ## Download

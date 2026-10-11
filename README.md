@@ -36,9 +36,9 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 
 | Platform | Status |
 |---|---|
-| macOS | 🟡 Built and opened in 1.1.0, but this build has not been driven with a car. Earlier builds were verified with one car model and a DualShock 4. |
+| macOS | ✅ Tested with the cars and a DualShock 4. |
 | Android | ✅ Verified on a tablet (Android 16) with two cars (SF-25, 296 GT3) and a DualShock 4. |
-| Windows | 🟡 Builds in CI; not yet tested on a real PC — reports welcome. |
+| Windows | ✅ Tested on a PC with the cars and a DualShock 4. |
 | iOS | ❌ Not supported. |
 
 ## Download
