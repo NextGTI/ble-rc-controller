@@ -2,10 +2,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import '../../core/car_transport.dart';
 import '../../core/driver.dart';
 import '../../input/controller_profile.dart';
 import '../../l10n/gen/app_localizations.dart';
+import '../cockpit/cockpit_states.dart';
 import '../common/glass.dart';
 import '../common/ring_spinner.dart';
 import '../strings.dart';
@@ -39,9 +39,9 @@ class GarageColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     final driver = DriverScope.of(context);
     final l = AppLocalizations.of(context);
-    final searching =
-        driver.bluetooth == BluetoothState.ready &&
-        driver.link == LinkState.idle;
+    // The same state the header names: the column does not spin "Searching"
+    // while the header says Bluetooth is blocked.
+    final searching = panelStateOf(driver) == PanelState.searching;
     final controllers = driver.controllers;
 
     return SizedBox(

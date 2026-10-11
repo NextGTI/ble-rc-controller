@@ -293,9 +293,7 @@ class LostView extends StatelessWidget {
         const SizedBox(height: 16),
         _SwitchedOff(
           // The same grid as the real cells.
-          columns: kind == LayoutKind.phone || kind == LayoutKind.landscape
-              ? 2
-              : 4,
+          columns: CockpitMetrics.of(kind).cellColumns,
           pads: driver.onScreenControls,
         ),
       ],

@@ -10,6 +10,7 @@ class CockpitMetrics {
     required this.header,
     required this.body,
     required this.minimum,
+    required this.cellColumns,
     this.maxInstrument = double.infinity,
     this.maxPads = double.infinity,
   });
@@ -22,6 +23,10 @@ class CockpitMetrics {
   /// bars do not already leave it.
   final EdgeInsets minimum;
 
+  /// How many columns the four state cells are in: 2 by 2, or one row of four.
+  /// The real cells and the switched-off ones of the lost state both ask.
+  final int cellColumns;
+
   /// Largest side of the instrument, and widest the row of arrows gets.
   final double maxInstrument;
   final double maxPads;
@@ -30,12 +35,14 @@ class CockpitMetrics {
     header: EdgeInsets.symmetric(horizontal: 24),
     body: EdgeInsets.symmetric(horizontal: 18),
     minimum: EdgeInsets.only(top: 24, bottom: 20),
+    cellColumns: 2,
   );
 
   static const _tablet = CockpitMetrics(
     header: EdgeInsets.symmetric(horizontal: 32),
     body: EdgeInsets.symmetric(horizontal: 32),
     minimum: EdgeInsets.only(top: 24, bottom: 20),
+    cellColumns: 4,
     // A portrait tablet has height to spare: the instrument takes most of
     // the width (on the Lenovo at 800 wide, 640 of the 736 available).
     maxInstrument: 640,
@@ -46,6 +53,7 @@ class CockpitMetrics {
     header: EdgeInsets.symmetric(horizontal: 24),
     body: EdgeInsets.symmetric(horizontal: 24),
     minimum: EdgeInsets.only(top: 24, bottom: 20),
+    cellColumns: 2,
   );
 
   // The approved desktop design: 36 on the left, 28 on the right.
@@ -53,6 +61,7 @@ class CockpitMetrics {
     header: EdgeInsets.fromLTRB(36, 0, 28, 0),
     body: EdgeInsets.fromLTRB(36, 0, 28, 0),
     minimum: EdgeInsets.only(top: 28, bottom: 28),
+    cellColumns: 4,
     maxInstrument: 440,
     maxPads: 480,
   );

@@ -968,6 +968,8 @@ void main() {
       (const Size(600, 960), 4),
       (const Size(800, 360), 2),
       (const Size(1180, 760), 4),
+      (const Size(915, 412), 2),
+      (const Size(568, 320), 2),
     ]) {
       _stateTest('${size.width.toInt()}x${size.height.toInt()}: $expected '
           'columns, as with a connected car', (t, rig) async {

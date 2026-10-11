@@ -298,8 +298,13 @@ class _CarRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 6),
-              SignalBars(level: level),
-              const SizedBox(width: 4),
+              // The signal was read from the advert, before the link. Once
+              // connected the car does not advertise, so the bars would show
+              // a number that never changes; the row says "Connected".
+              if (!connected) ...[
+                SignalBars(level: level),
+                const SizedBox(width: 4),
+              ],
               _RowButton(
                 label: buttonLabel,
                 car: model,

@@ -155,7 +155,7 @@ class _CockpitState extends State<Cockpit> {
       // The cells are buttons on the touch layouts. On the desktop they are
       // only with the on-screen controls on, which work by click.
       tappable: !desktop || driver.onScreenControls,
-      columns: kind == LayoutKind.phone || kind == LayoutKind.landscape ? 2 : 4,
+      columns: metrics.cellColumns,
     );
     final pads = driver.onScreenControls ? const TouchPads() : null;
 

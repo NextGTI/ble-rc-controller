@@ -8,6 +8,7 @@ import 'package:ble_rc_controller/l10n/gen/app_localizations.dart';
 import 'package:ble_rc_controller/ui/cockpit/car_decal.dart';
 import 'package:ble_rc_controller/ui/cockpit/cockpit.dart';
 import 'package:ble_rc_controller/ui/cockpit/cockpit_header.dart';
+import 'package:ble_rc_controller/ui/cockpit/cockpit_metrics.dart';
 import 'package:ble_rc_controller/ui/cockpit/instrument.dart';
 import 'package:ble_rc_controller/ui/cockpit/key_legend.dart';
 import 'package:ble_rc_controller/ui/cockpit/particles.dart';
@@ -488,6 +489,36 @@ void main() {
       expect(keys, everyElement(isNotNull));
       expect(keys.toSet(), hasLength(1));
     }, connect: false);
+  });
+
+  group('Cockpit, the columns of the cells', () {
+    test('are one thing for the real cells and the switched-off ones', () {
+      // phone and landscape: 2 by 2; tablet and desktop: one row of four.
+      for (final (kind, columns) in [
+        (LayoutKind.phone, 2),
+        (LayoutKind.landscape, 2),
+        (LayoutKind.tablet, 4),
+        (LayoutKind.desktop, 4),
+      ]) {
+        expect(CockpitMetrics.of(kind).cellColumns, columns, reason: '$kind');
+      }
+    });
+
+    for (final size in const [
+      Size(915, 412),
+      Size(568, 320),
+      Size(1180, 760),
+    ]) {
+      _cockpitTest('${size.width.toInt()}x${size.height.toInt()}: the cells '
+          'read the metrics', (t, rig) async {
+        await _mount(t, rig, size: size);
+        await t.pumpAndSettle();
+        expect(
+          t.widget<StateCells>(find.byType(StateCells)).columns,
+          CockpitMetrics.of(layoutFor(size)).cellColumns,
+        );
+      }, prefs: _noArrows);
+    }
   });
 
   group('Cockpit, by layout', () {

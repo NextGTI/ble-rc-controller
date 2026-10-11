@@ -5,9 +5,11 @@ import 'package:ble_rc_controller/core/driver.dart';
 import 'package:ble_rc_controller/input/controller_profile.dart';
 import 'package:ble_rc_controller/l10n/gen/app_localizations.dart';
 import 'package:ble_rc_controller/ui/cockpit/car_decal.dart';
+import 'package:ble_rc_controller/ui/cockpit/cockpit_states.dart';
 import 'package:ble_rc_controller/ui/common/amber_switch.dart';
 import 'package:ble_rc_controller/ui/common/glass.dart';
 import 'package:ble_rc_controller/ui/common/notice.dart';
+import 'package:ble_rc_controller/ui/common/ring_spinner.dart';
 import 'package:ble_rc_controller/ui/garage/car_list.dart';
 import 'package:ble_rc_controller/ui/garage/car_sheet.dart';
 import 'package:ble_rc_controller/ui/garage/garage_column.dart';
@@ -201,6 +203,33 @@ void main() {
       expect(find.text('Conectar'), findsNWidgets(2));
       expect(find.text('Trocar'), findsNothing);
       expect(find.text('Desconectar'), findsNothing);
+    });
+
+    _rigTest('the connected row has no bars: its signal is from before', (
+      t,
+      rig,
+    ) async {
+      await pumpWithDriver(t, rig.driver, const CarList());
+      // Before connecting, every row has its four bars.
+      expect(find.byType(SignalBars), findsNWidgets(2));
+      await _connect(t, rig, 'car1');
+      await t.pumpAndSettle();
+      // The signal read in the advert, before the link, says nothing about
+      // the link: the connected row shows none, the other row its own.
+      expect(
+        find.descendant(of: _row('SF-25'), matching: find.byType(SignalBars)),
+        findsNothing,
+      );
+      expect(
+        find.descendant(of: _row('296 GT3'), matching: find.byType(SignalBars)),
+        findsOneWidget,
+      );
+      expect(t.takeException(), isNull);
+
+      await t.tap(_in(_row('SF-25'), 'Desconectar'));
+      await _letGo(t);
+      await t.pumpAndSettle();
+      expect(find.byType(SignalBars), findsNWidgets(2));
     });
 
     _rigTest('a weak car says so', (t, rig) async {
@@ -962,6 +991,67 @@ void main() {
         } finally {
           await _finish(t, rig);
         }
+      });
+
+      testWidgets('is gone while the permission is refused, as in the header', (
+        t,
+      ) async {
+        // Bluetooth itself is ready, but the app was refused: the header says
+        // "Bluetooth blocked" and nothing is being searched.
+        final rig = await _rig(
+          t,
+          transport: FakeTransport()..denyPermission = true,
+          cars: const [],
+        );
+        try {
+          final handle = t.ensureSemantics();
+          await pumpWithDriver(t, rig.driver, const GarageColumn());
+          expect(rig.driver.bluetooth, BluetoothState.ready);
+          expect(rig.driver.message, MessageKind.permissionDenied);
+          expect(panelStateOf(rig.driver), PanelState.bluetooth);
+          await t.pumpAndSettle();
+          expect(spinner(), findsNothing);
+          expect(find.byType(RingSpinner), findsNothing);
+          handle.dispose();
+        } finally {
+          await _finish(t, rig);
+        }
+      });
+
+      testWidgets('is gone while the system blocks Bluetooth', (t) async {
+        final rig = await _rig(
+          t,
+          transport: FakeTransport()..state = BluetoothState.unauthorized,
+          cars: const [],
+        );
+        try {
+          await pumpWithDriver(t, rig.driver, const GarageColumn());
+          await t.pumpAndSettle();
+          expect(find.byType(RingSpinner), findsNothing);
+        } finally {
+          await _finish(t, rig);
+        }
+      });
+
+      _rigTest('follows the state of the panel: it spins exactly when the '
+          'header says Searching', (t, rig) async {
+        await pumpWithDriver(t, rig.driver, const GarageColumn());
+        for (var i = 0; i < 2; i++) {
+          final searching = panelStateOf(rig.driver) == PanelState.searching;
+          expect(find.byType(RingSpinner).evaluate().isNotEmpty, searching);
+          if (i == 0) {
+            expect(searching, isTrue);
+            await _connect(t, rig, 'car1');
+            await t.pumpAndSettle();
+          }
+        }
+        expect(panelStateOf(rig.driver), PanelState.connected);
+        // The lost car: the header says Reconnecting, so the column does not
+        // say Searching.
+        rig.transport.conn.add(false);
+        await t.pump(const Duration(milliseconds: 100));
+        expect(panelStateOf(rig.driver), PanelState.lost);
+        expect(find.byType(RingSpinner), findsNothing);
       });
 
       testWidgets('is gone while Bluetooth is off', (t) async {
