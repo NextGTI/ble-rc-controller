@@ -645,6 +645,41 @@ void main() {
     expect(transport.connected, ['car2'], reason: 'the late car1 connection is undone');
   });
 
+  test('a late connection that was cancelled leaves the live link alone', () async {
+    await setUp0();
+    transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55));
+    await settle();
+    transport.connectDelay = const Duration(milliseconds: 200); // the first is slow
+    final first = driver.connect('car1');
+    await driver.disconnect(); // Cancel
+    expect(transport.disconnected, ['car1'], reason: 'the cancel lets go once');
+
+    // The same car again, quickly this time. It owns the link now.
+    transport.connectDelay = Duration.zero;
+    await driver.connect('car1');
+    expect(driver.link, LinkState.connected);
+
+    // The first attempt gets there late. It must not undo the second one.
+    await first;
+    expect(transport.disconnected, ['car1'], reason: 'no second disconnect');
+    expect(driver.link, LinkState.connected);
+    expect(driver.carId, 'car1');
+    expect(transport.connected, contains('car1'));
+  });
+
+  test('a late connection to a car nobody wants any more is still undone', () async {
+    await setUp0();
+    transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55));
+    await settle();
+    transport.connectDelay = const Duration(milliseconds: 200);
+    final first = driver.connect('car1');
+    await driver.disconnect(); // Cancel, and nothing else is asked for
+    await first;
+    expect(driver.link, LinkState.idle);
+    expect(transport.disconnected, ['car1', 'car1'], reason: 'the late one is let go');
+    expect(transport.connected, isEmpty);
+  });
+
   test('retrying the permission clears the denial when it is granted', () async {
     await setUp0(const {}, null, FakeTransport()..denyPermission = true);
     expect(driver.message, MessageKind.permissionDenied);

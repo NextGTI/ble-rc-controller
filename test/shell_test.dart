@@ -775,6 +775,53 @@ void main() {
     }, prefs: _noArrows);
   });
 
+  group('Shell, a key released while a text has the focus', () {
+    _shellTest('stops driving: a key-up always counts', (t, rig) async {
+      await _mount(t, rig);
+      await t.pumpAndSettle();
+
+      // W is held on the cockpit...
+      await t.sendKeyDownEvent(LogicalKeyboardKey.keyW);
+      await t.pump(const Duration(milliseconds: 40));
+      expect(rig.driver.command.forward, isTrue);
+
+      // ...the person opens About and puts the focus on the address, which is
+      // a text that can be selected (an EditableText)...
+      await t.tap(_gear);
+      await t.pumpAndSettle();
+      await t.tap(find.text('Sobre'));
+      await t.pumpAndSettle();
+      await t.tap(find.byType(SelectableText));
+      await t.pumpAndSettle();
+      expect(
+        FocusManager.instance.primaryFocus?.context
+            ?.findAncestorWidgetOfExactType<EditableText>(),
+        isNotNull,
+        reason: 'the text has the focus',
+      );
+
+      // ...and lets go of W there. The car must stop.
+      await t.sendKeyUpEvent(LogicalKeyboardKey.keyW);
+      await t.pump(const Duration(milliseconds: 40));
+      expect(rig.driver.command.forward, isFalse);
+    }, keyboard: true);
+
+    _shellTest('a key pressed there does not drive', (t, rig) async {
+      await _mount(t, rig);
+      await t.tap(_gear);
+      await t.pumpAndSettle();
+      await t.tap(find.text('Sobre'));
+      await t.pumpAndSettle();
+      await t.tap(find.byType(SelectableText));
+      await t.pumpAndSettle();
+
+      await t.sendKeyDownEvent(LogicalKeyboardKey.keyW);
+      await t.pump(const Duration(milliseconds: 40));
+      expect(rig.driver.command.forward, isFalse);
+      await t.sendKeyUpEvent(LogicalKeyboardKey.keyW);
+    }, keyboard: true);
+  });
+
   group('Shell, a capture left open', () {
     // "+ Adicionar" of the action [a] on the page of buttons and keys.
     Finder add(CarAction a) => find.descendant(

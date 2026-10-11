@@ -363,7 +363,10 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       return;
     }
     if (token != _connectToken) {
-      await transport.disconnect(id);
+      // The attempt was cancelled. Its connection is let go, unless the car
+      // is wanted again: a newer attempt (or its link) already owns it, and
+      // letting go by id would cut that one.
+      if (_carId != id) await transport.disconnect(id);
       return;
     }
     _connSub = transport.connectionOf(id).listen((up) {
@@ -731,6 +734,10 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       cancelTeaching();
       return true;
     }
+    // A key that goes up is always forgotten, wherever the focus is: one that
+    // was pressed on the cockpit and let go in a text (About's address can be
+    // selected) must not keep driving. Only the key-downs are ignored there.
+    if (!down) _keysDown.remove(key.usbHidUsage);
     if (!_keyboardEnabled || _typingInTextField()) return false;
     // Leave system shortcuts alone.
     final hw = HardwareKeyboard.instance;
@@ -738,11 +745,7 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
       _keysDown.remove(key.usbHidUsage);
       return false;
     }
-    if (down) {
-      _keysDown.add(key.usbHidUsage);
-    } else {
-      _keysDown.remove(key.usbHidUsage);
-    }
+    if (down) _keysDown.add(key.usbHidUsage);
     return _isBoundKey(key);
   }
 

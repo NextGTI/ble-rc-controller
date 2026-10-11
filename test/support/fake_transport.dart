@@ -12,6 +12,9 @@ class FakeTransport implements CarTransport {
   final avail = StreamController<BluetoothState>.broadcast();
   final writes = <Uint8List>[];
   final connected = <String>[];
+
+  /// The id of every [disconnect] call, in order.
+  final disconnected = <String>[];
   bool failConnect = false;
 
   /// How many times [connect] was called, whether it succeeded or not.
@@ -70,6 +73,7 @@ class FakeTransport implements CarTransport {
 
   @override
   Future<void> disconnect(String id) async {
+    disconnected.add(id);
     if (disconnectDelay > Duration.zero) await Future<void>.delayed(disconnectDelay);
     connected.remove(id);
   }
