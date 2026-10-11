@@ -36,20 +36,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get disconnect => 'Desconectar';
 
   @override
-  String get connecting => 'Conectando…';
-
-  @override
   String get connectedLabel => 'Conectado';
 
   @override
-  String get msgConnectFailed =>
-      'Não foi possível conectar. Desligue e ligue o carro e confira se nenhum outro app está conectado a ele.';
-
-  @override
   String get msgDropped => 'O carro desconectou.';
-
-  @override
-  String get msgPermission => 'A permissão de Bluetooth foi negada.';
 
   @override
   String get rememberLast => 'Reconectar ao último carro';
@@ -103,27 +93,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get controllersTitle => 'Controles';
 
   @override
-  String get noController => 'Nenhum controle encontrado';
-
-  @override
   String get noControllerHint =>
       'Pareie o controle por Bluetooth ou USB e aperte qualquer botão.';
 
   @override
-  String get controllerRecognised => 'Layout reconhecido';
-
-  @override
-  String get controllerCustom => 'Mapeamento personalizado';
-
-  @override
-  String get teachController => 'Ensinar este controle…';
-
-  @override
   String get teachTitle => 'Ensinar controle';
-
-  @override
-  String get teachIntro =>
-      'Aperte o botão (ou mova o analógico) que o app pedir. Pule o que o seu controle não tiver. Esc cancela.';
 
   @override
   String get teachDone =>
@@ -150,18 +124,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get languageSystem => 'Sistema';
 
   @override
-  String deadzone(int percent) {
-    return 'Zona morta do analógico: $percent%';
-  }
-
-  @override
   String get onScreen => 'Botões na tela';
 
   @override
   String get onScreenHint => 'Para tablet e celular';
-
-  @override
-  String get about => 'Sobre';
 
   @override
   String get disclaimer =>

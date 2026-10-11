@@ -8,11 +8,8 @@
   "btUnsupportedTitle": "Bluetooth LE not available",
   "btUnsupportedBody": "This device cannot talk to the car.",
   "disconnect": "Disconnect",
-  "connecting": "Connecting…",
   "connectedLabel": "Connected",
-  "msgConnectFailed": "Could not connect. Turn the car off and on, and make sure no other app is connected to it.",
   "msgDropped": "The car disconnected.",
-  "msgPermission": "Bluetooth permission was denied.",
   "rememberLast": "Reconnect to the last car",
   "actionForward": "Forward",
   "actionReverse": "Reverse",
@@ -30,13 +27,8 @@
   "useKeyboard": "Use the keyboard",
   "sharedInput": "This input is also assigned to another action.",
   "controllersTitle": "Controllers",
-  "noController": "No controller found",
   "noControllerHint": "Pair your controller over Bluetooth or USB, then press any button.",
-  "controllerRecognised": "Recognised layout",
-  "controllerCustom": "Custom mapping",
-  "teachController": "Teach this controller…",
   "teachTitle": "Teach controller",
-  "teachIntro": "Press the button (or move the stick) the app asks for. Skip anything your controller does not have. Press Esc to cancel.",
   "teachDone": "All set! This controller now works with every action.",
   "done": "Done",
   "skip": "Skip",
@@ -51,17 +43,8 @@
   "settingsTitle": "Settings",
   "language": "Language",
   "languageSystem": "System",
-  "deadzone": "Stick dead zone: {percent}%",
-  "@deadzone": {
-    "placeholders": {
-      "percent": {
-        "type": "int"
-      }
-    }
-  },
   "onScreen": "On-screen buttons",
   "onScreenHint": "For tablets and phones",
-  "about": "About",
   "disclaimer": "Unofficial, independent open-source project (MIT). It is not affiliated with, endorsed or sponsored by any car, toy or fuel brand. All names belong to their owners.",
   "versionLabel": "Version {version}",
   "@versionLabel": {

@@ -148,35 +148,17 @@ abstract class AppLocalizations {
   /// **'Disconnect'**
   String get disconnect;
 
-  /// No description provided for @connecting.
-  ///
-  /// In en, this message translates to:
-  /// **'Connecting…'**
-  String get connecting;
-
   /// No description provided for @connectedLabel.
   ///
   /// In en, this message translates to:
   /// **'Connected'**
   String get connectedLabel;
 
-  /// No description provided for @msgConnectFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'Could not connect. Turn the car off and on, and make sure no other app is connected to it.'**
-  String get msgConnectFailed;
-
   /// No description provided for @msgDropped.
   ///
   /// In en, this message translates to:
   /// **'The car disconnected.'**
   String get msgDropped;
-
-  /// No description provided for @msgPermission.
-  ///
-  /// In en, this message translates to:
-  /// **'Bluetooth permission was denied.'**
-  String get msgPermission;
 
   /// No description provided for @rememberLast.
   ///
@@ -280,47 +262,17 @@ abstract class AppLocalizations {
   /// **'Controllers'**
   String get controllersTitle;
 
-  /// No description provided for @noController.
-  ///
-  /// In en, this message translates to:
-  /// **'No controller found'**
-  String get noController;
-
   /// No description provided for @noControllerHint.
   ///
   /// In en, this message translates to:
   /// **'Pair your controller over Bluetooth or USB, then press any button.'**
   String get noControllerHint;
 
-  /// No description provided for @controllerRecognised.
-  ///
-  /// In en, this message translates to:
-  /// **'Recognised layout'**
-  String get controllerRecognised;
-
-  /// No description provided for @controllerCustom.
-  ///
-  /// In en, this message translates to:
-  /// **'Custom mapping'**
-  String get controllerCustom;
-
-  /// No description provided for @teachController.
-  ///
-  /// In en, this message translates to:
-  /// **'Teach this controller…'**
-  String get teachController;
-
   /// No description provided for @teachTitle.
   ///
   /// In en, this message translates to:
   /// **'Teach controller'**
   String get teachTitle;
-
-  /// No description provided for @teachIntro.
-  ///
-  /// In en, this message translates to:
-  /// **'Press the button (or move the stick) the app asks for. Skip anything your controller does not have. Press Esc to cancel.'**
-  String get teachIntro;
 
   /// No description provided for @teachDone.
   ///
@@ -364,12 +316,6 @@ abstract class AppLocalizations {
   /// **'System'**
   String get languageSystem;
 
-  /// No description provided for @deadzone.
-  ///
-  /// In en, this message translates to:
-  /// **'Stick dead zone: {percent}%'**
-  String deadzone(int percent);
-
   /// No description provided for @onScreen.
   ///
   /// In en, this message translates to:
@@ -381,12 +327,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'For tablets and phones'**
   String get onScreenHint;
-
-  /// No description provided for @about.
-  ///
-  /// In en, this message translates to:
-  /// **'About'**
-  String get about;
 
   /// No description provided for @disclaimer.
   ///

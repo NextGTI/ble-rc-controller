@@ -8,11 +8,8 @@
   "btUnsupportedTitle": "Bluetooth LE no disponible",
   "btUnsupportedBody": "Este dispositivo no puede comunicarse con el coche.",
   "disconnect": "Desconectar",
-  "connecting": "Conectando…",
   "connectedLabel": "Conectado",
-  "msgConnectFailed": "No se pudo conectar. Apaga y enciende el coche y comprueba que ninguna otra app esté conectada.",
   "msgDropped": "El coche se desconectó.",
-  "msgPermission": "Se denegó el permiso de Bluetooth.",
   "rememberLast": "Reconectar con el último coche",
   "actionForward": "Adelante",
   "actionReverse": "Marcha atrás",
@@ -30,13 +27,8 @@
   "useKeyboard": "Usar el teclado",
   "sharedInput": "Esta entrada también está asignada a otra acción.",
   "controllersTitle": "Mandos",
-  "noController": "No se encontró ningún mando",
   "noControllerHint": "Empareja tu mando por Bluetooth o USB y pulsa cualquier botón.",
-  "controllerRecognised": "Disposición reconocida",
-  "controllerCustom": "Mapeo personalizado",
-  "teachController": "Enseñar este mando…",
   "teachTitle": "Enseñar mando",
-  "teachIntro": "Pulsa el botón (o mueve el stick) que pide la app. Omite lo que tu mando no tenga. Pulsa Esc para cancelar.",
   "teachDone": "¡Listo! Este mando ya funciona con todas las acciones.",
   "done": "Hecho",
   "skip": "Omitir",
@@ -51,17 +43,8 @@
   "settingsTitle": "Ajustes",
   "language": "Idioma",
   "languageSystem": "Sistema",
-  "deadzone": "Zona muerta del stick: {percent} %",
-  "@deadzone": {
-    "placeholders": {
-      "percent": {
-        "type": "int"
-      }
-    }
-  },
   "onScreen": "Botones en pantalla",
   "onScreenHint": "Para tabletas y móviles",
-  "about": "Acerca de",
   "disclaimer": "Proyecto de código abierto, independiente y no oficial (MIT). No está afiliado, respaldado ni patrocinado por ninguna marca de coches, juguetes o combustibles. Todos los nombres pertenecen a sus dueños.",
   "versionLabel": "Versión {version}",
   "@versionLabel": {

@@ -35,20 +35,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get disconnect => 'Disconnect';
 
   @override
-  String get connecting => 'Connecting…';
-
-  @override
   String get connectedLabel => 'Connected';
 
   @override
-  String get msgConnectFailed =>
-      'Could not connect. Turn the car off and on, and make sure no other app is connected to it.';
-
-  @override
   String get msgDropped => 'The car disconnected.';
-
-  @override
-  String get msgPermission => 'Bluetooth permission was denied.';
 
   @override
   String get rememberLast => 'Reconnect to the last car';
@@ -102,27 +92,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get controllersTitle => 'Controllers';
 
   @override
-  String get noController => 'No controller found';
-
-  @override
   String get noControllerHint =>
       'Pair your controller over Bluetooth or USB, then press any button.';
 
   @override
-  String get controllerRecognised => 'Recognised layout';
-
-  @override
-  String get controllerCustom => 'Custom mapping';
-
-  @override
-  String get teachController => 'Teach this controller…';
-
-  @override
   String get teachTitle => 'Teach controller';
-
-  @override
-  String get teachIntro =>
-      'Press the button (or move the stick) the app asks for. Skip anything your controller does not have. Press Esc to cancel.';
 
   @override
   String get teachDone =>
@@ -149,18 +123,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageSystem => 'System';
 
   @override
-  String deadzone(int percent) {
-    return 'Stick dead zone: $percent%';
-  }
-
-  @override
   String get onScreen => 'On-screen buttons';
 
   @override
   String get onScreenHint => 'For tablets and phones';
-
-  @override
-  String get about => 'About';
 
   @override
   String get disclaimer =>

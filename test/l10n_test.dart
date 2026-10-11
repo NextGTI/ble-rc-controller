@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:ble_rc_controller/l10n/gen/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -41,6 +44,30 @@ void main() {
       }
     });
   }
+
+  test('every string of the ARB files is used by the app', () {
+    // A key nobody asks for is translated three times for nothing, and the
+    // next person to read the list cannot tell which ones matter.
+    final template =
+        jsonDecode(File('lib/l10n/app_en.arb').readAsStringSync())
+            as Map<String, dynamic>;
+    final keys = template.keys.where((k) => !k.startsWith('@'));
+    // The code without its comments: "about" in a sentence is not a use. (A
+    // name that is also a word in code, like `deadzone`, still counts as
+    // used, so this catches the rest, not everything.)
+    final source = [
+      for (final f in Directory('lib').listSync(recursive: true))
+        if (f is File &&
+            f.path.endsWith('.dart') &&
+            !f.path.contains('/l10n/'))
+          f.readAsStringSync().replaceAll(RegExp('//.*'), ''),
+    ].join('\n');
+    final unused = [
+      for (final k in keys)
+        if (!RegExp('\\b${RegExp.escape(k)}\\b').hasMatch(source)) k,
+    ];
+    expect(unused, isEmpty);
+  });
 
   test('pt connects and counts steps in Portuguese', () async {
     final l = await _load('pt');

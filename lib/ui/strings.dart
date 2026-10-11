@@ -184,15 +184,4 @@ extension L10nText on AppLocalizations {
     }
     return null;
   }
-
-  String message(MessageKind k) {
-    switch (k) {
-      case MessageKind.connectFailed:
-        return msgConnectFailed;
-      case MessageKind.dropped:
-        return msgDropped;
-      case MessageKind.permissionDenied:
-        return msgPermission;
-    }
-  }
 }

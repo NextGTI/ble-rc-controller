@@ -36,20 +36,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get disconnect => 'Desconectar';
 
   @override
-  String get connecting => 'Conectando…';
-
-  @override
   String get connectedLabel => 'Conectado';
 
   @override
-  String get msgConnectFailed =>
-      'No se pudo conectar. Apaga y enciende el coche y comprueba que ninguna otra app esté conectada.';
-
-  @override
   String get msgDropped => 'El coche se desconectó.';
-
-  @override
-  String get msgPermission => 'Se denegó el permiso de Bluetooth.';
 
   @override
   String get rememberLast => 'Reconectar con el último coche';
@@ -103,27 +93,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get controllersTitle => 'Mandos';
 
   @override
-  String get noController => 'No se encontró ningún mando';
-
-  @override
   String get noControllerHint =>
       'Empareja tu mando por Bluetooth o USB y pulsa cualquier botón.';
 
   @override
-  String get controllerRecognised => 'Disposición reconocida';
-
-  @override
-  String get controllerCustom => 'Mapeo personalizado';
-
-  @override
-  String get teachController => 'Enseñar este mando…';
-
-  @override
   String get teachTitle => 'Enseñar mando';
-
-  @override
-  String get teachIntro =>
-      'Pulsa el botón (o mueve el stick) que pide la app. Omite lo que tu mando no tenga. Pulsa Esc para cancelar.';
 
   @override
   String get teachDone =>
@@ -150,18 +124,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get languageSystem => 'Sistema';
 
   @override
-  String deadzone(int percent) {
-    return 'Zona muerta del stick: $percent %';
-  }
-
-  @override
   String get onScreen => 'Botones en pantalla';
 
   @override
   String get onScreenHint => 'Para tabletas y móviles';
-
-  @override
-  String get about => 'Acerca de';
 
   @override
   String get disclaimer =>

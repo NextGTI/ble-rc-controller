@@ -8,11 +8,8 @@
   "btUnsupportedTitle": "Bluetooth LE indisponível",
   "btUnsupportedBody": "Este aparelho não consegue falar com o carro.",
   "disconnect": "Desconectar",
-  "connecting": "Conectando…",
   "connectedLabel": "Conectado",
-  "msgConnectFailed": "Não foi possível conectar. Desligue e ligue o carro e confira se nenhum outro app está conectado a ele.",
   "msgDropped": "O carro desconectou.",
-  "msgPermission": "A permissão de Bluetooth foi negada.",
   "rememberLast": "Reconectar ao último carro",
   "actionForward": "Frente",
   "actionReverse": "Ré",
@@ -30,13 +27,8 @@
   "useKeyboard": "Usar o teclado",
   "sharedInput": "Esta entrada também está atribuída a outra ação.",
   "controllersTitle": "Controles",
-  "noController": "Nenhum controle encontrado",
   "noControllerHint": "Pareie o controle por Bluetooth ou USB e aperte qualquer botão.",
-  "controllerRecognised": "Layout reconhecido",
-  "controllerCustom": "Mapeamento personalizado",
-  "teachController": "Ensinar este controle…",
   "teachTitle": "Ensinar controle",
-  "teachIntro": "Aperte o botão (ou mova o analógico) que o app pedir. Pule o que o seu controle não tiver. Esc cancela.",
   "teachDone": "Pronto! Este controle já funciona com todas as ações.",
   "done": "Pronto",
   "skip": "Pular",
@@ -51,17 +43,8 @@
   "settingsTitle": "Ajustes",
   "language": "Idioma",
   "languageSystem": "Sistema",
-  "deadzone": "Zona morta do analógico: {percent}%",
-  "@deadzone": {
-    "placeholders": {
-      "percent": {
-        "type": "int"
-      }
-    }
-  },
   "onScreen": "Botões na tela",
   "onScreenHint": "Para tablet e celular",
-  "about": "Sobre",
   "disclaimer": "Projeto de código aberto, independente e não oficial (MIT). Não é afiliado, endossado nem patrocinado por nenhuma marca de carros, brinquedos ou combustíveis. Todos os nomes pertencem aos seus donos.",
   "versionLabel": "Versão {version}",
   "@versionLabel": {
