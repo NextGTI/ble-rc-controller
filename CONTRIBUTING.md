@@ -7,7 +7,7 @@ Thanks for helping! The most valuable contributions are **test reports from real
 Open an issue with:
 
 - your OS and version, and the car's Bluetooth name (e.g. `SL-SF-25`);
-- the controller model, and what **Controllers → Input monitor** shows when you press the problem button;
+- the controller model, and what **Settings → Controllers → Live signals** shows when you press the problem button;
 - what you expected and what happened.
 
 ## Code
@@ -33,7 +33,7 @@ More cars are planned. To help, open an issue with:
 
 ## Adding a controller
 
-Most controllers are recognised by the built-in mapping database. If yours is not, use **Controllers → Teach this controller…** in the app. To make the fix permanent for everyone, open an issue with the vendor/product ID and the raw signals from the Input monitor.
+Most controllers are recognised by the built-in mapping database. If yours is not, use **Settings → Controllers → Teach a new controller** in the app. To make the fix permanent for everyone, open an issue with the vendor/product ID and the raw signals from Live signals.
 
 ## Releasing (maintainers)
 

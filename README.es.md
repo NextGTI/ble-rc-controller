@@ -4,6 +4,8 @@
 
 Conduce coches de juguete RC con Bluetooth LE usando un **mando** (DualShock 4, DualSense, Xbox, Switch Pro y otros), el **teclado** o **botones táctiles** en pantalla, desde tu ordenador o tu móvil Android.
 
+![BLE RC Controller](docs/images/hero.png)
+
 La app oficial del coche solo funciona en móviles. Esta app usa la misma interfaz Bluetooth, así que puedes usar un mando de verdad.
 
 > **Proyecto no oficial.** Es independiente, de código abierto (MIT) y **no está afiliado, respaldado ni patrocinado** por Shell ni por ninguna otra marca de coches, juguetes o combustibles. «Shell» y todos los demás nombres pertenecen a sus respectivos dueños y se usan aquí solo para indicar con qué coches funciona esta app. Consulta el [Aviso legal](#aviso-legal).
@@ -15,11 +17,12 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 
 ## Funciones
 
+- Un **panel** oscuro con una vista cenital del coche dibujada con líneas, un indicador de dirección y una escala de aceleración.
 - Encuentra los coches cercanos y te deja **elegir cuál conducir** (puede haber varios encendidos).
-- **Compatible con los mandos más comunes**, con un asistente **«Enseñar mando»** y un **monitor de entradas** para mandos que la app no conoce.
+- **Compatible con los mandos más comunes**, con un asistente **«Enseñar un mando nuevo»** y **Señales en vivo** para mandos que la app no conoce.
 - **Reasigna todos los botones.** Cada acción (adelante, marcha atrás, izquierda, derecha, luz, turbo, giro 360°) admite varias entradas: botones del mando, direcciones del stick y teclas.
 - Control por **teclado** (WASD / flechas por defecto) y **botones en pantalla** para pantallas táctiles.
-- Nivel de batería, intensidad de señal y reconexión automática con el último coche.
+- Nivel de batería, intensidad de señal y reconexión automática con el último coche. Si la conexión se corta, la app vuelve a conectar sola.
 - Seguridad: el coche se detiene al desconectar, cambiar de app o perder el mando.
 - Disponible en **English, Español y Português**.
 
@@ -27,8 +30,8 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 
 | Plataforma | Estado |
 |---|---|
-| macOS | ✅ Verificado con un modelo de coche y un DualShock 4: conecta, muestra la batería y reconoce el mando. |
-| Android | ✅ Verificado en una tableta (Android 16) con dos coches, un DualShock 4 y los botones en pantalla. |
+| macOS | 🟡 Compilada y abierta en la 1.1.0, pero esta versión no se ha probado conduciendo un coche. Las versiones anteriores se verificaron con un modelo de coche y un DualShock 4. |
+| Android | ✅ Verificado en una tableta (Android 16) con dos coches (SF-25, 296 GT3) y un DualShock 4. |
 | Windows | 🟡 Se compila en CI; aún sin probar en un PC real — se agradecen reportes. |
 | iOS | ❌ No compatible. |
 
@@ -43,8 +46,8 @@ Descarga la última versión para tu sistema desde [**Releases**](../../releases
 ## Primeros pasos
 
 1. **Cierra la app oficial del coche** en tu móvil: el coche solo acepta una conexión a la vez.
-2. Enciende el coche y abre **BLE RC Controller**. El coche aparece en la lista **Coches** (los nombres empiezan por `SL-`). Haz clic o tócalo.
-3. Empareja tu mando por Bluetooth (o conéctalo por USB) y pulsa cualquier botón. Aparece en **Mandos**.
+2. Enciende el coche y abre **BLE RC Controller**. El coche aparece en **Coches cercanos** (los nombres empiezan por `SL-`). Haz clic o toca **Conectar**.
+3. Empareja tu mando por Bluetooth (o conéctalo por USB) y pulsa cualquier botón. Aparece en **Mandos**, dentro de **Ajustes** (el engranaje), y en la columna del garaje en un ordenador.
 4. ¡A conducir!
 
 ### Controles por defecto
@@ -58,29 +61,30 @@ Descarga la última versión para tu sistema desde [**Releases**](../../releases
 | Turbo (mantener) | Botón derecho (○ / B) | Espacio |
 | Giro 360° (mantener) | Botón superior (△ / Y) | Q |
 
-Empujar el stick izquierdo hacia arriba/abajo **no** conduce por defecto. Si lo prefieres, añádelo en **Botones** (*Adelante* → Añadir → empuja el stick hacia arriba).
+Empujar el stick izquierdo hacia arriba/abajo **no** conduce por defecto. Si lo prefieres, añádelo en **Ajustes → Botones y teclas** (*Adelante* → Añadir → empuja el stick hacia arriba).
 
 En los botones en pantalla, **Luz**, **Turbo** y **Giro 360°** se activan y desactivan con cada toque.
 
-Todo es editable en la pestaña **Botones**. Todo es encendido/apagado: el coche no tiene velocidad ni dirección proporcionales.
+Todo es editable en **Ajustes → Botones y teclas**. Todo es encendido/apagado: el coche no tiene velocidad ni dirección proporcionales.
 
 ## Mandos compatibles
 
 Los mandos se reconocen con una base de datos de mapeos integrada, así que las disposiciones **PlayStation (DualShock 4 / DualSense), Xbox y Switch Pro** funcionan directamente en las plataformas donde el sistema los expone como mandos.
 
-Para cualquier otro, abre **Mandos → Enseñar este mando…** y pulsa uno a uno el botón que pide la app (omite lo que tu mando no tenga). También puedes usar el **Monitor de entradas** para ver las señales en bruto y asignar una señal directamente a una acción con **Botones → Añadir**.
+Para cualquier otro, abre **Ajustes → Mandos → Enseñar un mando nuevo** y pulsa uno a uno el botón que pide la app: 18 pasos en 5 grupos, con la pieza que toca pulsar iluminada en un dibujo del mando (omite lo que tu mando no tenga). También puedes usar **Señales en vivo** (en la misma pantalla) para ver las señales en bruto y asignar una señal directamente a una acción con **Ajustes → Botones y teclas → Añadir**.
 
 ## Teclado y pantalla táctil
 
 - El teclado solo cuenta mientras la ventana de la app está en primer plano.
-- **Ajustes → Mostrar controles en pantalla** activa los botones táctiles (por defecto en Android). Se pueden mantener varios a la vez.
+- **Ajustes → Botones en pantalla** activa los botones táctiles (por defecto en Android). Se pueden mantener varios a la vez.
+- En un ordenador, la leyenda de teclas bajo el panel muestra las teclas en uso. **Ajustes** se abre como un panel lateral; Esc o un clic fuera lo cierra.
 
 ## Solución de problemas
 
 - **El coche no aparece** — apágalo y enciéndelo, cierra la app oficial en todos los móviles y comprueba que el Bluetooth esté activo. En Android concede el permiso de «Dispositivos cercanos».
-- **«No se pudo conectar»** — probablemente otro dispositivo está conectado al coche.
-- **No se detecta el mando** — empareja primero y luego pulsa un botón. En Windows, el sistema puede no reconocer un DualShock 4 como mando; herramientas como Steam Input o DS4Windows lo hacen pasar por un mando Xbox, o usa el asistente **Enseñar**.
-- **Un botón no hace nada** — mira el **Monitor de entradas** (pestaña Mandos). Si la señal aparece allí, asígnala con **Botones → Añadir**.
+- **«No se pudo conectar con …»** — probablemente otro dispositivo está conectado al coche.
+- **No se detecta el mando** — empareja primero y luego pulsa un botón. En Windows, el sistema puede no reconocer un DualShock 4 como mando; herramientas como Steam Input o DS4Windows lo hacen pasar por un mando Xbox, o usa el asistente **Enseñar un mando nuevo**.
+- **Un botón no hace nada** — mira **Señales en vivo** (**Ajustes → Mandos**). Si la señal aparece allí, asígnala con **Ajustes → Botones y teclas → Añadir**.
 
 ## Compilar desde el código
 

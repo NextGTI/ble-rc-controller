@@ -4,6 +4,8 @@
 
 Pilote carrinhos de controle remoto com Bluetooth LE usando um **controle** (DualShock 4, DualSense, Xbox, Switch Pro e outros), o **teclado** ou **botões de toque** na tela — no computador ou no celular Android.
 
+![BLE RC Controller](docs/images/hero.png)
+
 O app oficial do carrinho só roda em celulares. Este app usa a mesma interface Bluetooth, então você pode usar um controle de verdade.
 
 > **Projeto não oficial.** É independente, de código aberto (MIT) e **não é afiliado, endossado nem patrocinado** pela Shell nem por nenhuma outra marca de carros, brinquedos ou combustíveis. "Shell" e todos os outros nomes pertencem aos seus respectivos donos e são usados aqui apenas para dizer com quais carrinhos este app funciona. Veja o [Aviso legal](#aviso-legal).
@@ -15,11 +17,12 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 
 ## Recursos
 
+- Um **painel** escuro com uma vista de cima do carro desenhada com linhas, um indicador de direção e uma escala de aceleração.
 - Encontra os carrinhos por perto e deixa você **escolher qual pilotar** (pode haver vários ligados).
-- **Suporte aos controles mais comuns**, com um assistente **"Ensinar controle"** e um **monitor de entradas** para controles que o app não conhece.
+- **Suporte aos controles mais comuns**, com um assistente **"Ensinar um controle novo"** e **Sinais ao vivo** para controles que o app não conhece.
 - **Remapeie todos os botões.** Cada ação (frente, ré, esquerda, direita, luz, turbo, giro 360°) aceita várias entradas: botões do controle, direções do analógico e teclas.
 - Controle pelo **teclado** (WASD / setas por padrão) e **botões na tela** para telas de toque.
-- Nível de bateria, intensidade do sinal e reconexão automática ao último carro.
+- Nível de bateria, intensidade do sinal e reconexão automática ao último carro. Se a conexão cair, o app reconecta sozinho.
 - Segurança: o carro para quando você desconecta, troca de app ou perde o controle.
 - Disponível em **English, Español e Português**.
 
@@ -27,8 +30,8 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 
 | Plataforma | Situação |
 |---|---|
-| macOS | ✅ Verificado com um modelo de carrinho e um DualShock 4: conecta, mostra a bateria e reconhece o controle. |
-| Android | ✅ Verificado em um tablet (Android 16) com dois carrinhos, um DualShock 4 e os botões da tela. |
+| macOS | 🟡 Compilado e aberto na 1.1.0, mas esta versão não foi testada pilotando um carrinho. As versões anteriores foram verificadas com um modelo de carrinho e um DualShock 4. |
+| Android | ✅ Verificado em um tablet (Android 16) com dois carrinhos (SF-25, 296 GT3) e um DualShock 4. |
 | Windows | 🟡 Compila no CI; ainda sem teste em PC real — relatos são bem-vindos. |
 | iOS | ❌ Não suportado. |
 
@@ -43,8 +46,8 @@ Baixe a versão mais recente para o seu sistema na página de [**Releases**](../
 ## Primeiros passos
 
 1. **Feche o app oficial do carrinho** no celular — o carro aceita só uma conexão por vez.
-2. Ligue o carrinho e abra o **BLE RC Controller**. O carro aparece na lista **Carros** (os nomes começam com `SL-`). Clique ou toque nele.
-3. Pareie o controle por Bluetooth (ou ligue por USB) e aperte qualquer botão. Ele aparece em **Controles**.
+2. Ligue o carrinho e abra o **BLE RC Controller**. O carro aparece em **Carros por perto** (os nomes começam com `SL-`). Clique ou toque em **Conectar**.
+3. Pareie o controle por Bluetooth (ou ligue por USB) e aperte qualquer botão. Ele aparece em **Controles**, dentro de **Ajustes** (a engrenagem), e na coluna da garagem no computador.
 4. Pilote!
 
 ### Controles padrão
@@ -58,29 +61,30 @@ Baixe a versão mais recente para o seu sistema na página de [**Releases**](../
 | Turbo (segurar) | Botão da direita (○ / B) | Espaço |
 | Giro 360° (segurar) | Botão de cima (△ / Y) | Q |
 
-Empurrar o analógico esquerdo para cima/baixo **não** pilota por padrão. Se você gosta disso, adicione em **Botões** (*Frente* → Adicionar → empurre o analógico para cima).
+Empurrar o analógico esquerdo para cima/baixo **não** pilota por padrão. Se você gosta disso, adicione em **Ajustes → Botões e teclas** (*Frente* → Adicionar → empurre o analógico para cima).
 
 Nos botões da tela, **Luz**, **Turbo** e **Giro 360°** ligam e desligam a cada toque.
 
-Tudo é editável na aba **Botões**. Tudo é liga/desliga: o carrinho não tem velocidade nem direção proporcionais.
+Tudo é editável em **Ajustes → Botões e teclas**. Tudo é liga/desliga: o carrinho não tem velocidade nem direção proporcionais.
 
 ## Controles suportados
 
 Os controles são reconhecidos por um banco de mapeamentos embutido, então os layouts **PlayStation (DualShock 4 / DualSense), Xbox e Switch Pro** funcionam direto nas plataformas em que o sistema os expõe como gamepad.
 
-Para qualquer outro, abra **Controles → Ensinar este controle…** e aperte, um a um, o botão que o app pedir (pule o que o seu controle não tiver). Você também pode usar o **Monitor de entradas** para ver os sinais brutos e atribuir um sinal direto a uma ação em **Botões → Adicionar**.
+Para qualquer outro, abra **Ajustes → Controles → Ensinar um controle novo** e aperte, um a um, o botão que o app pedir: 18 passos em 5 grupos, com a peça a apertar acesa num desenho do controle (pule o que o seu controle não tiver). Você também pode usar **Sinais ao vivo** (na mesma tela) para ver os sinais brutos e atribuir um sinal direto a uma ação em **Ajustes → Botões e teclas → Adicionar**.
 
 ## Teclado e toque
 
 - O teclado só vale com a janela do app em primeiro plano.
-- **Ajustes → Mostrar controles na tela** liga os botões de toque (padrão no Android). Dá para segurar vários ao mesmo tempo.
+- **Ajustes → Botões na tela** liga os botões de toque (padrão no Android). Dá para segurar vários ao mesmo tempo.
+- No computador, a legenda de teclas sob o painel mostra as teclas em uso. Os **Ajustes** abrem num painel lateral; Esc ou um clique fora fecha.
 
 ## Solução de problemas
 
 - **O carro não aparece** — desligue e ligue, feche o app oficial em todos os celulares e confira se o Bluetooth está ligado. No Android, conceda a permissão de "Dispositivos próximos".
-- **"Não foi possível conectar"** — provavelmente outro aparelho está conectado ao carro.
-- **Controle não detectado** — pareie primeiro e depois aperte um botão. No Windows, o sistema pode não reconhecer o DualShock 4 como gamepad; ferramentas como Steam Input ou DS4Windows fazem ele parecer um controle Xbox, ou use o assistente **Ensinar**.
-- **Um botão não faz nada** — olhe o **Monitor de entradas** (aba Controles). Se o sinal aparecer lá, atribua em **Botões → Adicionar**.
+- **"Não foi possível conectar ao …"** — provavelmente outro aparelho está conectado ao carro.
+- **Controle não detectado** — pareie primeiro e depois aperte um botão. No Windows, o sistema pode não reconhecer o DualShock 4 como gamepad; ferramentas como Steam Input ou DS4Windows fazem ele parecer um controle Xbox, ou use o assistente **Ensinar um controle novo**.
+- **Um botão não faz nada** — olhe **Sinais ao vivo** (**Ajustes → Controles**). Se o sinal aparecer lá, atribua em **Ajustes → Botões e teclas → Adicionar**.
 
 ## Compilar a partir do código
 

@@ -4,6 +4,8 @@
 
 Drive Bluetooth LE toy RC cars with a **gamepad** (DualShock 4, DualSense, Xbox, Switch Pro and others), a **keyboard** or on-screen **touch buttons** — from your computer or your Android phone.
 
+![BLE RC Controller](docs/images/hero.png)
+
 The car's own companion app only runs on phones. This app talks to the same Bluetooth interface, so you can use a real controller instead.
 
 > **Unofficial project.** It is independent, open source (MIT) and **not affiliated with, endorsed by or sponsored by** Shell or any other car, toy or fuel brand. "Shell" and all other names belong to their respective owners and are used here only to say which cars this app works with. See [Disclaimer](#disclaimer).
@@ -15,11 +17,12 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 
 ## Features
 
+- A dark **dashboard** with a line-drawn top view of the car, a steering gauge and a throttle scale.
 - Finds nearby cars automatically and lets you **pick which car** to drive (several can be on at once).
-- **Gamepad support** for the most common controllers, plus a **"Teach controller"** wizard and an **input monitor** for controllers the app does not know.
+- **Gamepad support** for the most common controllers, plus a **"Teach a new controller"** wizard and **Live signals** for controllers the app does not know.
 - **Remap every button.** Each action (forward, reverse, left, right, light, turbo, 360° spin) can have several inputs: controller buttons, stick directions, keyboard keys.
 - **Keyboard** control (WASD / arrow keys by default) and **on-screen buttons** for touch screens.
-- Battery level, signal strength, automatic reconnection to your last car.
+- Battery level, signal strength, automatic reconnection to your last car. If the connection drops, the app reconnects by itself.
 - Safety: the car stops when you disconnect, switch apps, or lose the controller.
 - Available in **English, Español and Português**.
 
@@ -27,8 +30,8 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 
 | Platform | Status |
 |---|---|
-| macOS | ✅ Verified with one car model and a DualShock 4: connects, shows battery, recognises the controller. |
-| Android | ✅ Verified on a tablet (Android 16) with two cars, a DualShock 4 and the on-screen buttons. |
+| macOS | 🟡 Built and opened in 1.1.0, but this build has not been driven with a car. Earlier builds were verified with one car model and a DualShock 4. |
+| Android | ✅ Verified on a tablet (Android 16) with two cars (SF-25, 296 GT3) and a DualShock 4. |
 | Windows | 🟡 Builds in CI; not yet tested on a real PC — reports welcome. |
 | iOS | ❌ Not supported. |
 
@@ -43,8 +46,8 @@ Get the latest build for your system from the [**Releases**](../../releases) pag
 ## Quick start
 
 1. **Close the car's official app** on your phone — the car accepts only one connection at a time.
-2. Turn the car on and open **BLE RC Controller**. The car appears in the **Cars** list (names start with `SL-`). Click or tap it.
-3. Pair your controller with Bluetooth (or plug it in) and press any button. It shows up under **Controllers**.
+2. Turn the car on and open **BLE RC Controller**. The car appears under **Cars nearby** (names start with `SL-`). Click or tap **Connect**.
+3. Pair your controller with Bluetooth (or plug it in) and press any button. It shows up under **Controllers** in **Settings** (the gear), and in the garage column on a computer.
 4. Drive.
 
 ### Default controls
@@ -58,29 +61,30 @@ Get the latest build for your system from the [**Releases**](../../releases) pag
 | Turbo (hold) | Right button (○ / B) | Space |
 | 360° spin (hold) | Top button (△ / Y) | Q |
 
-Pushing the left stick up/down does **not** drive by default. If you like that, add it in **Buttons** (*Forward* → Add → push the stick up).
+Pushing the left stick up/down does **not** drive by default. If you like that, add it in **Settings → Buttons and keys** (*Forward* → Add → push the stick up).
 
 On the on-screen buttons, **Light**, **Turbo** and **360° spin** switch on and off with each tap.
 
-All of this is editable in the **Buttons** tab. Everything is on/off: the car has no proportional speed or steering.
+All of this is editable in **Settings → Buttons and keys**. Everything is on/off: the car has no proportional speed or steering.
 
 ## Supported controllers
 
 Controllers are recognised by a built-in mapping database, so layouts such as **PlayStation (DualShock 4 / DualSense), Xbox and Switch Pro** work out of the box on the platforms where the OS exposes them as gamepads.
 
-For anything else open **Controllers → Teach this controller…** and press the button the app asks for, one by one (skip what your controller does not have). You can also use the **Input monitor** to see raw signals, and assign a raw signal to an action directly with **Buttons → Add**.
+For anything else open **Settings → Controllers → Teach a new controller** and press the button the app asks for, one by one: 18 steps in 5 groups, with the part to press lit on a drawing of the controller (skip what your controller does not have). You can also use **Live signals** (same screen) to see raw signals, and assign a raw signal to an action directly with **Settings → Buttons and keys → Add**.
 
 ## Keyboard and touch
 
 - Keyboard input only counts while the app window is in front.
-- **Settings → Show on-screen controls** turns on touch buttons (default on Android). Several buttons can be held at once.
+- **Settings → On-screen buttons** turns on touch buttons (default on Android). Several buttons can be held at once.
+- On a computer, the key legend under the dashboard shows the keys in use. **Settings** opens as a side panel; Esc or a click outside closes it.
 
 ## Troubleshooting
 
 - **The car does not show up** — turn it off and on, close the official app on every phone, and make sure Bluetooth is on. On Android grant the "Nearby devices" permission.
-- **"Could not connect"** — another device is probably connected to the car.
-- **Controller not detected** — pair it first, then press a button. On Windows, a DualShock 4 may not be reported as a gamepad by the OS; tools such as Steam Input or DS4Windows make it look like an Xbox controller, or use the **Teach** wizard.
-- **A button does nothing** — check the **Input monitor** (Controllers tab). If the signal shows up there, bind it with **Buttons → Add**.
+- **"Could not connect to …"** — another device is probably connected to the car.
+- **Controller not detected** — pair it first, then press a button. On Windows, a DualShock 4 may not be reported as a gamepad by the OS; tools such as Steam Input or DS4Windows make it look like an Xbox controller, or use the **Teach a new controller** wizard.
+- **A button does nothing** — check **Live signals** (**Settings → Controllers**). If the signal shows up there, bind it with **Settings → Buttons and keys → Add**.
 
 ## Build from source
 
