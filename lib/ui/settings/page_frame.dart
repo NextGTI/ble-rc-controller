@@ -15,8 +15,10 @@ const double settingsMaxWidth = 560;
 ///
 /// The header has a way back only when the screen was pushed as a route
 /// (`Navigator.canPop`): a "back" chevron, or a "close" cross on the first
-/// screen ([root]). On the desktop the side panel has its own way back, so
-/// nothing is drawn there.
+/// screen ([root]). A screen that is left rather than gone back from (the
+/// teach wizard) asks for the cross on the left instead, with [closeLeading].
+/// On the desktop the side panel has its own way back, so nothing is drawn
+/// there.
 ///
 /// The frame paints nothing behind itself and does not need a `Scaffold`: the
 /// host gives the background (a pushed route puts the `AmbientBackdrop` behind
@@ -30,6 +32,7 @@ class SettingsFrame extends StatelessWidget {
     required this.children,
     this.footer,
     this.root = false,
+    this.closeLeading = false,
   });
 
   final String title;
@@ -42,6 +45,10 @@ class SettingsFrame extends StatelessWidget {
 
   /// Whether this is the first screen, which closes instead of going back.
   final bool root;
+
+  /// Whether the way out is a cross on the left, as the sketch of the teach
+  /// wizard has, rather than the chevron of going back. Ignored by a [root].
+  final bool closeLeading;
 
   /// Side of the buttons of the header.
   static const double button = 48;
@@ -77,8 +84,10 @@ class SettingsFrame extends StatelessWidget {
                     children: [
                       if (back)
                         _HeaderButton(
-                          icon: Icons.chevron_left,
-                          tooltip: material.backButtonTooltip,
+                          icon: closeLeading ? Icons.close : Icons.chevron_left,
+                          tooltip: closeLeading
+                              ? material.closeButtonTooltip
+                              : material.backButtonTooltip,
                         ),
                       Expanded(
                         child: Align(

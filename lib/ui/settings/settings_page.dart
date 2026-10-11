@@ -8,6 +8,7 @@ import '../strings.dart';
 import '../theme/tokens.dart';
 import 'about_page.dart';
 import 'bindings_page.dart';
+import 'controllers_page.dart';
 import 'language_page.dart';
 import 'page_frame.dart';
 
@@ -62,8 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ? l.noControllerShort
                   : controllers.first.name,
               trailing: const SettingsChevron(),
-              // TODO(task 14): open ControllersPage(open: widget.open) instead.
-              onTap: () => widget.open(const _ControllersPlaceholder()),
+              onTap: () => widget.open(ControllersPage(open: widget.open)),
             ),
             // The switch is the only target of this row: with a tap on the row
             // as well, one touch would flip it twice.
@@ -187,15 +187,4 @@ class _DeadzoneRow extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Stands in for the screen of the controllers until Task 14 makes it.
-class _ControllersPlaceholder extends StatelessWidget {
-  const _ControllersPlaceholder();
-
-  @override
-  Widget build(BuildContext context) => SettingsFrame(
-    title: AppLocalizations.of(context).controllersTitle,
-    children: const [],
-  );
 }

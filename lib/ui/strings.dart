@@ -10,7 +10,7 @@ import '../l10n/gen/app_localizations.dart';
 /// Gives widgets access to the [Driver] and rebuilds them when it changes.
 class DriverScope extends InheritedNotifier<Driver> {
   const DriverScope({super.key, required Driver driver, required super.child})
-      : super(notifier: driver);
+    : super(notifier: driver);
 
   static Driver of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<DriverScope>()!.notifier!;
@@ -154,6 +154,35 @@ extension L10nText on AppLocalizations {
         return teach_dpadRight;
     }
     return id;
+  }
+
+  /// The line under the question of a teach step that names the button in
+  /// the words of each brand ("✕ on PlayStation, A on Xbox..."); null for the
+  /// steps that need none (the sticks and the d-pad say what to do).
+  String? teachHint(String id) {
+    switch (id) {
+      case 'a':
+        return teachHint_a;
+      case 'b':
+        return teachHint_b;
+      case 'x':
+        return teachHint_x;
+      case 'y':
+        return teachHint_y;
+      case 'leftBumper':
+        return teachHint_leftBumper;
+      case 'rightBumper':
+        return teachHint_rightBumper;
+      case 'leftTrigger':
+        return teachHint_leftTrigger;
+      case 'rightTrigger':
+        return teachHint_rightTrigger;
+      case 'back':
+        return teachHint_back;
+      case 'start':
+        return teachHint_start;
+    }
+    return null;
   }
 
   String message(MessageKind k) {

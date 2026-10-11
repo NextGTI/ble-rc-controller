@@ -829,6 +829,30 @@ void main() {
       expect(fill(), 0);
     });
 
+    testWidgets('with a labelWidth the name is that wide, whatever it says', (
+      tester,
+    ) async {
+      Future<double> barStart(String label, {double? width}) async {
+        await pumpWithDriver(
+          tester,
+          await _driver(),
+          SignalMeter(label: label, value: 0.5, labelWidth: width),
+        );
+        return tester.getTopLeft(find.byType(ClipRRect)).dx;
+      }
+
+      final short = await barStart('R2', width: 120);
+      final long = await barStart(
+        'a name that is much too long for it',
+        width: 120,
+      );
+      expect(long, short);
+      expect(tester.takeException(), isNull);
+      // Without one the bar follows the name, up to 96.
+      final free = await barStart('R2');
+      expect(free, lessThan(short));
+    });
+
     testWidgets('screen readers get one label and one value', (tester) async {
       final handle = tester.ensureSemantics();
       await meter(tester, 0.5);

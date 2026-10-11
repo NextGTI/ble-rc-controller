@@ -8,11 +8,27 @@ import '../theme/tokens.dart';
 /// app (spec 4.8).
 ///
 /// [value] is limited to 0..1 before it is drawn or written.
+///
+/// The name takes the room it needs, up to 96. A list of meters gives every
+/// one the same [labelWidth] instead, so the bars start in the same place
+/// whatever the names are; a longer name is cut with an ellipsis.
 class SignalMeter extends StatelessWidget {
-  const SignalMeter({super.key, required this.label, required this.value});
+  const SignalMeter({
+    super.key,
+    required this.label,
+    required this.value,
+    this.labelWidth,
+  });
 
   final String label;
   final double value;
+
+  /// The fixed width of the name; null lets it be as wide as it is.
+  final double? labelWidth;
+
+  /// One format for each language, made once: a meter is rebuilt at every
+  /// signal of a controller, which is many times a second.
+  static final Map<String, NumberFormat> _formats = {};
 
   /// [value] limited to 0..1. A NaN counts as 0, and so does a negative zero
   /// (which would be written "-0,00").
@@ -24,25 +40,29 @@ class SignalMeter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final v = clamp01(value);
-    final text = NumberFormat(
-      '0.00',
-      Localizations.localeOf(context).toString(),
-    ).format(v);
+    final locale = Localizations.localeOf(context).toString();
+    final text = _formats
+        .putIfAbsent(locale, () => NumberFormat('0.00', locale))
+        .format(v);
+    final name = Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: AppType.body(size: 12).copyWith(color: AppColors.text2),
+    );
     return Semantics(
       label: label,
       value: text,
       excludeSemantics: true,
       child: Row(
         children: [
-          ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 24, maxWidth: 96),
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppType.body(size: 12).copyWith(color: AppColors.text2),
+          if (labelWidth != null)
+            SizedBox(width: labelWidth, child: name)
+          else
+            ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 24, maxWidth: 96),
+              child: name,
             ),
-          ),
           const SizedBox(width: 10),
           Expanded(child: _Bar(fraction: v)),
           const SizedBox(width: 10),

@@ -5,6 +5,7 @@ import 'package:ble_rc_controller/ui/common/amber_switch.dart';
 import 'package:ble_rc_controller/ui/common/settings_row.dart';
 import 'package:ble_rc_controller/ui/settings/about_page.dart';
 import 'package:ble_rc_controller/ui/settings/bindings_page.dart';
+import 'package:ble_rc_controller/ui/settings/controllers_page.dart';
 import 'package:ble_rc_controller/ui/settings/language_page.dart';
 import 'package:ble_rc_controller/ui/settings/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -99,14 +100,15 @@ void main() {
       expect(opened, isA<AboutPage>());
     });
 
-    testWidgets('tapping "Controles" opens a page called Controles', (t) async {
+    testWidgets('tapping "Controles" opens the ControllersPage', (t) async {
       final d = await newDriver();
       Widget? opened;
       await pumpWithDriver(t, d, SettingsPage(open: (page) => opened = page));
       await t.pumpAndSettle();
       await t.tap(find.text('Controles'));
-      expect(opened, isNotNull);
-      // The page that Task 14 makes keeps this title.
+      expect(opened, isA<ControllersPage>());
+      // It keeps the title of the row, and goes on opening through the same
+      // callback.
       await pumpWithDriver(t, d, opened!);
       await t.pumpAndSettle();
       expect(find.text('Controles'), findsOneWidget);
