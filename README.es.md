@@ -120,3 +120,7 @@ Es un proyecto independiente de interoperabilidad. No contiene, distribuye ni de
 ## Licencia
 
 [MIT](LICENSE)
+
+## Privacidad
+
+La app no recopila datos personales y no se conecta a internet. Consulta la [política de privacidad](PRIVACY.es.md).

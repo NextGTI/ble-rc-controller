@@ -120,3 +120,7 @@ This is an independent interoperability project. It does not contain, distribute
 ## License
 
 [MIT](LICENSE)
+
+## Privacy
+
+The app collects no personal data and does not connect to the internet. See the [privacy policy](PRIVACY.md).

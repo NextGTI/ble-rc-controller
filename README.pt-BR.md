@@ -120,3 +120,7 @@ Issues e pull requests são bem-vindos — principalmente relatos de teste em ha
 ## Licença
 
 [MIT](LICENSE)
+
+## Privacidade
+
+O app não coleta dados pessoais e não se conecta à internet. Veja a [política de privacidade](PRIVACY.pt-BR.md).
