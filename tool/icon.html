@@ -24,6 +24,14 @@
     foreground  Android adaptive foreground: the drawing alone, sized for
                 the 16% inset flutter_launcher_icons adds.
     monochrome  Android 13 themed icon: the foreground in plain white.
+    play        Google Play store icon: the dark backdrop, full bleed, no
+                corners and no shadow (Play applies its own mask), with the
+                drawing centred at 64% of the height so it sits well inside
+                the rounded square. Not part of the loop above (it is not
+                an app asset): render it at 1024 the same way, to
+                /tmp/icon_play.png, then downscale to 512 and keep it 32-bit
+                (RGBA), as Play asks:
+                  python3 -c "from PIL import Image as I; I.open('/tmp/icon_play.png').convert('RGBA').resize((512, 512), I.LANCZOS).save('marketing/play-store/icon-512.png')"
 -->
 <html><head><meta charset="utf-8">
 <style>html,body{margin:0;background:transparent}svg{display:block}</style>
@@ -95,6 +103,11 @@ if (M === 'squircle') {
   body += `<rect x="101" y="101" width="822" height="822" rx="185" fill="none" stroke="url(#edge)" stroke-width="3"/>`;
 } else if (M === 'background') {
   body += backdrop;
+} else if (M === 'play') {
+  // Full bleed for the Play mask (rounded square, about 20% corner radius).
+  // The drawing spans 462 x 586; at 1.12 it is 517 x 656, so it clears the
+  // corners with room to spare and keeps the weight of the squircle icon.
+  body += backdrop + `<g transform="translate(512 512) scale(1.12) translate(-512 -547)">${drawing()}</g>`;
 } else {
   // Centre the drawing (its middle is at y 547). flutter_launcher_icons insets
   // this layer by 16% on each side, so the 66 of 108 safe circle is 90% of
