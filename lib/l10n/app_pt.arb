@@ -141,6 +141,7 @@
       }
     }
   },
+  "aboutMaker": "Desenvolvido por",
   "aboutRepository": "Código-fonte",
   "aboutLicenseMit": "Licença MIT",
   "aboutLicenses": "Licenças de código aberto",

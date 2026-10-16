@@ -12,6 +12,7 @@ import 'package:ble_rc_controller/ui/common/ambient.dart';
 import 'package:ble_rc_controller/ui/common/glass.dart';
 import 'package:ble_rc_controller/ui/garage/car_list.dart';
 import 'package:ble_rc_controller/ui/garage/garage_column.dart';
+import 'package:ble_rc_controller/ui/settings/about_page.dart';
 import 'package:ble_rc_controller/ui/settings/bindings_page.dart';
 import 'package:ble_rc_controller/ui/settings/settings_page.dart';
 import 'package:ble_rc_controller/ui/shell.dart';
@@ -805,7 +806,7 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(find.text('Sobre'));
       await t.pumpAndSettle();
-      await t.tap(find.byType(SelectableText));
+      await t.tap(find.widgetWithText(SelectableText, repositoryAddress));
       await t.pumpAndSettle();
       expect(
         FocusManager.instance.primaryFocus?.context
@@ -826,7 +827,7 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(find.text('Sobre'));
       await t.pumpAndSettle();
-      await t.tap(find.byType(SelectableText));
+      await t.tap(find.widgetWithText(SelectableText, repositoryAddress));
       await t.pumpAndSettle();
 
       await t.sendKeyDownEvent(LogicalKeyboardKey.keyW);

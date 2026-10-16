@@ -124,3 +124,9 @@ This is an independent interoperability project. It does not contain, distribute
 ## Privacy
 
 The app collects no personal data and does not connect to the internet. See the [privacy policy](PRIVACY.md).
+
+---
+
+<a href="https://nextgti.com.br"><img src="docs/images/nextgti.png" alt="NextGTI" height="40"></a>
+
+A [NextGTI](https://nextgti.com.br) project, from São Paulo, Brazil.

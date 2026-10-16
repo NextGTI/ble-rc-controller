@@ -1,4 +1,4 @@
-package io.github.blerc.ble_rc_controller
+package br.com.nextgti.blerc
 
 import android.hardware.input.InputManager
 import android.os.Build

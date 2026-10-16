@@ -307,6 +307,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get aboutMaker => 'Made by';
+
+  @override
   String get aboutRepository => 'Source code';
 
   @override

@@ -15,7 +15,7 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "io.github.blerc.ble_rc_controller"
+    namespace = "br.com.nextgti.blerc"
     compileSdk = flutter.compileSdkVersion
     // Use an NDK that is commonly preinstalled; pinned so the build never auto-downloads another.
     ndkVersion = "27.1.12297006"

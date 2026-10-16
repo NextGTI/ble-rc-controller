@@ -141,6 +141,7 @@
       }
     }
   },
+  "aboutMaker": "Made by",
   "aboutRepository": "Source code",
   "aboutLicenseMit": "MIT license",
   "aboutLicenses": "Open-source licences",

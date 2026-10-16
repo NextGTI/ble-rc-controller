@@ -2,9 +2,9 @@
 
 **English** · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt-BR.md)
 
-Effective date: October 13, 2026
+Effective date: October 16, 2026
 
-BLE RC Controller is a free, open-source app that drives Bluetooth LE toy RC cars with a gamepad, a keyboard or on-screen buttons. It is developed by Daniel Galhardi. This policy covers the app on Android (including the Google Play version), macOS and Windows.
+BLE RC Controller is a free, open-source app that drives Bluetooth LE toy RC cars with a gamepad, a keyboard or on-screen buttons. It is developed by NextGTI (NextGTI Gestão de Tecnologia da Informação Ltda.), São Paulo, Brazil. This policy covers the app on Android (including the Google Play version), macOS and Windows.
 
 ## The short version
 
@@ -34,7 +34,7 @@ The app does not collect personal information from anyone, including children.
 
 ## Open source
 
-You can read the full source code at https://github.com/daniel-nextgti/ble-rc-controller.
+You can read the full source code at https://github.com/NextGTI/ble-rc-controller.
 
 ## Changes
 
@@ -42,6 +42,6 @@ If this policy changes, the new version will be published at this address with a
 
 ## Contact
 
-Questions: open an issue at https://github.com/daniel-nextgti/ble-rc-controller/issues, or write to the developer contact email shown on the app's Google Play page.
+Questions: open an issue at https://github.com/NextGTI/ble-rc-controller/issues, or write to daniel@nextgti.com.br.
 
 BLE RC Controller is an independent, unofficial project. It is not affiliated with Shell or any other brand.

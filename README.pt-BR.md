@@ -124,3 +124,9 @@ Issues e pull requests são bem-vindos — principalmente relatos de teste em ha
 ## Privacidade
 
 O app não coleta dados pessoais e não se conecta à internet. Veja a [política de privacidade](PRIVACY.pt-BR.md).
+
+---
+
+<a href="https://nextgti.com.br"><img src="docs/images/nextgti.png" alt="NextGTI" height="40"></a>
+
+Um projeto da [NextGTI](https://nextgti.com.br), de São Paulo.

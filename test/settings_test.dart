@@ -666,9 +666,24 @@ void main() {
       expect(find.text('Código-fonte'), findsOneWidget);
       final address = find.widgetWithText(
         SelectableText,
-        'github.com/daniel-nextgti/ble-rc-controller',
+        'github.com/NextGTI/ble-rc-controller',
       );
       expect(address, findsOneWidget);
+      expect(t.takeException(), isNull);
+    });
+
+    testWidgets('names NextGTI as the maker, with its address to copy', (
+      t,
+    ) async {
+      final d = await newDriver();
+      await pumpWithDriver(t, d, const AboutPage());
+      await t.pumpAndSettle();
+      expect(find.text('Desenvolvido por'), findsOneWidget);
+      expect(find.text('NextGTI'), findsOneWidget);
+      expect(
+        find.widgetWithText(SelectableText, 'nextgti.com.br'),
+        findsOneWidget,
+      );
       expect(t.takeException(), isNull);
     });
 

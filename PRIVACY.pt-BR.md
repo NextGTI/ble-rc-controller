@@ -2,9 +2,9 @@
 
 [English](PRIVACY.md) · [Español](PRIVACY.es.md) · **Português**
 
-Vigência: 13 de outubro de 2026
+Vigência: 16 de outubro de 2026
 
-O BLE RC Controller é um app gratuito e de código aberto para pilotar carrinhos de controle remoto Bluetooth LE com um controle de videogame, o teclado ou botões na tela. Ele é desenvolvido por Daniel Galhardi. Esta política vale para o app no Android (inclusive a versão do Google Play), no macOS e no Windows.
+O BLE RC Controller é um app gratuito e de código aberto para pilotar carrinhos de controle remoto Bluetooth LE com um controle de videogame, o teclado ou botões na tela. Ele é desenvolvido pela NextGTI (NextGTI Gestão de Tecnologia da Informação Ltda.), de São Paulo, Brasil. Esta política vale para o app no Android (inclusive a versão do Google Play), no macOS e no Windows.
 
 ## Em resumo
 
@@ -34,7 +34,7 @@ O app não coleta informação pessoal de ninguém, inclusive de crianças.
 
 ## Código aberto
 
-O código-fonte completo está em https://github.com/daniel-nextgti/ble-rc-controller.
+O código-fonte completo está em https://github.com/NextGTI/ble-rc-controller.
 
 ## Mudanças
 
@@ -42,6 +42,6 @@ Se esta política mudar, a nova versão será publicada neste mesmo endereço, c
 
 ## Contato
 
-Dúvidas: abra uma issue em https://github.com/daniel-nextgti/ble-rc-controller/issues ou escreva para o e-mail de contato do desenvolvedor que aparece na página do app no Google Play.
+Dúvidas: abra uma issue em https://github.com/NextGTI/ble-rc-controller/issues ou escreva para daniel@nextgti.com.br.
 
 O BLE RC Controller é um projeto independente e não oficial, sem vínculo com a Shell ou com qualquer outra marca.

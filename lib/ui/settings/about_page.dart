@@ -9,7 +9,12 @@ import 'page_frame.dart';
 
 /// Where the code lives. Shown as text to select and copy: the app has no
 /// package to open links with.
-const String repositoryAddress = 'github.com/daniel-nextgti/ble-rc-controller';
+const String repositoryAddress = 'github.com/NextGTI/ble-rc-controller';
+
+/// Who makes the app, and where to find them; the address is text to copy,
+/// like the repository's.
+const String makerName = 'NextGTI';
+const String makerAddress = 'nextgti.com.br';
 
 /// The version of the app as the package says it: "1.0.2", or null when the
 /// platform did not tell it (or told an empty one).
@@ -23,9 +28,9 @@ String? versionOf(PackageInfo? info, {bool withBuild = false}) {
   return withBuild && build.isNotEmpty ? '$version ($build)' : version;
 }
 
-/// About the app (spec 5.4): its name and version, where the code is, the MIT
-/// licence with the notice that the project is independent of any brand, and a
-/// button for the licences of the packages it uses.
+/// About the app (spec 5.4): its name and version, who makes it, where the code
+/// is, the MIT licence with the notice that the project is independent of any
+/// brand, and a button for the licences of the packages it uses.
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
 
@@ -68,6 +73,24 @@ class _AboutPageState extends State<AboutPage> {
         const SizedBox(height: 20),
         SettingsCard(
           items: [
+            _Block(
+              label: l.aboutMaker,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    makerName,
+                    style: AppType.body(size: 15)
+                        .copyWith(color: AppColors.text),
+                  ),
+                  SelectableText(
+                    makerAddress,
+                    style: AppType.body(size: 13.5)
+                        .copyWith(color: AppColors.text2),
+                  ),
+                ],
+              ),
+            ),
             _Block(
               label: l.aboutRepository,
               child: SelectableText(

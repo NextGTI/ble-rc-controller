@@ -8,7 +8,7 @@
 PRODUCT_NAME = BLE RC Controller
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = io.github.blerc.bleRcController
+PRODUCT_BUNDLE_IDENTIFIER = br.com.nextgti.blerc
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = MIT License. Unofficial, independent project.
+PRODUCT_COPYRIGHT = Copyright © 2026 NextGTI. MIT License.

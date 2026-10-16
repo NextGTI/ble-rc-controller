@@ -308,6 +308,9 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get aboutMaker => 'Desarrollado por';
+
+  @override
   String get aboutRepository => 'Código fuente';
 
   @override

@@ -652,6 +652,12 @@ abstract class AppLocalizations {
   /// **'Version {version}, open source'**
   String aboutHint(String version);
 
+  /// No description provided for @aboutMaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Made by'**
+  String get aboutMaker;
+
   /// No description provided for @aboutRepository.
   ///
   /// In en, this message translates to:

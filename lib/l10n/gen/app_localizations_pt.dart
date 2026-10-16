@@ -308,6 +308,9 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get aboutMaker => 'Desenvolvido por';
+
+  @override
   String get aboutRepository => 'Código-fonte';
 
   @override
