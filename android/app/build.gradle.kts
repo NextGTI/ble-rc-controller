@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         // The Google Play package name; it can never change once the app is on Play.
-        applicationId = "br.com.nextgti.blerc"
+        applicationId = "br.com.nextgti.blercontroller"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
