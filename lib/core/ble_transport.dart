@@ -8,7 +8,7 @@ import 'car_transport.dart';
 import 'protocol.dart';
 
 /// [CarTransport] backed by the `universal_ble` package
-/// (Android, macOS, Windows, ...).
+/// (Android, iOS, macOS, Windows).
 class UniversalBleTransport implements CarTransport {
   static String _full(String uuid) => BleUuidParser.string(uuid).toLowerCase();
 

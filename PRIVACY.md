@@ -2,9 +2,9 @@
 
 **English** · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt-BR.md)
 
-Effective date: October 16, 2026
+Effective date: October 30, 2026
 
-BLE RC Controller is a free, open-source app that drives Bluetooth LE toy RC cars with a gamepad, a keyboard or on-screen buttons. It is developed by NextGTI (NextGTI Gestão de Tecnologia da Informação Ltda.), São Paulo, Brazil. This policy covers the app on Android (including the Google Play version), macOS and Windows.
+BLE RC Controller is a free, open-source app that drives Bluetooth LE toy RC cars with a gamepad, a keyboard or on-screen buttons. It is developed by NextGTI (NextGTI Gestão de Tecnologia da Informação Ltda.), São Paulo, Brazil. This policy covers the app on Android (including the Google Play version), iPhone and iPad (App Store), macOS and Windows.
 
 ## The short version
 
@@ -12,7 +12,7 @@ The app does not collect, send or share any personal data. It has no account, no
 
 ## What the app uses, and why
 
-- **Bluetooth.** The app scans for nearby cars and connects to the one you pick, so it can send driving commands. On Android 12 and later it asks for the "Nearby devices" permission (Bluetooth scan and connect). The scan is declared as not used to determine location. On Android 11 and earlier, Android requires the location permission for any Bluetooth scan; the app uses it only to find cars and never reads your location.
+- **Bluetooth.** The app scans for nearby cars and connects to the one you pick, so it can send driving commands. On Android 12 and later it asks for the "Nearby devices" permission (Bluetooth scan and connect). The scan is declared as not used to determine location. On Android 11 and earlier, Android requires the location permission for any Bluetooth scan; the app uses it only to find cars and never reads your location. On iPhone and iPad it asks for the Bluetooth permission the first time it looks for cars.
 - **Game controllers and keyboard.** The app reads button, stick and key presses while it is open, only to turn them into driving commands. Nothing is recorded or sent anywhere.
 
 ## What the app stores on your device

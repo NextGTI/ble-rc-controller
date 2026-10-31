@@ -1,0 +1,2 @@
+/* The Bluetooth permission prompt. */
+"NSBluetoothAlwaysUsageDescription" = "Used to find your toy RC car and drive it over Bluetooth.";

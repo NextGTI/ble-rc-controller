@@ -1,0 +1,2 @@
+/* O pedido de permissão do Bluetooth. */
+"NSBluetoothAlwaysUsageDescription" = "Usado para encontrar o seu carrinho de controle remoto e pilotá-lo por Bluetooth.";

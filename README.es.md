@@ -2,7 +2,7 @@
 
 [English](README.md) · **Español** · [Português](README.pt-BR.md)
 
-Conduce coches de juguete RC con Bluetooth LE usando un **mando** (DualShock 4, DualSense, Xbox, Switch Pro y otros), el **teclado** o **botones táctiles** en pantalla, desde tu ordenador o tu móvil Android.
+Conduce coches de juguete RC con Bluetooth LE usando un **mando** (DualShock 4, DualSense, Xbox, Switch Pro y otros), el **teclado** o **botones táctiles** en pantalla, desde tu ordenador, tu móvil Android o tu iPhone y iPad.
 
 ![BLE RC Controller](docs/images/hero.png)
 
@@ -39,7 +39,7 @@ La app oficial del coche solo funciona en móviles. Esta app usa la misma interf
 | macOS | ✅ Probado con los coches y un DualShock 4. |
 | Android | ✅ Verificado en una tableta (Android 16) con dos coches (SF-25, 296 GT3) y un DualShock 4. |
 | Windows | ✅ Probado en un PC con los coches y un DualShock 4. |
-| iOS | ❌ No compatible. |
+| iOS | 🧪 Compila; aún no probado en un iPhone. |
 
 ## Descarga
 
@@ -82,12 +82,12 @@ Para cualquier otro, abre **Ajustes → Mandos → Enseñar un mando nuevo** y p
 ## Teclado y pantalla táctil
 
 - El teclado solo cuenta mientras la ventana de la app está en primer plano.
-- **Ajustes → Botones en pantalla** activa los botones táctiles (por defecto en Android). Se pueden mantener varios a la vez.
+- **Ajustes → Botones en pantalla** activa los botones táctiles (activados por defecto en Android e iOS). Se pueden mantener varios a la vez.
 - En un ordenador, la leyenda de teclas bajo el panel muestra las teclas en uso. **Ajustes** se abre como un panel lateral; Esc o un clic fuera lo cierra.
 
 ## Solución de problemas
 
-- **El coche no aparece** — apágalo y enciéndelo, cierra la app oficial en todos los móviles y comprueba que el Bluetooth esté activo. En Android concede el permiso de «Dispositivos cercanos».
+- **El coche no aparece** — apágalo y enciéndelo, cierra la app oficial en todos los móviles y comprueba que el Bluetooth esté activo. En Android concede el permiso de «Dispositivos cercanos»; en iPhone y iPad permite el Bluetooth cuando la app lo pida (o después en Ajustes → BLE RC Controller).
 - **«No se pudo conectar con …»** — probablemente otro dispositivo está conectado al coche.
 - **No se detecta el mando** — empareja primero y luego pulsa un botón. En Windows, el sistema puede no reconocer un DualShock 4 como mando; herramientas como Steam Input o DS4Windows lo hacen pasar por un mando Xbox, o usa el asistente **Enseñar un mando nuevo**.
 - **Un botón no hace nada** — mira **Señales en vivo** (**Ajustes → Mandos**). Si la señal aparece allí, asígnala con **Ajustes → Botones y teclas → Añadir**.
@@ -99,7 +99,7 @@ Necesitas [Flutter](https://docs.flutter.dev/get-started/install) (estable, 3.47
 ```bash
 flutter pub get
 flutter test
-flutter run -d macos     # o: -d windows / -d <dispositivo android>
+flutter run -d macos     # o: -d windows / -d <dispositivo android> / -d <iPhone>
 flutter build apk --release
 ```
 

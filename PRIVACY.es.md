@@ -2,9 +2,9 @@
 
 [English](PRIVACY.md) · **Español** · [Português](PRIVACY.pt-BR.md)
 
-Fecha de vigencia: 16 de octubre de 2026
+Fecha de vigencia: 30 de octubre de 2026
 
-BLE RC Controller es una app gratuita y de código abierto para conducir coches de juguete por radiocontrol Bluetooth LE con un mando, el teclado o botones en pantalla. La desarrolla NextGTI (NextGTI Gestão de Tecnologia da Informação Ltda.), de São Paulo, Brasil. Esta política se aplica a la app en Android (incluida la versión de Google Play), macOS y Windows.
+BLE RC Controller es una app gratuita y de código abierto para conducir coches de juguete por radiocontrol Bluetooth LE con un mando, el teclado o botones en pantalla. La desarrolla NextGTI (NextGTI Gestão de Tecnologia da Informação Ltda.), de São Paulo, Brasil. Esta política se aplica a la app en Android (incluida la versión de Google Play), iPhone y iPad (App Store), macOS y Windows.
 
 ## En resumen
 
@@ -12,7 +12,7 @@ La app no recopila, no envía ni comparte ningún dato personal. No tiene cuenta
 
 ## Qué usa la app y por qué
 
-- **Bluetooth.** La app busca coches cercanos y se conecta al que elijas para enviar los comandos de conducción. En Android 12 o posterior pide el permiso "Dispositivos cercanos" (búsqueda y conexión Bluetooth). La búsqueda está declarada como no usada para determinar la ubicación. En Android 11 o anterior, Android exige el permiso de ubicación para cualquier búsqueda Bluetooth; la app lo usa solo para encontrar los coches y nunca lee tu ubicación.
+- **Bluetooth.** La app busca coches cercanos y se conecta al que elijas para enviar los comandos de conducción. En Android 12 o posterior pide el permiso "Dispositivos cercanos" (búsqueda y conexión Bluetooth). La búsqueda está declarada como no usada para determinar la ubicación. En Android 11 o anterior, Android exige el permiso de ubicación para cualquier búsqueda Bluetooth; la app lo usa solo para encontrar los coches y nunca lee tu ubicación. En iPhone y iPad pide el permiso de Bluetooth la primera vez que busca coches.
 - **Mandos y teclado.** Con la app abierta, lee los botones, sticks y teclas pulsados solo para convertirlos en comandos de conducción. Nada se graba ni se envía.
 
 ## Qué guarda la app en tu dispositivo

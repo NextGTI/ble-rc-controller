@@ -2,7 +2,7 @@
 
 **English** · [Español](README.es.md) · [Português](README.pt-BR.md)
 
-Drive Bluetooth LE toy RC cars with a **gamepad** (DualShock 4, DualSense, Xbox, Switch Pro and others), a **keyboard** or on-screen **touch buttons** — from your computer or your Android phone.
+Drive Bluetooth LE toy RC cars with a **gamepad** (DualShock 4, DualSense, Xbox, Switch Pro and others), a **keyboard** or on-screen **touch buttons** — from your computer, your Android phone or your iPhone and iPad.
 
 ![BLE RC Controller](docs/images/hero.png)
 
@@ -39,7 +39,7 @@ The car's own companion app only runs on phones. This app talks to the same Blue
 | macOS | ✅ Tested with the cars and a DualShock 4. |
 | Android | ✅ Verified on a tablet (Android 16) with two cars (SF-25, 296 GT3) and a DualShock 4. |
 | Windows | ✅ Tested on a PC with the cars and a DualShock 4. |
-| iOS | ❌ Not supported. |
+| iOS | 🧪 Builds; not tested on an iPhone yet. |
 
 ## Download
 
@@ -82,12 +82,12 @@ For anything else open **Settings → Controllers → Teach a new controller** a
 ## Keyboard and touch
 
 - Keyboard input only counts while the app window is in front.
-- **Settings → On-screen buttons** turns on touch buttons (default on Android). Several buttons can be held at once.
+- **Settings → On-screen buttons** turns on touch buttons (on by default on Android and iOS). Several buttons can be held at once.
 - On a computer, the key legend under the dashboard shows the keys in use. **Settings** opens as a side panel; Esc or a click outside closes it.
 
 ## Troubleshooting
 
-- **The car does not show up** — turn it off and on, close the official app on every phone, and make sure Bluetooth is on. On Android grant the "Nearby devices" permission.
+- **The car does not show up** — turn it off and on, close the official app on every phone, and make sure Bluetooth is on. On Android grant the "Nearby devices" permission; on iPhone and iPad allow Bluetooth when asked (or later in Settings → BLE RC Controller).
 - **"Could not connect to …"** — another device is probably connected to the car.
 - **Controller not detected** — pair it first, then press a button. On Windows, a DualShock 4 may not be reported as a gamepad by the OS; tools such as Steam Input or DS4Windows make it look like an Xbox controller, or use the **Teach a new controller** wizard.
 - **A button does nothing** — check **Live signals** (**Settings → Controllers**). If the signal shows up there, bind it with **Settings → Buttons and keys → Add**.
@@ -99,7 +99,7 @@ You need [Flutter](https://docs.flutter.dev/get-started/install) (stable, 3.47 o
 ```bash
 flutter pub get
 flutter test
-flutter run -d macos     # or: -d windows / -d <android device>
+flutter run -d macos     # or: -d windows / -d <android device> / -d <iPhone>
 flutter build apk --release
 ```
 

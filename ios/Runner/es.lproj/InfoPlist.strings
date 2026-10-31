@@ -1,0 +1,2 @@
+/* La solicitud de permiso de Bluetooth. */
+"NSBluetoothAlwaysUsageDescription" = "Se usa para encontrar tu coche de radiocontrol y conducirlo por Bluetooth.";

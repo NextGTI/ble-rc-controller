@@ -6,6 +6,7 @@ import 'package:ble_rc_controller/core/protocol.dart';
 import 'package:ble_rc_controller/input/controller_profile.dart';
 import 'package:ble_rc_controller/input/input_ref.dart';
 import 'package:ble_rc_controller/input/pad_input.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -764,5 +765,34 @@ void main() {
     transport.scan.add(const FoundCar(id: 'car1', name: 'SL-SF-25', rssi: -55));
     await settle();
     expect(driver.cars.single.model, 'SF-25');
+  });
+  group('the on-screen buttons start on where the screen is the controller',
+      () {
+    for (final (platform, on) in [
+      (TargetPlatform.android, true),
+      (TargetPlatform.iOS, true),
+      (TargetPlatform.macOS, false),
+      (TargetPlatform.windows, false),
+    ]) {
+      test('${platform.name}: ${on ? 'on' : 'off'}', () async {
+        debugDefaultTargetPlatformOverride = platform;
+        try {
+          await setUp0();
+          expect(driver.onScreenControls, on);
+        } finally {
+          debugDefaultTargetPlatformOverride = null;
+        }
+      });
+    }
+
+    test('a choice the person saved wins', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      try {
+        await setUp0({'onScreen': false});
+        expect(driver.onScreenControls, isFalse);
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
   });
 }

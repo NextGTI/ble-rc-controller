@@ -2,9 +2,9 @@
 
 [English](PRIVACY.md) · [Español](PRIVACY.es.md) · **Português**
 
-Vigência: 16 de outubro de 2026
+Vigência: 30 de outubro de 2026
 
-O BLE RC Controller é um app gratuito e de código aberto para pilotar carrinhos de controle remoto Bluetooth LE com um controle de videogame, o teclado ou botões na tela. Ele é desenvolvido pela NextGTI (NextGTI Gestão de Tecnologia da Informação Ltda.), de São Paulo, Brasil. Esta política vale para o app no Android (inclusive a versão do Google Play), no macOS e no Windows.
+O BLE RC Controller é um app gratuito e de código aberto para pilotar carrinhos de controle remoto Bluetooth LE com um controle de videogame, o teclado ou botões na tela. Ele é desenvolvido pela NextGTI (NextGTI Gestão de Tecnologia da Informação Ltda.), de São Paulo, Brasil. Esta política vale para o app no Android (inclusive a versão do Google Play), no iPhone e no iPad (App Store), no macOS e no Windows.
 
 ## Em resumo
 
@@ -12,7 +12,7 @@ O app não coleta, não envia e não compartilha nenhum dado pessoal. Não tem c
 
 ## O que o app usa, e por quê
 
-- **Bluetooth.** O app procura carrinhos por perto e se conecta ao que você escolher, para enviar os comandos de pilotagem. No Android 12 ou mais novo, ele pede a permissão "Dispositivos por perto" (busca e conexão Bluetooth). A busca é declarada como não usada para descobrir localização. No Android 11 ou mais antigo, o Android exige a permissão de localização para qualquer busca Bluetooth; o app a usa só para encontrar os carrinhos e nunca lê a sua localização.
+- **Bluetooth.** O app procura carrinhos por perto e se conecta ao que você escolher, para enviar os comandos de pilotagem. No Android 12 ou mais novo, ele pede a permissão "Dispositivos por perto" (busca e conexão Bluetooth). A busca é declarada como não usada para descobrir localização. No Android 11 ou mais antigo, o Android exige a permissão de localização para qualquer busca Bluetooth; o app a usa só para encontrar os carrinhos e nunca lê a sua localização. No iPhone e no iPad, ele pede a permissão de Bluetooth na primeira vez que procura carrinhos.
 - **Controles e teclado.** Com o app aberto, ele lê os botões, analógicos e teclas apertados, só para transformá-los em comandos de pilotagem. Nada é gravado nem enviado.
 
 ## O que o app guarda no aparelho

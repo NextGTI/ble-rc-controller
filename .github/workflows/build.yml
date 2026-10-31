@@ -80,6 +80,21 @@ jobs:
           path: ble-rc-controller-*-macos.zip
           retention-days: 90
 
+  # Unsigned, so it only proves the iOS app still builds. The App Store build
+  # is archived and signed on a Mac with the NextGTI team (docs/IOS.md).
+  ios:
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build ios --release --no-codesign
+
   windows:
     needs: test
     runs-on: windows-latest

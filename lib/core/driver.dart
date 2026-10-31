@@ -49,8 +49,11 @@ class Driver extends ChangeNotifier with WidgetsBindingObserver {
     _autoConnect = prefs.getBool('autoConnect') ?? true;
     _keyboardEnabled = prefs.getBool('keyboard') ?? true;
     _deadzone = prefs.getDouble('deadzone') ?? 0.35;
+    // On a phone or tablet the screen is the controller until a real one
+    // shows up; on a computer the keyboard is.
     _onScreenControls = prefs.getBool('onScreen') ??
-        (defaultTargetPlatform == TargetPlatform.android);
+        (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS);
     _localeCode = prefs.getString('locale') ?? 'system';
     _lastCarId = prefs.getString('lastCar');
   }

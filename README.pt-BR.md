@@ -2,7 +2,7 @@
 
 [English](README.md) · [Español](README.es.md) · **Português**
 
-Pilote carrinhos de controle remoto com Bluetooth LE usando um **controle** (DualShock 4, DualSense, Xbox, Switch Pro e outros), o **teclado** ou **botões de toque** na tela — no computador ou no celular Android.
+Pilote carrinhos de controle remoto com Bluetooth LE usando um **controle** (DualShock 4, DualSense, Xbox, Switch Pro e outros), o **teclado** ou **botões de toque** na tela — no computador, no celular Android ou no iPhone e iPad.
 
 ![BLE RC Controller](docs/images/hero.png)
 
@@ -39,7 +39,7 @@ O app oficial do carrinho só roda em celulares. Este app usa a mesma interface 
 | macOS | ✅ Testado com os carrinhos e um DualShock 4. |
 | Android | ✅ Verificado em um tablet (Android 16) com dois carrinhos (SF-25, 296 GT3) e um DualShock 4. |
 | Windows | ✅ Testado em um PC com os carrinhos e um DualShock 4. |
-| iOS | ❌ Não suportado. |
+| iOS | 🧪 Compila; ainda não testado num iPhone. |
 
 ## Download
 
@@ -82,12 +82,12 @@ Para qualquer outro, abra **Ajustes → Controles → Ensinar um controle novo**
 ## Teclado e toque
 
 - O teclado só vale com a janela do app em primeiro plano.
-- **Ajustes → Botões na tela** liga os botões de toque (padrão no Android). Dá para segurar vários ao mesmo tempo.
+- **Ajustes → Botões na tela** liga os botões de toque (ligados por padrão no Android e no iOS). Dá para segurar vários ao mesmo tempo.
 - No computador, a legenda de teclas sob o painel mostra as teclas em uso. Os **Ajustes** abrem num painel lateral; Esc ou um clique fora fecha.
 
 ## Solução de problemas
 
-- **O carro não aparece** — desligue e ligue, feche o app oficial em todos os celulares e confira se o Bluetooth está ligado. No Android, conceda a permissão de "Dispositivos próximos".
+- **O carro não aparece** — desligue e ligue, feche o app oficial em todos os celulares e confira se o Bluetooth está ligado. No Android, conceda a permissão de "Dispositivos próximos"; no iPhone e no iPad, permita o Bluetooth quando o app pedir (ou depois em Ajustes → BLE RC Controller).
 - **"Não foi possível conectar ao …"** — provavelmente outro aparelho está conectado ao carro.
 - **Controle não detectado** — pareie primeiro e depois aperte um botão. No Windows, o sistema pode não reconhecer o DualShock 4 como gamepad; ferramentas como Steam Input ou DS4Windows fazem ele parecer um controle Xbox, ou use o assistente **Ensinar um controle novo**.
 - **Um botão não faz nada** — olhe **Sinais ao vivo** (**Ajustes → Controles**). Se o sinal aparecer lá, atribua em **Ajustes → Botões e teclas → Adicionar**.
@@ -99,7 +99,7 @@ Você precisa do [Flutter](https://docs.flutter.dev/get-started/install) (stable
 ```bash
 flutter pub get
 flutter test
-flutter run -d macos     # ou: -d windows / -d <aparelho android>
+flutter run -d macos     # ou: -d windows / -d <aparelho android> / -d <iPhone>
 flutter build apk --release
 ```
 

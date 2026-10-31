@@ -24,6 +24,12 @@
     foreground  Android adaptive foreground: the drawing alone, sized for
                 the 16% inset flutter_launcher_icons adds.
     monochrome  Android 13 themed icon: the foreground in plain white.
+    ios         iOS app icon: the dark backdrop, full bleed, no corners and
+                no shadow (iOS applies its own mask), the drawing as on the
+                squircle. Not part of the loop above: render it at 1024 to
+                /tmp/icon_ios.png and flatten it to RGB (the App Store refuses
+                an icon with alpha) into the single-size asset catalog:
+                  python3 -c "from PIL import Image as I; I.open('/tmp/icon_ios.png').convert('RGB').save('ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-1024.png')"
     play        Google Play store icon: the dark backdrop, full bleed, no
                 corners and no shadow (Play applies its own mask), with the
                 drawing centred at 64% of the height so it sits well inside
@@ -103,6 +109,11 @@ if (M === 'squircle') {
   body += `<rect x="101" y="101" width="822" height="822" rx="185" fill="none" stroke="url(#edge)" stroke-width="3"/>`;
 } else if (M === 'background') {
   body += backdrop;
+} else if (M === 'ios') {
+  // iOS: full bleed, opaque, no corners (iOS applies its own mask). The
+  // squircle's 824 square stretched to 1024, so the drawing keeps the same
+  // place and weight as on macOS.
+  body += backdrop + `<g transform="translate(512 512) scale(${1024 / 824}) translate(-512 -512)">${drawing()}</g>`;
 } else if (M === 'play') {
   // Full bleed for the Play mask (rounded square, about 20% corner radius).
   // The drawing spans 462 x 586; at 1.12 it is 517 x 656, so it clears the
